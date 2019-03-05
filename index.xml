@@ -7,13 +7,13 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;&lt;img alt=&#34;Creative Commons License&#34; style=&#34;border-width:0&#34; src=&#34;https://i.creativecommons.org/l/by-sa/4.0/80x15.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.</copyright>
-    <lastBuildDate>Fri, 01 Mar 2019 00:00:00 -0600</lastBuildDate>
+    <lastBuildDate>Fri, 01 Mar 2019 00:00:00 +0000</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>(2017 Spring) Math 2011 Introduction to Multivariable Calculus</title>
       <link>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</link>
-      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</guid>
       <description>&lt;p&gt;Differentiation in several variables, with applications in approximation, maximum and minimum and geometry. Integration in several variables, vector analysis.&lt;/p&gt;
@@ -63,7 +63,7 @@ Homework will be assigned through the online WeBWorK system located at &lt;a hre
     <item>
       <title>(2016 Autumn) Math 4052 Partial Differential Equations</title>
       <link>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</link>
-      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</guid>
       <description>&lt;p&gt;Outline: Derivatives of the Laplace equations, the wave equations and diffusion equation; Methods to solve equations: separation of variables, Fourier series and integrals and characteristics; maximum principles, Green&amp;rsquo;s functions.&lt;/p&gt;
@@ -352,7 +352,7 @@ $$ \begin{eqnarray} u_{xx} + u_{yy} = 0 \text{ in } Q, \quad u(0,y) = g(y) \text
     <item>
       <title>(2016 Spring) Math 2352: Differential Equations</title>
       <link>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</link>
-      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</guid>
       <description>&lt;p&gt;This course covers: first order equations, second order equations, Laplace transform method, numerical solution of initial value problems, boundary-value problems.&lt;/p&gt;
@@ -480,7 +480,7 @@ $$ \begin{eqnarray} u_{xx} + u_{yy} = 0 \text{ in } Q, \quad u(0,y) = g(y) \text
     <item>
       <title>(2015 Autumn) Math 2111: Matrix Algebra and Applications</title>
       <link>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</link>
-      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</guid>
       <description>&lt;p&gt;This course covers: systems of linear equations; vector spaces; linear transformations; matrix representation of linear transformations; linear operators, eigenvalues and eigenvectors; similarity invariants and canonical forms.&lt;/p&gt;
@@ -530,7 +530,7 @@ $$ \begin{eqnarray} u_{xx} + u_{yy} = 0 \text{ in } Q, \quad u(0,y) = g(y) \text
     <item>
       <title>(2015 Spring) Math 2352: Differential Equations</title>
       <link>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</link>
-      <pubDate>Sun, 01 Mar 2015 00:00:00 -0600</pubDate>
+      <pubDate>Sun, 01 Mar 2015 00:00:00 +0000</pubDate>
       
       <guid>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</guid>
       <description>&lt;p&gt;This course covers: first order equations, second order equations, Laplace transform method, numerical solution of initial value problems, boundary-value problems.&lt;/p&gt;
