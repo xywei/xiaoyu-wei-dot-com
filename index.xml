@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Xiaoyu Wei on Xiaoyu Wei</title>
+    <link>https://www.xiaoyu-wei.com/</link>
+    <description>Recent content in Xiaoyu Wei on Xiaoyu Wei</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;&lt;img alt=&#34;Creative Commons License&#34; style=&#34;border-width:0&#34; src=&#34;https://i.creativecommons.org/l/by-sa/4.0/80x15.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.</copyright>
+    <lastBuildDate>Fri, 01 Mar 2019 00:00:00 -0600</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>(2017 Spring) Math 2011 Introduction to Multivariable Calculus</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</guid>
+      <description>&lt;p&gt;Differentiation in several variables, with applications in approximation, maximum and minimum and geometry. Integration in several variables, vector analysis.&lt;/p&gt;
+
+&lt;p&gt;Here you can find tutorial materials and course related resources.
+Homework will be assigned through the online WeBWorK system located at &lt;a href=&#34;https://webwork.math.ust.hk/webwork2/&#34; target=&#34;_blank&#34;&gt;https://webwork.math.ust.hk/webwork2/&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;basic-info&#34;&gt;Basic Info&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Course Name: Introduction to Multivariable Calculus&lt;/li&gt;
+&lt;li&gt;Lecturers: Prof. Tiezheng Qian&lt;/li&gt;
+&lt;li&gt;Sessions: T1A (Monday 16:30-17:20 at CYT G009B), T1B (Wednesday 12:00-12:50 at Room 4582)&lt;/li&gt;
+&lt;li&gt;Course Page: &lt;a href=&#34;http://www.math.ust.hk/~maqian/ma2011_1617S.html&#34; target=&#34;_blank&#34;&gt;http://www.math.ust.hk/~maqian/ma2011_1617S.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Semester: &amp;ldquo;2017-Spring&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please refer to the course page (follow the link above) for the course schedule and lecture notes.&lt;/p&gt;
+
+&lt;h4 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;This page serves exclusively for T1A and T1B; some of the information may not apply for the other tutorial sessions of this course.&lt;/li&gt;
+&lt;li&gt;We strive to provide accurate and updated information; however, no warranty is given or implied. If you found any errors, omissions or inaccuracies, please kindly contact us to help fix them.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;tutorial-notes&#34;&gt;Tutorial Notes&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;tut-01.pdf&#34; target=&#34;_blank&#34;&gt;Tutorial Notes 01&lt;/a&gt;. Two problems we solved during the sessions on curves and polar coordinates.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog-xywei.rhcloud.com/2017/03/15/introduction-to-multi-variable-calculus-1/&#34; target=&#34;_blank&#34;&gt;Totorial Notes 02&lt;/a&gt;. A review from 1.1 to 3.3 (link to my Blog).&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;tut-02.pdf&#34; target=&#34;_blank&#34;&gt;Totorial Notes 02*&lt;/a&gt;. A review from 1.1 to 3.3 (a print-friendly PDF version, but no animations).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;useful-links&#34;&gt;Useful links&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.math.ust.hk/~maqian/ma2011_1617S.html&#34; target=&#34;_blank&#34;&gt;The course page&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://webwork.math.ust.hk/webwork2/&#34; target=&#34;_blank&#34;&gt;Online homework system&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.math.ust.hk/~support/&#34; target=&#34;_blank&#34;&gt;Math Support Center&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.wolframalpha.com/&#34; target=&#34;_blank&#34;&gt;WolframAlpha&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://webwork.maa.org/wiki/Mathematical_notation_recognized_by_WeBWorK&#34; target=&#34;_blank&#34;&gt;Mathematical notation recognized by WeBWorK&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog-xywei.rhcloud.com/2017/03/20/viewing-webworks-interactive-images-without-java/&#34; target=&#34;_blank&#34;&gt;Viewing interactive images in WeBWorK without Java&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>(2016 Autumn) Math 4052 Partial Differential Equations</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</guid>
+      <description>&lt;p&gt;Outline: Derivatives of the Laplace equations, the wave equations and diffusion equation; Methods to solve equations: separation of variables, Fourier series and integrals and characteristics; maximum principles, Green&amp;rsquo;s functions.&lt;/p&gt;
+
+&lt;p&gt;Here you can find homework problems and solutions. The problems are selected from
+the text book (&lt;em&gt;Partial differential equations, an introduction, Walter A. Strauss,  The second edition, John Wiley &amp;amp; Sons,  Ltd.&lt;/em&gt;) and are listed here for your convenience.&lt;/p&gt;
+
+&lt;h2 id=&#34;basic-info&#34;&gt;Basic Info&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Course Name: Partial Differential Equations&lt;/li&gt;
+&lt;li&gt;Lecturers: Chair Prof. Xiao-Ping Wang&lt;/li&gt;
+&lt;li&gt;Sessions: T1A (Wednesday 16:30-17:20 at Room 1505), T1B (Monday 17:30-18:20 at Room 1511)&lt;/li&gt;
+&lt;li&gt;Course Page: &lt;a href=&#34;http://www.math.ust.hk/~mawang/teaching/math4052/math4052a.html&#34; target=&#34;_blank&#34;&gt;http://www.math.ust.hk/~mawang/teaching/math4052/math4052a.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Semester: 2016-Autumn&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;homework-problems&#34;&gt;Homework Problems&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Homework 1 (Due in tutorial class in the week of Sept 12):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-005.pdf&#34; target=&#34;_blank&#34;&gt;Page 5&lt;/a&gt;, Q2(a)(b)). Which of the following operators are linear?
+
+&lt;ul&gt;
+&lt;li&gt;$ \mathscr{ L } u = u_x + x u_y $.&lt;/li&gt;
+&lt;li&gt;$ \mathscr{ L } u = u_x + u u_y $.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-005.pdf&#34; target=&#34;_blank&#34;&gt;Page 5&lt;/a&gt;, Q3(c)(d)). For each of the following equations, state the order and
+whether it is nonlinear, linear inhomogeneous, or linear homogeneous; provide
+reasons.
+
+&lt;ul&gt;
+&lt;li&gt;$ u_t - u_{xxt} + u u_x = 0 $.&lt;/li&gt;
+&lt;li&gt;$ u_{tt} - u_{xx} + x^2 = 0 $.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-009.pdf&#34; target=&#34;_blank&#34;&gt;Page 9&lt;/a&gt;, Q1). Solve the first-order equation $ 2u_t + 3u_x = 0 $ with the auxiliary condition
+$ u=\sin x $ when $ t=0 $.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 2 (Due in tutorial class in the week of Sept 19):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-027.pdf&#34; target=&#34;_blank&#34;&gt;Page 27&lt;/a&gt;, Q3). Solve the boundary problem $ u&amp;rsquo;^\prime = 0 $
+for $ 0&amp;lt;x&amp;lt;1 $ with $ u&amp;rsquo;(0)+k u(0) = 0 $ and $ u&amp;rsquo;(1)\pm k u(1)=0 $.
+Do the $+$ and $-$ cases separately. What is special about the case $k=2$?&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-031.pdf&#34; target=&#34;_blank&#34;&gt;Page 31&lt;/a&gt;, Q1). What is the type of each of the following equations?
+
+&lt;ul&gt;
+&lt;li&gt;$ u_{xx}  - u_{xy} + 2 u _y + u_{yy} - 3 u_{yx} + 4u = 0$.&lt;/li&gt;
+&lt;li&gt;$ 9 u_{xx}  + 6 u_{xy} + u_{yy} + u_{x}  = 0$.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-032.pdf&#34; target=&#34;_blank&#34;&gt;Page 32&lt;/a&gt;, Q6). Consider the equation $ 3u_y + u_{xy} = 0$.
+
+&lt;ul&gt;
+&lt;li&gt;What is its type?&lt;/li&gt;
+&lt;li&gt;Find the general solution. (&lt;em&gt;Hint:&lt;/em&gt; Substitute $v=u_y$.)&lt;/li&gt;
+&lt;li&gt;With the auxiliary conditions $u(x,0)= e^{-3x}$ and $u_y(x,0)=0$,
+does a solution exist? Is it unique?&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 3 (Due in tutorial class in the week of Sept 26):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-038.pdf&#34; target=&#34;_blank&#34;&gt;Page 38&lt;/a&gt;, Q1). Solve $ u_{tt} = c^2 u_{xx}$, $u(x,0)=e^x$,
+$u_t(x,0) = \sin x$.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-038.pdf&#34; target=&#34;_blank&#34;&gt;Page 38&lt;/a&gt;, Q2). Solve $ u_{tt} = c^2 u_{xx}$, $u(x,0)=\log (1+x^2)$,
+$u_t(x,0) = 4+x$.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-038.pdf&#34; target=&#34;_blank&#34;&gt;Page 38&lt;/a&gt;, Q9). Solve $u_{xx} - 3 u_{xt} - 4u_{tt} = 0$,
+$u(x,0)=x^2$, $u_t(x,0)=e^x$. (&lt;em&gt;Hint:&lt;/em&gt; Factor the operator as we did for the
+wave equation.)&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-041.pdf&#34; target=&#34;_blank&#34;&gt;Page 41&lt;/a&gt;, Q4). If $u(x,t)$ satisfies the wave equation $u_{tt} = u_{xx}$, prove the identity
+$$u(x+h,t+k) + u(x-h,t-k) = u(x+k,t+h) + u(x-k,t-h)$$
+for all $x,t,h$, and $k$. Sketch the quadrilateral $Q$ whose vertices are the arguments in the identity.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 4 (Due in tutorial class in the week of Oct. 3):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-052.pdf&#34; target=&#34;_blank&#34;&gt;Page 52&lt;/a&gt;, Q3). Use the method of Green&amp;rsquo;s function to solve the diffusion equation $u_t = k u_{xx}$, subject to the initial condition $u(x,0)=\phi(x)$, where $ \phi(x) = e^{3x} $.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-052.pdf&#34; target=&#34;_blank&#34;&gt;Page 52&lt;/a&gt;, Q4). Solve the diffusion equation above if $\phi(x) = e^{-x}$ for $x&amp;gt;0$ and $\phi(x)=0$ for $x&amp;lt;0$.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-052.pdf&#34; target=&#34;_blank&#34;&gt;Page 52&lt;/a&gt;, Q5). Prove properties (a)-(e) seen on &lt;a href=&#34;page-047.pdf&#34; target=&#34;_blank&#34;&gt;Page 47&lt;/a&gt; of the diffusion equation $u_t = k u_{xx}$.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 5 (Due in tutorial class in the week of Oct. 10):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-089.pdf&#34; target=&#34;_blank&#34;&gt;Page 89&lt;/a&gt;, Q2). Consider a metal rod ($0&amp;lt;x&amp;lt;l$), insulated along its sides but not at its ends, which is initially at temperature $=1$. Suddenly both ends are plunged into a bath of temperature $=0$. Write the differential equation, boundary conditions, and initial condition. Write the formula for the temperature $u(x,t)$ at later times. In this problem, &lt;em&gt;assume&lt;/em&gt; the infinite series expansion
+$$ 1 = \frac{4}{\pi} \left( \sin \frac{\pi x}{l} + \frac{1}{3}\sin\frac{3 \pi x}{l} + \frac{1}{5}\sin\frac{5 \pi x}{l}+ \cdots  \right) $$&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-089.pdf&#34; target=&#34;_blank&#34;&gt;Page 89&lt;/a&gt;, Q4). Consider waves in a resistant medium that satisfy the problem
+$$ u_{tt} = c^2 u_{xx} - r u_t \quad \text{for} \quad 0&amp;lt;x&amp;lt;l $$
+$$ u= 0 \quad \text{at both ends} $$
+$$ u(x,0)= \phi(x) \quad u_{t}(x,0) = \psi(x),$$
+where $r$ is a constant, $0&amp;lt;r&amp;lt;2\pi c/l$. Write down the series expansion of the solution.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-092.pdf&#34; target=&#34;_blank&#34;&gt;Page 92&lt;/a&gt;, Q2). Consider the equation $u_{tt}=c^2 u_{xx}$ for $0&amp;lt;x&amp;lt;l$, with the boundary conditions $u_x(0,t) = 0,u(l,t)=0$ (Neumann at the left, Dirichlet at the right).
+
+&lt;ol&gt;
+&lt;li&gt;Show that the eigenfunctions are $\cos\left[ \left( n+\frac{1}{2}\right)\pi x/l\right]$.&lt;/li&gt;
+&lt;li&gt;Write the series expansion for a solution $u(x,t)$.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-092.pdf&#34; target=&#34;_blank&#34;&gt;Page 92&lt;/a&gt;, Q3). Solve the Schrödinger equation $u_t = i k u_{xx}$ for real $k$ in the interval $0&amp;lt;x&amp;lt;l$ with the boundary conditions $u_x(0,t) = 0,u(l,t) = 0$.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 6 (Due in tutorial class in the week of Oct. 16):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-045.pdf&#34; target=&#34;_blank&#34;&gt;Page 45&lt;/a&gt;, Q2). Consider a solution of the diffusion equation
+$u_t = u_{xx}$ in $\{ 0 \leq x \leq l, 0 \leq t &amp;lt; \infty \}$.
+
+&lt;ol&gt;
+&lt;li&gt;Let $M(T) = $ the maximum of $u(x,t)$ in the closed rectangle $\{ 0 \leq x \leq l,
+0 \leq t \leq T \}$. Does $M(T)$ increase or decrease as a function of $T$?&lt;/li&gt;
+&lt;li&gt;Let $m(T) = $ the minimum of $u(x,t)$ in the closed rectangle $\{ 0 \leq x \leq l,
+0 \leq t \leq T \}$. Does $m(T)$ increase or decrease as a function of $T$?&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-046.pdf&#34; target=&#34;_blank&#34;&gt;Page 46&lt;/a&gt;, Q4). Consider the diffusion equation $u_t = u_{xx}$  in $\{ 0&amp;lt;x&amp;lt;1,0&amp;lt;t&amp;lt; \infty \}$
+with $u(0,t)=u(1,t)=0$ and $u(x,0)=4x(1-x)$.
+
+&lt;ol&gt;
+&lt;li&gt;Show that $ 0 &amp;lt; u(x,t) &amp;lt; 1 $ for all $t&amp;gt;0$ and $0&amp;lt;x&amp;lt;1$.&lt;/li&gt;
+&lt;li&gt;Show that $ u(x,t) = u(1-x,t) $ for all $t\geq 0$ and $0 \leq x \leq 1$.&lt;/li&gt;
+&lt;li&gt;Use the energy method to show that $ \int _0 ^1 u^2 dx$ is a strictly decreasing
+function of $t$.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 7 (Due in tutorial class in the week of Oct. 31):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-111.pdf&#34; target=&#34;_blank&#34;&gt;Page 111&lt;/a&gt;, Q2). Let $\phi(x) \equiv x^2$ for $0 \leq x \leq 1 = l$.
+
+&lt;ol&gt;
+&lt;li&gt;Calculate its Fourier sine series.&lt;/li&gt;
+&lt;li&gt;Calculate its Fourier cosine series.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-111.pdf&#34; target=&#34;_blank&#34;&gt;Page 111&lt;/a&gt;, Q4).  Find the Fourier cosine series of the function
+$ | \sin x | $ in the interval $(-\pi,\pi)$. Use it to find the sums
+$$ \sum_{n=1}^\infty \frac{1}{4 n^2 - 1} \quad \text{and} \quad
+\sum_{n=1}^\infty \frac{(-1)^n}{4n^2 - 1}. $$&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-134.pdf&#34; target=&#34;_blank&#34;&gt;Page 134&lt;/a&gt;, Q1). $\sum_{n=0}^\infty (-1)^n x^{2n}$ is a
+geometric series.
+
+&lt;ol&gt;
+&lt;li&gt;Does it converge pointwise in the interval $-1&amp;lt;x&amp;lt;1$ ?&lt;/li&gt;
+&lt;li&gt;Does it converge uniformly in the interval $-1&amp;lt;x&amp;lt;1$ ?&lt;/li&gt;
+&lt;li&gt;Does it converge in the $L^2$ sense in the interval $-1&amp;lt;x&amp;lt;1$ ?&lt;br /&gt;
+(&lt;em&gt;Hint&lt;/em&gt;: You can compute its partial sums explicitly.)&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-134.pdf&#34; target=&#34;_blank&#34;&gt;Page 134&lt;/a&gt;, Q5). Let $\phi(x)=0$ for $0&amp;lt;x&amp;lt;1$ and $\phi(x)=1$
+for $1&amp;lt;x&amp;lt;3$.
+
+&lt;ol&gt;
+&lt;li&gt;Find the first four nonzero terms of its Fourier cosine series explicitly.&lt;/li&gt;
+&lt;li&gt;For each $x$ $(0\leq x \leq 3)$, what is the sum of this series?&lt;/li&gt;
+&lt;li&gt;Does it converge to $\phi(x)$ in the $L^2$ sense? Why?&lt;/li&gt;
+&lt;li&gt;Put $x=0$ to find the sum&lt;br /&gt;
+$$  1 + \frac{1}{2} - \frac{1}{4} - \frac{1}{5} + \frac{1}{7} + \frac{1}{8} - \frac{1}{10} - \frac{1}{11} + \dots .$$&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-134.pdf&#34; target=&#34;_blank&#34;&gt;Page 134&lt;/a&gt;~&lt;a href=&#34;page-135.pdf&#34; target=&#34;_blank&#34;&gt;Page 135&lt;/a&gt;, Q7). Let
+$$ \phi(x) = \left\{ \begin{align} -1-x \quad &amp;amp; \text{for}\quad -1 &amp;lt; x &amp;lt; 0 \\ +1-x \quad &amp;amp; \text{for}\quad 0 &amp;lt; x &amp;lt; 1. \end{align} \right.$$
+
+&lt;ol&gt;
+&lt;li&gt;Find the full Fourier series of $\phi(x)$ in the interval $(-1,1)$.&lt;/li&gt;
+&lt;li&gt;Find the first three nonzero terms explicitly.&lt;/li&gt;
+&lt;li&gt;Does it converge in the mean square sense?&lt;/li&gt;
+&lt;li&gt;Does it converge pointwise?&lt;/li&gt;
+&lt;li&gt;Does it converge uniformly to $\phi(x)$ in the interval $(-1,1)$?&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 8 (Due in tutorial class in the week of Nov. 7):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-160.pdf&#34; target=&#34;_blank&#34;&gt;Page 160&lt;/a&gt;, Q6). Solve $u_{xx} + u_{yy}=1$
+in the annulus $a&amp;lt;r&amp;lt;b$ with $u(x,y)$ vanishing on both parts
+of the boundary $r=a$ and $r=b$.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-160.pdf&#34; target=&#34;_blank&#34;&gt;Page 160&lt;/a&gt;, Q9). A spherical shell with inner radius $1$
+and outer radius $2$ has a steady-state temperature distribution. Its
+inner boundary is held at $100\unicode{x2103}$. Its outer boundary satisfies
+$\partial u / \partial r = - \gamma &amp;lt; 0 $, where $\gamma$ is a constant.
+
+&lt;ol&gt;
+&lt;li&gt;Find the temperature. (&lt;em&gt;Hint&lt;/em&gt;: The temperature depends only on the radius.)&lt;/li&gt;
+&lt;li&gt;What are the hottest and coldest temperatures?&lt;/li&gt;
+&lt;li&gt;Can you choose $\gamma$ so that the temperature on its outer boundary is
+$20\unicode{x2103}$?&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-164.pdf&#34; target=&#34;_blank&#34;&gt;Page 164&lt;/a&gt;~&lt;a href=&#34;page-165.pdf&#34; target=&#34;_blank&#34;&gt;Page 165&lt;/a&gt;, Q1). Solve  $u_{xx} + u_{yy}=0$
+in the rectangle $0&amp;lt;x&amp;lt;a$, $0&amp;lt;y&amp;lt;b$ with the following boundary conditions:
+$$ \begin{align} &amp;amp; u_x  = -a \quad \text{on } x=0 \qquad &amp;amp; u_x  = 0 \quad \text{on } x=a \\  &amp;amp; u_y  = b \quad \text{on } y=0  \qquad &amp;amp; u_y = 0 \quad \text{on } y=b.   \end{align}
+$$
+(&lt;em&gt;Hint&lt;/em&gt;: Note that the necessary condition of Exercise 6.1.11 is satisfied. A shortcut
+is to guess that the solution might be a quadratic polynomial in $x$ and $y$.)&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-165.pdf&#34; target=&#34;_blank&#34;&gt;Page 165&lt;/a&gt;, Q4). Find the harmonic function in the square
+$\{ 0&amp;lt;x&amp;lt;1, 0&amp;lt;y&amp;lt;1 \}$ with the boundary conditions $u(x,0)=x$, $u(x,1)=0$,
+$u_x(0,y)=0$, $u_x( 1,y )=y^2$.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 9 (Due in  tutorial class in the week of Nov. 14):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-172.pdf&#34; target=&#34;_blank&#34;&gt;Page 172&lt;/a&gt;, Q1). Suppose that $u$ is a harmonic function in the disk $D=\{r&amp;lt;2\}$ and that $u=3 \sin 2 \theta + 1$
+for $r=2$. Without finding the solution, answer the following questions:
+
+&lt;ol&gt;
+&lt;li&gt;Find the maximum value of $u$ in $\bar{D}$.&lt;/li&gt;
+&lt;li&gt;Calculate the value of $u$ at the origin.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-172.pdf&#34; target=&#34;_blank&#34;&gt;Page 172&lt;/a&gt;, Q2). Solve $u_{xx} + u_{yy}=0$ in the disk $D=\{r&amp;lt;a\}$ with the boundary condition
+$$ u = 1 + 3 \sin \theta \quad \text{on } r=a. $$&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-175.pdf&#34; target=&#34;_blank&#34;&gt;Page 175&lt;/a&gt;, Q1). Solve $u_{xx} + u_{yy}=0$ in the &lt;em&gt;exterior&lt;/em&gt; $\{r&amp;gt;a\}$ of a disk, with the boundary condition
+$u=1+3\sin\theta$ on $r=a$, and the condition at infinity that $u$ be bounded as $r\longrightarrow\infty$.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-176.pdf&#34; target=&#34;_blank&#34;&gt;Page 176&lt;/a&gt;, Q10).Solve $u_{xx} + u_{yy}=0$ in the quarter-disk $\{ x^2 + y^2 &amp;lt; a^2, x&amp;gt;0, y&amp;gt;0 \}$
+with the following BCs:
+$$ u=0 \quad \text{on } x=0 \text{ and on } y=0 \quad \text{and} \quad \frac{\partial u}{\partial r} = 1 \quad \text{on } r=a.$$
+Write the answer as an infinite series and write the first two nonzero terms explicitly.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 10 (Due in  tutorial class in the week of Nov. 21):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-184.pdf&#34; target=&#34;_blank&#34;&gt;Page 184&lt;/a&gt;, Q2). Prove the uniqueness up to constants of the Neumann problem using the energy method.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-184.pdf&#34; target=&#34;_blank&#34;&gt;Page 184&lt;/a&gt;, Q3). Prove the uniqueness of the Robin problem $ \partial u / \partial n + a(\mathbf{x}) u(\mathbf{x}) = h(\mathbf{x})$
+provided that $a(\mathbf{x})&amp;gt;0$ on the boundary.&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-187.pdf&#34; target=&#34;_blank&#34;&gt;Page 187&lt;/a&gt;, Q1). Derive the representation formula for harmonic functions in two dimensions:
+$$ u(\mathbf{x}_0) = \frac{1}{2\pi} \int_{\text{bdy} D} \left[
+u(\mathbf{x}) \frac{\partial}{\partial n} ( \log |\mathbf{x} - \mathbf{x}_0| ) - \frac{\partial u}{\partial n} \log |\mathbf{x} - \mathbf{x}_0|
+\right] ds.$$&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-187.pdf&#34; target=&#34;_blank&#34;&gt;Page 187&lt;/a&gt;, Q2). Let $\phi(\mathbf{x})$ be any $\mathbf{C}^2$ function defined on all of three-dimensional space that vanishes outside
+some sphere. Show that
+$$ \phi(\mathbf{0}) = - \iiint \frac{1}{|\mathbf{x}|} \Delta \phi(\mathbf{x}) \frac{d\mathbf{x}}{4\pi}. $$
+The integration is taken over the region where $\phi(\mathbf{x})$ is not zero.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Homework 11 (Due in  tutorial class in the week of Nov. 28):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;(&lt;a href=&#34;page-196.pdf&#34; target=&#34;_blank&#34;&gt;Page 196&lt;/a&gt;, Q1). Find the one-dimensional Green&amp;rsquo;s function for the interval $(0,l)$. The three properties defining it can be restated as follows.
+
+&lt;ol&gt;
+&lt;li&gt;It solves $G&amp;rsquo;^\prime (x) = 0$ for $x\neq x_0$ (&amp;ldquo;harmonic&amp;rdquo;).&lt;/li&gt;
+&lt;li&gt;$G(0) = G(l) = 0$.&lt;/li&gt;
+&lt;li&gt;$G(x)$ is continuous at $x_0$ and $G(x) + \frac{1}{2} | x - x_0 |$ is harmonic at $x_0$.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-196.pdf&#34; target=&#34;_blank&#34;&gt;Page 196&lt;/a&gt;, Q6).
+
+&lt;ol&gt;
+&lt;li&gt;Find the Green&amp;rsquo;s function for the half-plane $ \{ (x,y): y&amp;gt;0 \} $.&lt;/li&gt;
+&lt;li&gt;Use it to solve the Dirichlet problem in the half-plane with boundary values $h(x)$.&lt;/li&gt;
+&lt;li&gt;Calculate the solution with $u(x,0) = 1$.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-197.pdf&#34; target=&#34;_blank&#34;&gt;Page 197&lt;/a&gt;, Q9). Find the Green&amp;rsquo;s function for the tilted half-space $ \{ (x,y,z): ax+by+cz&amp;gt;0  \} $. (&lt;em&gt;Hint&lt;/em&gt;: Either do it from scratch by reflecting across the tilted plane, or change variables in the double integral (3)
+$$ 0 = \iint_{\text{bdy }D} \left( u \frac{\partial H}{\partial n} - \frac{\partial u}{\partial n} H \right) dS  $$
+using a linear transformation.)&lt;/li&gt;
+&lt;li&gt;(&lt;a href=&#34;page-197.pdf&#34; target=&#34;_blank&#34;&gt;Page 197&lt;/a&gt;, Q17).
+
+&lt;ol&gt;
+&lt;li&gt;Find the Green&amp;rsquo;s function for the quadrant
+$$ Q = \{ (x,y) : x&amp;gt;0,y&amp;gt;0 \}.$$
+(&lt;em&gt;Hint&lt;/em&gt;: Either use the method of reflection or reduce to the half-plane problem by the transformation $(x,y) \mapsto (x^2-y^2,2xy)$.)
+2, Use your answer in the previous part to solve the Dirichlet problem
+$$ \begin{eqnarray} u_{xx} + u_{yy} = 0 \text{ in } Q, \quad u(0,y) = g(y) \text{ for } y&amp;gt;0, \\  u(x,0) = h(x) \text{ for } x&amp;gt;0. \end{eqnarray} $$&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;answers-and-hints&#34;&gt;Answers and Hints&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Homework 1: &lt;a href=&#34;hw-01.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 2: &lt;a href=&#34;hw-02.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 3: &lt;a href=&#34;hw-03.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 4: &lt;a href=&#34;hw-04.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 5: &lt;a href=&#34;hw-05.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 6: &lt;a href=&#34;hw-06.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 7: &lt;a href=&#34;hw-07.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 8: &lt;a href=&#34;hw-08.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 9: &lt;a href=&#34;hw-09.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 10: &lt;a href=&#34;hw-10.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Homework 11: &lt;a href=&#34;hw-11.pdf&#34; target=&#34;_blank&#34;&gt;Answers and Hints&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>(2016 Spring) Math 2352: Differential Equations</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</guid>
+      <description>&lt;p&gt;This course covers: first order equations, second order equations, Laplace transform method, numerical solution of initial value problems, boundary-value problems.&lt;/p&gt;
+
+&lt;p&gt;There are several problems to be solved for each week. The problems are given in &amp;ldquo;Work Sheets&amp;rdquo;, and solutions &amp;ldquo;Answer Sheets&amp;rdquo;.&lt;/p&gt;
+
+&lt;h2 id=&#34;basic-info&#34;&gt;Basic Info&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Course Name: Differential Equations&lt;/li&gt;
+&lt;li&gt;Lecturers: Prof. Jeffrey Robert Chasnov&lt;/li&gt;
+&lt;li&gt;Sessions: T1A, T1B&lt;/li&gt;
+&lt;li&gt;Course Page: &lt;a href=&#34;http://www.math.ust.hk/~machas/ode/spring2016/index.html&#34; target=&#34;_blank&#34;&gt;http://www.math.ust.hk/~machas/ode/spring2016/index.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Semester: 2016-Spring&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;work-sheets&#34;&gt;Work Sheets&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Complex Numbers &amp;amp; Separable Equations&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht01.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk01_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Linear First-Order Equations&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht02.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk02_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Second-Order Homogeneous ODEs&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht03.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk03_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Inhomogeneous ODEs&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht04.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk04_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The Laplace Transform&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht05.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk05_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Series Solutions&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht06.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk06_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Cauchy-Euler Equations&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht07.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk07_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Systems of Equations&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht08.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk08_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Normal Modes&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht09.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk09_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Fixed Points and Linear Stability&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht10.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk10_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Fourier Series&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wksht11.pdf&#34; target=&#34;_blank&#34;&gt;Work Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;wk11_ans.pdf&#34; target=&#34;_blank&#34;&gt;Answer Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;errata&#34;&gt;Errata&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In wk06_ans.pdf, at the last line of problem 2, the denominator of the coefficient of $x^2$ should be $120$ (instead of $240$).&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wk06_ans_v2.pdf&#34; target=&#34;_blank&#34;&gt;Click here to view the corrected version&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;In wk07_ans.pdf, problem 3-b), the second $e$ in the final result should be instead $1$&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wk07_ans_v2.pdf&#34; target=&#34;_blank&#34;&gt;Click here to view the corrected version&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;In wk08_ans.pdf, problem 2-b), the $2$ in $x_1(t)$ should be deleted (check the program above to see the correct answer). Similarly, in 3-a), there is a missing bracket in $x_1(t)$.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;wk08_ans_v2.pdf&#34; target=&#34;_blank&#34;&gt;Click here to view the corrected version&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;acknowledgement&#34;&gt;Acknowledgement&lt;/h3&gt;
+
+&lt;p&gt;Special thanks to Mr. Yuqi Zhao for providing several solution sheets (those without attributes).&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>(2015 Autumn) Math 2111: Matrix Algebra and Applications</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</guid>
+      <description>&lt;p&gt;This course covers: systems of linear equations; vector spaces; linear transformations; matrix representation of linear transformations; linear operators, eigenvalues and eigenvectors; similarity invariants and canonical forms.&lt;/p&gt;
+
+&lt;p&gt;There are several problems to be solved for each week, except for the first week where we do some reviews on the preliminaries. The problems and solution are given in &amp;ldquo;Problems &amp;amp; Solutions&amp;rdquo;. After the tutorial sessions, I will provide some more detailed explanations based on the outcome.&lt;/p&gt;
+
+&lt;h2 id=&#34;basic-info&#34;&gt;Basic Info&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Course Name: Matrix Algebra and Applications&lt;/li&gt;
+&lt;li&gt;Lecturers: Dr. LEE Wing-Lung&lt;/li&gt;
+&lt;li&gt;Sessions: T1C, T1D&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Course Page: &lt;a href=&#34;http://www.math.ust.hk/~malung/2111.html&#34; target=&#34;_blank&#34;&gt;http://www.math.ust.hk/~malung/2111.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Semester:  2015-Autumn&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;work-sheets&#34;&gt;Work Sheets&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Week 01: Review on basic mathematical notations and concepts. &lt;a href=&#34;tut01.pdf&#34; target=&#34;_blank&#34;&gt;Review&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 02: &lt;a href=&#34;tut02.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints02.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 03: &lt;a href=&#34;tut03.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints03.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 04: &lt;a href=&#34;tut04.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints04.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 05: &lt;a href=&#34;tut05.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints05.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 06: &lt;a href=&#34;tut06.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints06.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 07: &lt;a href=&#34;tut07.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints07.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 08: &lt;a href=&#34;tut08.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints08.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 09: &lt;a href=&#34;tut09.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints09.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 10: &lt;a href=&#34;tut10.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints10.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 11: &lt;a href=&#34;tut11.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints11.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 12: &lt;a href=&#34;tut12.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints12.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Week 13: &lt;a href=&#34;tut13.pdf&#34; target=&#34;_blank&#34;&gt;Problems &amp;amp; Solutions&lt;/a&gt;, &lt;a href=&#34;hints13.pdf&#34; target=&#34;_blank&#34;&gt;Explanations&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;review-materials&#34;&gt;Review Materials&lt;/h3&gt;
+
+&lt;p&gt;Here is a summary of concepts and theorems with illustrative examples, written by Dr. PAN Liang during his earlier duty as the teaching assistant of this course:
+&lt;a href=&#34;notes_pan.pdf&#34; target=&#34;_blank&#34;&gt;Tutorial notes for MATH 2111&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;useful-links&#34;&gt;Useful Links&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;HKUST&amp;rsquo;s &lt;a href=&#34;http://webwork.math.ust.hk/&#34; target=&#34;_blank&#34;&gt;WeBWork&lt;/a&gt; system.&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>(2015 Spring) Math 2352: Differential Equations</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</link>
+      <pubDate>Sun, 01 Mar 2015 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</guid>
+      <description>&lt;p&gt;This course covers: first order equations, second order equations, Laplace transform method, numerical solution of initial value problems, boundary-value problems.&lt;/p&gt;
+
+&lt;h2 id=&#34;basic-info&#34;&gt;Basic Info&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Lecturers: Prof. WU Lixin&lt;/li&gt;
+&lt;li&gt;sessions: T1A, T1B&lt;/li&gt;
+&lt;li&gt;Course Page: &lt;a href=&#34;http://www.math.ust.hk/~malwu/math2352/m2352.html&#34; target=&#34;_blank&#34;&gt;http://www.math.ust.hk/~malwu/math2352/m2352.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Semester: 2015-Spring&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;work-sheets&#34;&gt;Work Sheets&lt;/h2&gt;
+
+&lt;p&gt;There are several problems to be solved for each week. The problems are provided in &amp;ldquo;problem sheets&amp;rdquo;  and solutions in &amp;ldquo;solution sheets&amp;rdquo;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Week01: &lt;a href=&#34;problem_sheet_01p.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_01.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week02: &lt;a href=&#34;problem_sheet_02.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_02.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week03: &lt;a href=&#34;problem_sheet_03.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_03_v2.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week04: &lt;a href=&#34;problem_sheet_04.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_04.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week05: &lt;a href=&#34;problem_sheet_05.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_05.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week06: &lt;a href=&#34;problem_sheet_06.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_06.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week07: &lt;a href=&#34;problem_sheet_07.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_07.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week08: &lt;a href=&#34;problem_sheet_08.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_08.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week09: &lt;a href=&#34;problem_sheet_09.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_09.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week10: &lt;a href=&#34;problem_sheet_10.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_10.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Week11: &lt;a href=&#34;problem_sheet_11.pdf&#34; target=&#34;_blank&#34;&gt;Problems&lt;/a&gt;, &lt;a href=&#34;solution_sheet_11.pdf&#34; target=&#34;_blank&#34;&gt;Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;further-reading&#34;&gt;Further Reading&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;J. J. Gray: &lt;a href=&#34;http://projecteuclid.org/euclid.bams/1183551413&#34; target=&#34;_blank&#34;&gt;Fuchs and the theory of differential equations&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;remarks&#34;&gt;Remarks&lt;/h3&gt;
+
+&lt;p&gt;Note: There are multiple versions of the text book for different regions. The proper one for this course is the &amp;ldquo;International Student Version&amp;rdquo;, as with the one reserved at the university library.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

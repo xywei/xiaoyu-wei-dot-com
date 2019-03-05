@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.1.0">
+  <meta name="generator" content="Hugo 0.54.0" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Xiaoyu Wei">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Outline: Derivatives of the Laplace equations, the wave equations and diffusion equation; Methods to solve equations: separation of variables, Fourier series and integrals and characteristics; maximum principles, Green&rsquo;s functions.
+
+Here you can find homework problems and solutions. The problems are selected from
+the text book (Partial differential equations, an introduction, Walter A. Strauss,  The second edition, John Wiley &amp; Sons,  Ltd.) and are listed here for your convenience.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="https://www.xiaoyu-wei.com/index.xml" type="application/rss+xml" title="Xiaoyu Wei">
+  <link rel="feed" href="https://www.xiaoyu-wei.com/index.xml" type="application/rss+xml" title="Xiaoyu Wei">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@jacobxiaoyuwei">
+  <meta property="twitter:creator" content="@jacobxiaoyuwei">
+  
+  <meta property="og:site_name" content="Xiaoyu Wei">
+  <meta property="og:url" content="https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/">
+  <meta property="og:title" content="(2016 Autumn) Math 4052 Partial Differential Equations | Xiaoyu Wei">
+  <meta property="og:description" content="Outline: Derivatives of the Laplace equations, the wave equations and diffusion equation; Methods to solve equations: separation of variables, Fourier series and integrals and characteristics; maximum principles, Green&rsquo;s functions.
+
+Here you can find homework problems and solutions. The problems are selected from
+the text book (Partial differential equations, an introduction, Walter A. Strauss,  The second edition, John Wiley &amp; Sons,  Ltd.) and are listed here for your convenience."><meta property="og:image" content="https://www.xiaoyu-wei.com/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2019-03-01T00:00:00-06:00">
+  <meta property="article:modified_time" content="2019-03-01T00:00:00-06:00">
+  
+
+  
+
+  
+
+  <title>(2016 Autumn) Math 4052 Partial Differential Equations | Xiaoyu Wei</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" role="textbox" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Xiaoyu Wei</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#featured">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/tutorial/">
+            
+            <span>Tutorials</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">(2016 Autumn) Math 4052 Partial Differential Equations</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2019-03-01 00:00:00 -0600 CST" itemprop="datePublished">
+<meta content="2019-03-01 00:00:00 -0600 CST" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Mar 1, 2019</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%282016%20Autumn%29%20Math%204052%20Partial%20Differential%20Equations&amp;url=https%3a%2f%2fwww.xiaoyu-wei.com%2ftutorial%2f2016autumn-math4052%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.xiaoyu-wei.com%2ftutorial%2f2016autumn-math4052%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.xiaoyu-wei.com%2ftutorial%2f2016autumn-math4052%2f&amp;title=%282016%20Autumn%29%20Math%204052%20Partial%20Differential%20Equations"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.xiaoyu-wei.com%2ftutorial%2f2016autumn-math4052%2f&amp;title=%282016%20Autumn%29%20Math%204052%20Partial%20Differential%20Equations"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%282016%20Autumn%29%20Math%204052%20Partial%20Differential%20Equations&amp;body=https%3a%2f%2fwww.xiaoyu-wei.com%2ftutorial%2f2016autumn-math4052%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      <p>Outline: Derivatives of the Laplace equations, the wave equations and diffusion equation; Methods to solve equations: separation of variables, Fourier series and integrals and characteristics; maximum principles, Green&rsquo;s functions.</p>
+
+<p>Here you can find homework problems and solutions. The problems are selected from
+the text book (<em>Partial differential equations, an introduction, Walter A. Strauss,  The second edition, John Wiley &amp; Sons,  Ltd.</em>) and are listed here for your convenience.</p>
+
+<h2 id="basic-info">Basic Info</h2>
+
+<ul>
+<li>Course Name: Partial Differential Equations</li>
+<li>Lecturers: Chair Prof. Xiao-Ping Wang</li>
+<li>Sessions: T1A (Wednesday 16:30-17:20 at Room 1505), T1B (Monday 17:30-18:20 at Room 1511)</li>
+<li>Course Page: <a href="http://www.math.ust.hk/~mawang/teaching/math4052/math4052a.html" target="_blank">http://www.math.ust.hk/~mawang/teaching/math4052/math4052a.html</a></li>
+<li>Semester: 2016-Autumn</li>
+</ul>
+
+<h4 id="homework-problems">Homework Problems</h4>
+
+<ul>
+<li><p>Homework 1 (Due in tutorial class in the week of Sept 12):</p>
+
+<ol>
+<li>(<a href="page-005.pdf" target="_blank">Page 5</a>, Q2(a)(b)). Which of the following operators are linear?
+
+<ul>
+<li>$ \mathscr{ L } u = u_x + x u_y $.</li>
+<li>$ \mathscr{ L } u = u_x + u u_y $.</li>
+</ul></li>
+<li>(<a href="page-005.pdf" target="_blank">Page 5</a>, Q3(c)(d)). For each of the following equations, state the order and
+whether it is nonlinear, linear inhomogeneous, or linear homogeneous; provide
+reasons.
+
+<ul>
+<li>$ u_t - u_{xxt} + u u_x = 0 $.</li>
+<li>$ u_{tt} - u_{xx} + x^2 = 0 $.</li>
+</ul></li>
+<li>(<a href="page-009.pdf" target="_blank">Page 9</a>, Q1). Solve the first-order equation $ 2u_t + 3u_x = 0 $ with the auxiliary condition
+$ u=\sin x $ when $ t=0 $.</li>
+</ol></li>
+
+<li><p>Homework 2 (Due in tutorial class in the week of Sept 19):</p>
+
+<ol>
+<li>(<a href="page-027.pdf" target="_blank">Page 27</a>, Q3). Solve the boundary problem $ u&rsquo;^\prime = 0 $
+for $ 0&lt;x&lt;1 $ with $ u&rsquo;(0)+k u(0) = 0 $ and $ u&rsquo;(1)\pm k u(1)=0 $.
+Do the $+$ and $-$ cases separately. What is special about the case $k=2$?</li>
+<li>(<a href="page-031.pdf" target="_blank">Page 31</a>, Q1). What is the type of each of the following equations?
+
+<ul>
+<li>$ u_{xx}  - u_{xy} + 2 u _y + u_{yy} - 3 u_{yx} + 4u = 0$.</li>
+<li>$ 9 u_{xx}  + 6 u_{xy} + u_{yy} + u_{x}  = 0$.</li>
+</ul></li>
+<li>(<a href="page-032.pdf" target="_blank">Page 32</a>, Q6). Consider the equation $ 3u_y + u_{xy} = 0$.
+
+<ul>
+<li>What is its type?</li>
+<li>Find the general solution. (<em>Hint:</em> Substitute $v=u_y$.)</li>
+<li>With the auxiliary conditions $u(x,0)= e^{-3x}$ and $u_y(x,0)=0$,
+does a solution exist? Is it unique?</li>
+</ul></li>
+</ol></li>
+
+<li><p>Homework 3 (Due in tutorial class in the week of Sept 26):</p>
+
+<ol>
+<li>(<a href="page-038.pdf" target="_blank">Page 38</a>, Q1). Solve $ u_{tt} = c^2 u_{xx}$, $u(x,0)=e^x$,
+$u_t(x,0) = \sin x$.</li>
+<li>(<a href="page-038.pdf" target="_blank">Page 38</a>, Q2). Solve $ u_{tt} = c^2 u_{xx}$, $u(x,0)=\log (1+x^2)$,
+$u_t(x,0) = 4+x$.</li>
+<li>(<a href="page-038.pdf" target="_blank">Page 38</a>, Q9). Solve $u_{xx} - 3 u_{xt} - 4u_{tt} = 0$,
+$u(x,0)=x^2$, $u_t(x,0)=e^x$. (<em>Hint:</em> Factor the operator as we did for the
+wave equation.)</li>
+<li>(<a href="page-041.pdf" target="_blank">Page 41</a>, Q4). If $u(x,t)$ satisfies the wave equation $u_{tt} = u_{xx}$, prove the identity
+$$u(x+h,t+k) + u(x-h,t-k) = u(x+k,t+h) + u(x-k,t-h)$$
+for all $x,t,h$, and $k$. Sketch the quadrilateral $Q$ whose vertices are the arguments in the identity.</li>
+</ol></li>
+
+<li><p>Homework 4 (Due in tutorial class in the week of Oct. 3):</p>
+
+<ol>
+<li>(<a href="page-052.pdf" target="_blank">Page 52</a>, Q3). Use the method of Green&rsquo;s function to solve the diffusion equation $u_t = k u_{xx}$, subject to the initial condition $u(x,0)=\phi(x)$, where $ \phi(x) = e^{3x} $.</li>
+<li>(<a href="page-052.pdf" target="_blank">Page 52</a>, Q4). Solve the diffusion equation above if $\phi(x) = e^{-x}$ for $x&gt;0$ and $\phi(x)=0$ for $x&lt;0$.</li>
+<li>(<a href="page-052.pdf" target="_blank">Page 52</a>, Q5). Prove properties (a)-(e) seen on <a href="page-047.pdf" target="_blank">Page 47</a> of the diffusion equation $u_t = k u_{xx}$.</li>
+</ol></li>
+
+<li><p>Homework 5 (Due in tutorial class in the week of Oct. 10):</p>
+
+<ol>
+<li>(<a href="page-089.pdf" target="_blank">Page 89</a>, Q2). Consider a metal rod ($0&lt;x&lt;l$), insulated along its sides but not at its ends, which is initially at temperature $=1$. Suddenly both ends are plunged into a bath of temperature $=0$. Write the differential equation, boundary conditions, and initial condition. Write the formula for the temperature $u(x,t)$ at later times. In this problem, <em>assume</em> the infinite series expansion
+$$ 1 = \frac{4}{\pi} \left( \sin \frac{\pi x}{l} + \frac{1}{3}\sin\frac{3 \pi x}{l} + \frac{1}{5}\sin\frac{5 \pi x}{l}+ \cdots  \right) $$</li>
+<li>(<a href="page-089.pdf" target="_blank">Page 89</a>, Q4). Consider waves in a resistant medium that satisfy the problem
+$$ u_{tt} = c^2 u_{xx} - r u_t \quad \text{for} \quad 0&lt;x&lt;l $$
+$$ u= 0 \quad \text{at both ends} $$
+$$ u(x,0)= \phi(x) \quad u_{t}(x,0) = \psi(x),$$
+where $r$ is a constant, $0&lt;r&lt;2\pi c/l$. Write down the series expansion of the solution.</li>
+<li>(<a href="page-092.pdf" target="_blank">Page 92</a>, Q2). Consider the equation $u_{tt}=c^2 u_{xx}$ for $0&lt;x&lt;l$, with the boundary conditions $u_x(0,t) = 0,u(l,t)=0$ (Neumann at the left, Dirichlet at the right).
+
+<ol>
+<li>Show that the eigenfunctions are $\cos\left[ \left( n+\frac{1}{2}\right)\pi x/l\right]$.</li>
+<li>Write the series expansion for a solution $u(x,t)$.</li>
+</ol></li>
+<li>(<a href="page-092.pdf" target="_blank">Page 92</a>, Q3). Solve the Schrödinger equation $u_t = i k u_{xx}$ for real $k$ in the interval $0&lt;x&lt;l$ with the boundary conditions $u_x(0,t) = 0,u(l,t) = 0$.</li>
+</ol></li>
+
+<li><p>Homework 6 (Due in tutorial class in the week of Oct. 16):</p>
+
+<ol>
+<li>(<a href="page-045.pdf" target="_blank">Page 45</a>, Q2). Consider a solution of the diffusion equation
+$u_t = u_{xx}$ in $\{ 0 \leq x \leq l, 0 \leq t &lt; \infty \}$.
+
+<ol>
+<li>Let $M(T) = $ the maximum of $u(x,t)$ in the closed rectangle $\{ 0 \leq x \leq l,
+0 \leq t \leq T \}$. Does $M(T)$ increase or decrease as a function of $T$?</li>
+<li>Let $m(T) = $ the minimum of $u(x,t)$ in the closed rectangle $\{ 0 \leq x \leq l,
+0 \leq t \leq T \}$. Does $m(T)$ increase or decrease as a function of $T$?</li>
+</ol></li>
+<li>(<a href="page-046.pdf" target="_blank">Page 46</a>, Q4). Consider the diffusion equation $u_t = u_{xx}$  in $\{ 0&lt;x&lt;1,0&lt;t&lt; \infty \}$
+with $u(0,t)=u(1,t)=0$ and $u(x,0)=4x(1-x)$.
+
+<ol>
+<li>Show that $ 0 &lt; u(x,t) &lt; 1 $ for all $t&gt;0$ and $0&lt;x&lt;1$.</li>
+<li>Show that $ u(x,t) = u(1-x,t) $ for all $t\geq 0$ and $0 \leq x \leq 1$.</li>
+<li>Use the energy method to show that $ \int _0 ^1 u^2 dx$ is a strictly decreasing
+function of $t$.</li>
+</ol></li>
+</ol></li>
+
+<li><p>Homework 7 (Due in tutorial class in the week of Oct. 31):</p>
+
+<ol>
+<li>(<a href="page-111.pdf" target="_blank">Page 111</a>, Q2). Let $\phi(x) \equiv x^2$ for $0 \leq x \leq 1 = l$.
+
+<ol>
+<li>Calculate its Fourier sine series.</li>
+<li>Calculate its Fourier cosine series.</li>
+</ol></li>
+<li>(<a href="page-111.pdf" target="_blank">Page 111</a>, Q4).  Find the Fourier cosine series of the function
+$ | \sin x | $ in the interval $(-\pi,\pi)$. Use it to find the sums
+$$ \sum_{n=1}^\infty \frac{1}{4 n^2 - 1} \quad \text{and} \quad
+\sum_{n=1}^\infty \frac{(-1)^n}{4n^2 - 1}. $$</li>
+<li>(<a href="page-134.pdf" target="_blank">Page 134</a>, Q1). $\sum_{n=0}^\infty (-1)^n x^{2n}$ is a
+geometric series.
+
+<ol>
+<li>Does it converge pointwise in the interval $-1&lt;x&lt;1$ ?</li>
+<li>Does it converge uniformly in the interval $-1&lt;x&lt;1$ ?</li>
+<li>Does it converge in the $L^2$ sense in the interval $-1&lt;x&lt;1$ ?<br />
+(<em>Hint</em>: You can compute its partial sums explicitly.)</li>
+</ol></li>
+<li>(<a href="page-134.pdf" target="_blank">Page 134</a>, Q5). Let $\phi(x)=0$ for $0&lt;x&lt;1$ and $\phi(x)=1$
+for $1&lt;x&lt;3$.
+
+<ol>
+<li>Find the first four nonzero terms of its Fourier cosine series explicitly.</li>
+<li>For each $x$ $(0\leq x \leq 3)$, what is the sum of this series?</li>
+<li>Does it converge to $\phi(x)$ in the $L^2$ sense? Why?</li>
+<li>Put $x=0$ to find the sum<br />
+$$  1 + \frac{1}{2} - \frac{1}{4} - \frac{1}{5} + \frac{1}{7} + \frac{1}{8} - \frac{1}{10} - \frac{1}{11} + \dots .$$</li>
+</ol></li>
+<li>(<a href="page-134.pdf" target="_blank">Page 134</a>~<a href="page-135.pdf" target="_blank">Page 135</a>, Q7). Let
+$$ \phi(x) = \left\{ \begin{align} -1-x \quad &amp; \text{for}\quad -1 &lt; x &lt; 0 \\ +1-x \quad &amp; \text{for}\quad 0 &lt; x &lt; 1. \end{align} \right.$$
+
+<ol>
+<li>Find the full Fourier series of $\phi(x)$ in the interval $(-1,1)$.</li>
+<li>Find the first three nonzero terms explicitly.</li>
+<li>Does it converge in the mean square sense?</li>
+<li>Does it converge pointwise?</li>
+<li>Does it converge uniformly to $\phi(x)$ in the interval $(-1,1)$?</li>
+</ol></li>
+</ol></li>
+
+<li><p>Homework 8 (Due in tutorial class in the week of Nov. 7):</p>
+
+<ol>
+<li>(<a href="page-160.pdf" target="_blank">Page 160</a>, Q6). Solve $u_{xx} + u_{yy}=1$
+in the annulus $a&lt;r&lt;b$ with $u(x,y)$ vanishing on both parts
+of the boundary $r=a$ and $r=b$.</li>
+<li>(<a href="page-160.pdf" target="_blank">Page 160</a>, Q9). A spherical shell with inner radius $1$
+and outer radius $2$ has a steady-state temperature distribution. Its
+inner boundary is held at $100\unicode{x2103}$. Its outer boundary satisfies
+$\partial u / \partial r = - \gamma &lt; 0 $, where $\gamma$ is a constant.
+
+<ol>
+<li>Find the temperature. (<em>Hint</em>: The temperature depends only on the radius.)</li>
+<li>What are the hottest and coldest temperatures?</li>
+<li>Can you choose $\gamma$ so that the temperature on its outer boundary is
+$20\unicode{x2103}$?</li>
+</ol></li>
+<li>(<a href="page-164.pdf" target="_blank">Page 164</a>~<a href="page-165.pdf" target="_blank">Page 165</a>, Q1). Solve  $u_{xx} + u_{yy}=0$
+in the rectangle $0&lt;x&lt;a$, $0&lt;y&lt;b$ with the following boundary conditions:
+$$ \begin{align} &amp; u_x  = -a \quad \text{on } x=0 \qquad &amp; u_x  = 0 \quad \text{on } x=a \\  &amp; u_y  = b \quad \text{on } y=0  \qquad &amp; u_y = 0 \quad \text{on } y=b.   \end{align}
+$$
+(<em>Hint</em>: Note that the necessary condition of Exercise 6.1.11 is satisfied. A shortcut
+is to guess that the solution might be a quadratic polynomial in $x$ and $y$.)</li>
+<li>(<a href="page-165.pdf" target="_blank">Page 165</a>, Q4). Find the harmonic function in the square
+$\{ 0&lt;x&lt;1, 0&lt;y&lt;1 \}$ with the boundary conditions $u(x,0)=x$, $u(x,1)=0$,
+$u_x(0,y)=0$, $u_x( 1,y )=y^2$.</li>
+</ol></li>
+
+<li><p>Homework 9 (Due in  tutorial class in the week of Nov. 14):</p>
+
+<ol>
+<li>(<a href="page-172.pdf" target="_blank">Page 172</a>, Q1). Suppose that $u$ is a harmonic function in the disk $D=\{r&lt;2\}$ and that $u=3 \sin 2 \theta + 1$
+for $r=2$. Without finding the solution, answer the following questions:
+
+<ol>
+<li>Find the maximum value of $u$ in $\bar{D}$.</li>
+<li>Calculate the value of $u$ at the origin.</li>
+</ol></li>
+<li>(<a href="page-172.pdf" target="_blank">Page 172</a>, Q2). Solve $u_{xx} + u_{yy}=0$ in the disk $D=\{r&lt;a\}$ with the boundary condition
+$$ u = 1 + 3 \sin \theta \quad \text{on } r=a. $$</li>
+<li>(<a href="page-175.pdf" target="_blank">Page 175</a>, Q1). Solve $u_{xx} + u_{yy}=0$ in the <em>exterior</em> $\{r&gt;a\}$ of a disk, with the boundary condition
+$u=1+3\sin\theta$ on $r=a$, and the condition at infinity that $u$ be bounded as $r\longrightarrow\infty$.</li>
+<li>(<a href="page-176.pdf" target="_blank">Page 176</a>, Q10).Solve $u_{xx} + u_{yy}=0$ in the quarter-disk $\{ x^2 + y^2 &lt; a^2, x&gt;0, y&gt;0 \}$
+with the following BCs:
+$$ u=0 \quad \text{on } x=0 \text{ and on } y=0 \quad \text{and} \quad \frac{\partial u}{\partial r} = 1 \quad \text{on } r=a.$$
+Write the answer as an infinite series and write the first two nonzero terms explicitly.</li>
+</ol></li>
+
+<li><p>Homework 10 (Due in  tutorial class in the week of Nov. 21):</p>
+
+<ol>
+<li>(<a href="page-184.pdf" target="_blank">Page 184</a>, Q2). Prove the uniqueness up to constants of the Neumann problem using the energy method.</li>
+<li>(<a href="page-184.pdf" target="_blank">Page 184</a>, Q3). Prove the uniqueness of the Robin problem $ \partial u / \partial n + a(\mathbf{x}) u(\mathbf{x}) = h(\mathbf{x})$
+provided that $a(\mathbf{x})&gt;0$ on the boundary.</li>
+<li>(<a href="page-187.pdf" target="_blank">Page 187</a>, Q1). Derive the representation formula for harmonic functions in two dimensions:
+$$ u(\mathbf{x}_0) = \frac{1}{2\pi} \int_{\text{bdy} D} \left[
+u(\mathbf{x}) \frac{\partial}{\partial n} ( \log |\mathbf{x} - \mathbf{x}_0| ) - \frac{\partial u}{\partial n} \log |\mathbf{x} - \mathbf{x}_0|
+\right] ds.$$</li>
+<li>(<a href="page-187.pdf" target="_blank">Page 187</a>, Q2). Let $\phi(\mathbf{x})$ be any $\mathbf{C}^2$ function defined on all of three-dimensional space that vanishes outside
+some sphere. Show that
+$$ \phi(\mathbf{0}) = - \iiint \frac{1}{|\mathbf{x}|} \Delta \phi(\mathbf{x}) \frac{d\mathbf{x}}{4\pi}. $$
+The integration is taken over the region where $\phi(\mathbf{x})$ is not zero.</li>
+</ol></li>
+
+<li><p>Homework 11 (Due in  tutorial class in the week of Nov. 28):</p>
+
+<ol>
+<li>(<a href="page-196.pdf" target="_blank">Page 196</a>, Q1). Find the one-dimensional Green&rsquo;s function for the interval $(0,l)$. The three properties defining it can be restated as follows.
+
+<ol>
+<li>It solves $G&rsquo;^\prime (x) = 0$ for $x\neq x_0$ (&ldquo;harmonic&rdquo;).</li>
+<li>$G(0) = G(l) = 0$.</li>
+<li>$G(x)$ is continuous at $x_0$ and $G(x) + \frac{1}{2} | x - x_0 |$ is harmonic at $x_0$.</li>
+</ol></li>
+<li>(<a href="page-196.pdf" target="_blank">Page 196</a>, Q6).
+
+<ol>
+<li>Find the Green&rsquo;s function for the half-plane $ \{ (x,y): y&gt;0 \} $.</li>
+<li>Use it to solve the Dirichlet problem in the half-plane with boundary values $h(x)$.</li>
+<li>Calculate the solution with $u(x,0) = 1$.</li>
+</ol></li>
+<li>(<a href="page-197.pdf" target="_blank">Page 197</a>, Q9). Find the Green&rsquo;s function for the tilted half-space $ \{ (x,y,z): ax+by+cz&gt;0  \} $. (<em>Hint</em>: Either do it from scratch by reflecting across the tilted plane, or change variables in the double integral (3)
+$$ 0 = \iint_{\text{bdy }D} \left( u \frac{\partial H}{\partial n} - \frac{\partial u}{\partial n} H \right) dS  $$
+using a linear transformation.)</li>
+<li>(<a href="page-197.pdf" target="_blank">Page 197</a>, Q17).
+
+<ol>
+<li>Find the Green&rsquo;s function for the quadrant
+$$ Q = \{ (x,y) : x&gt;0,y&gt;0 \}.$$
+(<em>Hint</em>: Either use the method of reflection or reduce to the half-plane problem by the transformation $(x,y) \mapsto (x^2-y^2,2xy)$.)
+2, Use your answer in the previous part to solve the Dirichlet problem
+$$ \begin{eqnarray} u_{xx} + u_{yy} = 0 \text{ in } Q, \quad u(0,y) = g(y) \text{ for } y&gt;0, \\  u(x,0) = h(x) \text{ for } x&gt;0. \end{eqnarray} $$</li>
+</ol></li>
+</ol></li>
+</ul>
+
+<h4 id="answers-and-hints">Answers and Hints</h4>
+
+<ul>
+<li>Homework 1: <a href="hw-01.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 2: <a href="hw-02.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 3: <a href="hw-03.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 4: <a href="hw-04.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 5: <a href="hw-05.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 6: <a href="hw-06.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 7: <a href="hw-07.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 8: <a href="hw-08.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 9: <a href="hw-09.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 10: <a href="hw-10.pdf" target="_blank">Answers and Hints</a>.</li>
+<li>Homework 11: <a href="hw-11.pdf" target="_blank">Answers and Hints</a>.</li>
+</ul>
+    </div>
+
+    
+
+
+    
+      
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  
+  <img class="portrait mr-3" src="/author/admin/avatar_huda6f8eb49c6b90e7ff60e13123e04490_15160_250x250_fill_lanczos_center_2.png" itemprop="image" alt="Avatar">
+  
+
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/authors/admin">Xiaoyu Wei</a></h5>
+    <h6 class="card-subtitle">Postdoctoral Research Associate</h6>
+    <p class="card-text" itemprop="description">My research interests include high-order numerical methods for PDEs, integral equation methods and fast algorithms.</p>
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="/#contact" >
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://twitter.com/jacobxiaoyuwei" target="_blank" rel="noopener">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://scholar.google.com/citations?hl=en&amp;user=zWARAnQAAAAJ" target="_blank" rel="noopener">
+          <i class="ai ai-google-scholar"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://github.com/xywei" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>. &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.d7381f2d79e6271d4da28f474f49096c.js"></script>
+
+  </body>
+</html>
+

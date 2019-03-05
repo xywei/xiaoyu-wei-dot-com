@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tutorials on Xiaoyu Wei</title>
+    <link>https://www.xiaoyu-wei.com/tutorial/</link>
+    <description>Recent content in Tutorials on Xiaoyu Wei</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;&lt;img alt=&#34;Creative Commons License&#34; style=&#34;border-width:0&#34; src=&#34;https://i.creativecommons.org/l/by-sa/4.0/80x15.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.</copyright>
+    <lastBuildDate>Fri, 01 Mar 2019 00:00:00 -0600</lastBuildDate>
+    
+	<atom:link href="https://www.xiaoyu-wei.com/tutorial/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>(2017 Spring) Math 2011 Introduction to Multivariable Calculus</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</guid>
+      <description>&lt;p&gt;Differentiation in several variables, with applications in approximation, maximum and minimum and geometry. Integration in several variables, vector analysis.&lt;/p&gt;
+
+&lt;p&gt;Here you can find tutorial materials and course related resources.
+Homework will be assigned through the online WeBWorK system located at &lt;a href=&#34;https://webwork.math.ust.hk/webwork2/&#34; target=&#34;_blank&#34;&gt;https://webwork.math.ust.hk/webwork2/&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>(2016 Autumn) Math 4052 Partial Differential Equations</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</guid>
+      <description>&lt;p&gt;Outline: Derivatives of the Laplace equations, the wave equations and diffusion equation; Methods to solve equations: separation of variables, Fourier series and integrals and characteristics; maximum principles, Green&amp;rsquo;s functions.&lt;/p&gt;
+
+&lt;p&gt;Here you can find homework problems and solutions. The problems are selected from
+the text book (&lt;em&gt;Partial differential equations, an introduction, Walter A. Strauss,  The second edition, John Wiley &amp;amp; Sons,  Ltd.&lt;/em&gt;) and are listed here for your convenience.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>(2016 Spring) Math 2352: Differential Equations</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</guid>
+      <description>&lt;p&gt;This course covers: first order equations, second order equations, Laplace transform method, numerical solution of initial value problems, boundary-value problems.&lt;/p&gt;
+
+&lt;p&gt;There are several problems to be solved for each week. The problems are given in &amp;ldquo;Work Sheets&amp;rdquo;, and solutions &amp;ldquo;Answer Sheets&amp;rdquo;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>(2015 Autumn) Math 2111: Matrix Algebra and Applications</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</guid>
+      <description>&lt;p&gt;This course covers: systems of linear equations; vector spaces; linear transformations; matrix representation of linear transformations; linear operators, eigenvalues and eigenvectors; similarity invariants and canonical forms.&lt;/p&gt;
+
+&lt;p&gt;There are several problems to be solved for each week, except for the first week where we do some reviews on the preliminaries. The problems and solution are given in &amp;ldquo;Problems &amp;amp; Solutions&amp;rdquo;. After the tutorial sessions, I will provide some more detailed explanations based on the outcome.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>(2015 Spring) Math 2352: Differential Equations</title>
+      <link>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</link>
+      <pubDate>Sun, 01 Mar 2015 00:00:00 -0600</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</guid>
+      <description>&lt;p&gt;This course covers: first order equations, second order equations, Laplace transform method, numerical solution of initial value problems, boundary-value problems.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

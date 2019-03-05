@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</loc>
+      <lastmod>2019-03-01T00:00:00-06:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</loc>
+      <lastmod>2019-03-01T00:00:00-06:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</loc>
+      <lastmod>2019-03-01T00:00:00-06:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</loc>
+      <lastmod>2019-03-01T00:00:00-06:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</loc>
+      <lastmod>2019-03-01T00:00:00-06:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/author/admin/</loc>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/author/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/categories/" hreflang="en"/>
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/categories/" hreflang="zh"/>
+    
+      <loc>https://www.xiaoyu-wei.com/categories/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/post/</loc>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/publication/</loc>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/talk/</loc>
+    </url>
+    
+  
+    
+    <url>
+    
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/tags/" hreflang="en"/>
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/tags/" hreflang="zh"/>
+    
+      <loc>https://www.xiaoyu-wei.com/tags/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>https://www.xiaoyu-wei.com/tutorial/</loc>
+      <lastmod>2019-03-01T00:00:00-06:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/" hreflang="en"/>
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/" hreflang="zh"/>
+    
+      <loc>https://www.xiaoyu-wei.com/</loc>
+      <lastmod>2019-03-01T00:00:00-06:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+</urlset>
