@@ -1,0 +1,45 @@
+title = "Xiaoyu Wei"
+baseurl = "https://www.xiaoyu-wei.com/"
+
+copyright = '<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.'
+
+# Enable analytics by entering Google Analytics tracking ID
+googleAnalytics = ""
+
+# Enable comments by entering Disqus shortname
+disqusShortname = ""
+
+theme = "academic"
+enableGitInfo = false
+
+# Default language to use (if you setup multilingual support)
+defaultContentLanguage = "en"
+hasCJKLanguage = true
+defaultContentLanguageInSubdir = false
+
+paginate = 10
+enableEmoji = true
+footnotereturnlinkcontents = "<sup>^</sup>"
+ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+preserveTaxonomyNames = true
+
+[outputs]
+  home = [ "HTML", "CSS", "RSS", "JSON" ]
+  section = [ "HTML", "RSS" ]
+
+# Configure BlackFriday Markdown rendering.
+#   See: https://gohugo.io/getting-started/configuration/#configure-blackfriday
+[blackfriday]
+  hrefTargetBlank = true  # `true` opens external links in a new tab. See https://github.com/gohugoio/hugo/issues/2424
+	angledQuotes = false
+	latexDashes = true
+  extensions = ["backslashLineBreak"]
+
+[imaging]
+  resampleFilter = "lanczos"
+  quality = 90
+  anchor = "smart"  # Smart or Center
+
+[taxonomies]
+  tag = "tags"
+  author = "categories"
