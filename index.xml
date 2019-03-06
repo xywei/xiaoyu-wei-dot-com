@@ -596,5 +596,14 @@ $$ \begin{eqnarray} u_{xx} + u_{yy} = 0 \text{ in } Q, \quad u(0,y) = g(y) \text
 </description>
     </item>
     
+    <item>
+      <title>An Integral Equation Method for the Cahn-Hilliard Equation in the Wetting Problem</title>
+      <link>https://www.xiaoyu-wei.com/talk/cahn-hilliard/</link>
+      <pubDate>Thu, 26 Feb 2009 15:05:00 +0000</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/talk/cahn-hilliard/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
