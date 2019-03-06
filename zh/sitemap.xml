@@ -4,6 +4,27 @@
     
     <url>
     
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/author/admin/" hreflang="zh"/>
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/author/admin/" hreflang="en"/>
+    
+      <loc>https://www.xiaoyu-wei.com/zh/author/admin/</loc>
+    </url>
+    
+  
+    
+    <url>
+    
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/author/" hreflang="zh"/>
+      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/author/" hreflang="en"/>
+    
+      <loc>https://www.xiaoyu-wei.com/zh/author/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/categories/" hreflang="zh"/>
       <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/categories/" hreflang="en"/>
     
