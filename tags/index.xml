@@ -7,9 +7,37 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;&lt;img alt=&#34;Creative Commons License&#34; style=&#34;border-width:0&#34; src=&#34;https://i.creativecommons.org/l/by-sa/4.0/80x15.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.</copyright>
+    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.xiaoyu-wei.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>FFT</title>
+      <link>https://www.xiaoyu-wei.com/tags/fft/</link>
+      <pubDate>Sun, 01 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tags/fft/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Image Segmentation</title>
+      <link>https://www.xiaoyu-wei.com/tags/image-segmentation/</link>
+      <pubDate>Sun, 01 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tags/image-segmentation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MBO</title>
+      <link>https://www.xiaoyu-wei.com/tags/mbo/</link>
+      <pubDate>Sun, 01 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/tags/mbo/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>
