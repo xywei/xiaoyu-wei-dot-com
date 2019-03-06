@@ -573,5 +573,28 @@ $$ \begin{eqnarray} u_{xx} + u_{yy} = 0 \text{ in } Q, \quad u(0,y) = g(y) \text
 &lt;p&gt;Note: There are multiple versions of the text book for different regions. The proper one for this course is the &amp;ldquo;International Student Version&amp;rdquo;, as with the one reserved at the university library.&lt;/p&gt;</description>
     </item>
     
+    <item>
+      <title>An Efficient Iterative Thresholding Method for Image Segmentation</title>
+      <link>https://www.xiaoyu-wei.com/publication/2016-iterative-thresholding/</link>
+      <pubDate>Sun, 01 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.xiaoyu-wei.com/publication/2016-iterative-thresholding/</guid>
+      <description>
+
+&lt;h3 id=&#34;code&#34;&gt;Code&lt;/h3&gt;
+
+&lt;p&gt;A Matlab implementation is available at
+&lt;a href=&#34;https://github.com/xywei/threshseg&#34; target=&#34;_blank&#34;&gt;https://github.com/xywei/threshseg&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;gallery&#34;&gt;Gallery&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Segmentation example: &lt;img src=&#34;Flowers.png&#34; alt=&#34;Segmentation&#34; /&gt;&lt;/li&gt;
+&lt;li&gt;Energy decaying property: &lt;img src=&#34;Energy.png&#34; alt=&#34;Energy&#34; /&gt;&lt;/li&gt;
+&lt;li&gt;Graphical user interface: &lt;img src=&#34;GUI.png&#34; alt=&#34;GUI&#34; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
