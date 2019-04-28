@@ -51,7 +51,9 @@ time_format = "3:04 PM"
 
 # Enter contact details (optional). To hide a field, clear it to "".
 email = "xywei@pm.me"
-gpg_key_fingerprint = "5779E52C7153F269"
+gpg_key_fingerprint = "95DA A2EB E8B4 AA3D 281E  9C7C 5779 E52C 7153 F269"
+gpg_key_id = "7153F269"
+gpg_key_url = "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x5779E52C7153F269"
 phone = ""
 address = "Dept. of Computer Science, 201 N Goodwin Ave, Urbana, IL 61801, USA"
 

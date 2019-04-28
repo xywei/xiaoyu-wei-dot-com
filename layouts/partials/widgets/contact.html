@@ -57,7 +57,7 @@
       <li>
         <i class="fa-li fas fa-lock fa-2x" aria-hidden="true"></i>
         <span id="person-gpg-key" itemprop="key-fingerprint">
-        {{- if $autolink }}GPG key fingerprint: <a href="https://pgp.mit.edu/pks/lookup?op=get&search=0x{{ . }}" target="_blank">{{ . }}</a>{{ else }}{{ . }}{{ end -}}
+          {{- if $autolink }}GPG key fingerprint: <a href="{{ site.Params.gpg_key_url }}" target="_blank">{{ . }}</a>{{ else }}{{ . }}{{ end -}}
         </span>
       </li>
       {{ end }}
