@@ -9,7 +9,8 @@ go:
     - master
 
 install:
-    - go get github.com/gohugoio/hugo    # consume time 70.85s
+    - wget -O /tmp/hugo.deb https://github.com/gohugoio/hugo/releases/download/v0.55.4/hugo_extended_0.55.4_Linux-64bit.deb
+    - sudo dpkg -i /tmp/hugo.deb
 
 before_script:
     - git submodule update --init --recursive
