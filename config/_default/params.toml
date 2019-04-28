@@ -51,6 +51,7 @@ time_format = "3:04 PM"
 
 # Enter contact details (optional). To hide a field, clear it to "".
 email = "xywei@pm.me"
+gpg_key_fingerprint = "5779E52C7153F269"
 phone = ""
 address = "Dept. of Computer Science, 201 N Goodwin Ave, Urbana, IL 61801, USA"
 
@@ -88,10 +89,10 @@ contact_links = [
 #   1: Google Maps
 #   2: OpenStreetMap (Mapnik)
 #   3: OpenStreetMap (Mapbox)
-map = 0
+map = 2
 map_api_key = ""
-latitude = "37.4275"
-longitude = "-122.1697"
+latitude = "40.11386"
+longitude = "-88.22491"
 zoom = 15
 
 ############################
