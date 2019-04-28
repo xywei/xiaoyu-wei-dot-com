@@ -1,58 +1,79 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/author/admin/" hreflang="zh"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/author/admin/" hreflang="en"/>
-    
-      <loc>https://www.xiaoyu-wei.com/zh/author/admin/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/zh/author/admin/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/author/admin/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/author/admin/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/author/" hreflang="zh"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/author/" hreflang="en"/>
-    
-      <loc>https://www.xiaoyu-wei.com/zh/author/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/zh/author/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/author/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/author/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/categories/" hreflang="zh"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/categories/" hreflang="en"/>
-    
-      <loc>https://www.xiaoyu-wei.com/zh/categories/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/zh/categories/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/categories/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/tags/" hreflang="zh"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/tags/" hreflang="en"/>
-    
-      <loc>https://www.xiaoyu-wei.com/zh/tags/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/zh/tags/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/tags/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/" hreflang="zh"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/" hreflang="en"/>
-    
-      <loc>https://www.xiaoyu-wei.com/zh/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/zh/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/"
+                />
+  </url>
   
 </urlset>

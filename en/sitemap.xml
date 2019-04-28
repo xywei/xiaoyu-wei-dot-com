@@ -1,224 +1,182 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</loc>
-      <lastmod>2019-03-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tutorial/2017spring-math2011/</loc>
+    <lastmod>2019-03-01T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</loc>
-      <lastmod>2019-03-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tutorial/2016autumn-math4052/</loc>
+    <lastmod>2019-03-01T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</loc>
-      <lastmod>2019-03-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tutorial/2016spring-math2352/</loc>
+    <lastmod>2019-03-01T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</loc>
-      <lastmod>2019-03-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tutorial/2015autumn-math2111/</loc>
+    <lastmod>2019-03-01T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</loc>
-      <lastmod>2019-03-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tutorial/2015spring-math2352/</loc>
+    <lastmod>2019-03-01T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/publication/2016-iterative-thresholding/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tutorial/</loc>
+    <lastmod>2019-03-01T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/talk/cahn-hilliard/</loc>
-      <lastmod>2009-02-26T15:05:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/</loc>
+    <lastmod>2019-03-01T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/author/admin/" hreflang="en"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/author/admin/" hreflang="zh"/>
-    
-      <loc>https://www.xiaoyu-wei.com/author/admin/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/publication/2016-iterative-thresholding/</loc>
+    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/authors/andreas-kloeckner/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tags/fft/</loc>
+    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/authors/dong-wang/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tags/image-segmentation/</loc>
+    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/authors/haohan-li/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tags/mbo/</loc>
+    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/authors/shidong-jiang/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/publication/</loc>
+    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/authors/xiao-ping-wang/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/tags/</loc>
+    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/tags/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/authors/xiaoyu-wei/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/talk/cahn-hilliard/</loc>
+    <lastmod>2009-02-26T15:05:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/author/" hreflang="en"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/author/" hreflang="zh"/>
-    
-      <loc>https://www.xiaoyu-wei.com/author/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/talk/</loc>
+    <lastmod>2009-02-26T15:05:00+00:00</lastmod>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/authors/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/author/admin/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/author/admin/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/author/admin/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/categories/" hreflang="en"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/categories/" hreflang="zh"/>
-    
-      <loc>https://www.xiaoyu-wei.com/categories/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/authors/andreas-kloeckner/</loc>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tags/fft/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/authors/dong-wang/</loc>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tags/image-segmentation/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/authors/haohan-li/</loc>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tags/mbo/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/authors/shidong-jiang/</loc>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/post/</loc>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/authors/xiao-ping-wang/</loc>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/publication/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/authors/xiaoyu-wei/</loc>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/talk/</loc>
-      <lastmod>2009-02-26T15:05:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/author/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/author/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/author/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/tags/" hreflang="en"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/tags/" hreflang="zh"/>
-    
-      <loc>https://www.xiaoyu-wei.com/tags/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/authors/</loc>
+    <priority>0</priority>
+  </url>
   
-    
-    <url>
-    
-      <loc>https://www.xiaoyu-wei.com/tutorial/</loc>
-      <lastmod>2019-03-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/categories/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://www.xiaoyu-wei.com/zh/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.xiaoyu-wei.com/categories/"
+                />
+  </url>
   
-    
-    <url>
-    
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/" hreflang="en"/>
-      <xhtml:link rel="alternate" href="https://www.xiaoyu-wei.com/zh/" hreflang="zh"/>
-    
-      <loc>https://www.xiaoyu-wei.com/</loc>
-      <lastmod>2019-03-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.xiaoyu-wei.com/post/</loc>
+  </url>
   
 </urlset>
