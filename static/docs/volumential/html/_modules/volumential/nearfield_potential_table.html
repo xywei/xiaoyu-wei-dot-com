@@ -1,0 +1,1127 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>volumential.nearfield_potential_table &mdash; Volumential 2017.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Volumential
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2017
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sphinx.html">Documentation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../indices_tables.html">Indices and tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Volumential</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>volumential.nearfield_potential_table</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for volumential.nearfield_potential_table</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2017 - 2018 Xiaoyu Wei&quot;</span>
+
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="s2">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="s2">in the Software without restriction, including without limitation the rights</span>
+<span class="s2">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="s2">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="s2">furnished to do so, subject to the following conditions:</span>
+
+<span class="s2">The above copyright notice and this permission notice shall be included in</span>
+<span class="s2">all copies or substantial portions of the Software.</span>
+
+<span class="s2">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="s2">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="s2">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="s2">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="s2">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="s2">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="s2">THE SOFTWARE.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">BarycentricInterpolator</span> <span class="k">as</span> <span class="n">Interpolator</span>
+
+<span class="kn">import</span> <span class="nn">volumential.list1_gallery</span> <span class="k">as</span> <span class="nn">gallery</span>
+<span class="kn">import</span> <span class="nn">volumential.singular_integral_2d</span> <span class="k">as</span> <span class="nn">squad</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># NOTE: Cannot use sumpy kernels for &quot;Transform&quot; since they</span>
+<span class="c1"># do not work with multiprocess.</span>
+<span class="c1"># e.g. with LaplaceKernel it will complain &quot;AttributeError:</span>
+<span class="c1"># &#39;LaplaceKernel&#39; object has no attribute &#39;expression&#39;&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_self_tp</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">tpd</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Self tensor product</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">tpd</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">vec</span>
+    <span class="k">elif</span> <span class="n">tpd</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">),</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">)])</span>
+    <span class="k">elif</span> <span class="n">tpd</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="o">*</span> <span class="n">vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">),</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="o">*</span> <span class="n">vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">)])</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">def</span> <span class="nf">_orthonormal</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+    <span class="n">eb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">eb</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">eb</span>
+
+
+<span class="k">def</span> <span class="nf">constant_one</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+
+<span class="c1"># {{{ kernel function getters</span>
+
+
+<span class="k">def</span> <span class="nf">get_laplace</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Kernel function Laplace&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D not implemented.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">def</span> <span class="nf">laplace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="k">return</span> <span class="n">laplace</span>
+
+
+<span class="k">def</span> <span class="nf">get_cahn_hilliard</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">approx_at_origin</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Kernel function Laplace&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D not implemented.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">def</span> <span class="nf">quadratic_formula_1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">quadratic_formula_2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">citardauq_formula_1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">c</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">citardauq_formula_2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">c</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">c</span>
+
+        <span class="n">root11</span> <span class="o">=</span> <span class="n">quadratic_formula_1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="n">root12</span> <span class="o">=</span> <span class="n">citardauq_formula_1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">root11</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">root12</span><span class="p">)):</span>
+            <span class="n">lam1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">root11</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lam1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">root12</span><span class="p">)</span>
+
+        <span class="n">root21</span> <span class="o">=</span> <span class="n">quadratic_formula_2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="n">root22</span> <span class="o">=</span> <span class="n">citardauq_formula_2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">root21</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">root22</span><span class="p">)):</span>
+            <span class="n">lam1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">root21</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lam2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">root22</span><span class="p">)</span>
+
+        <span class="c1"># assert np.abs(f(lam1**2)) &lt; 1e-12</span>
+        <span class="c1"># assert np.abs(f(lam2**2)) &lt; 1e-12</span>
+
+        <span class="n">lambdas</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">lam1</span><span class="p">,</span> <span class="n">lam2</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="nb">abs</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># biggest first</span>
+        <span class="n">lam1</span> <span class="o">=</span> <span class="n">lambdas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">lam2</span> <span class="o">=</span> <span class="n">lambdas</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="kn">import</span> <span class="nn">scipy.special</span> <span class="k">as</span> <span class="nn">sp</span>
+
+        <span class="k">def</span> <span class="nf">cahn_hilliard</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="c1"># Leading order removed analytically</span>
+            <span class="k">def</span> <span class="nf">k0_approx</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+                <span class="n">euler_constant</span> <span class="o">=</span> <span class="mf">0.57721566490153286060651209008240243104215933593992</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">rr</span> <span class="o">*</span> <span class="n">lam</span>
+                <span class="k">return</span> <span class="p">(</span>
+                    <span class="o">-</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span> <span class="o">+</span> <span class="n">euler_constant</span><span class="p">)</span>
+                    <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">euler_constant</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">r</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">64</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">r</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">128</span><span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">approx_at_origin</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span>
+                    <span class="o">-</span><span class="mi">1</span>
+                    <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">lam1</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">lam2</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="n">k0_approx</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">lam1</span><span class="p">)</span> <span class="o">-</span> <span class="n">k0_approx</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">lam2</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span>
+                    <span class="o">-</span><span class="mi">1</span>
+                    <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">lam1</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">lam2</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">kn</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">lam1</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="n">sp</span><span class="o">.</span><span class="n">kn</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">lam2</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cahn_hilliard</span>
+
+
+<span class="k">def</span> <span class="nf">get_cahn_hilliard_laplacian</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+        <span class="s2">&quot;Transform method under construction, &quot;</span> <span class="s2">&quot;use DrosteSum instead&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># }}} End kernel function getters</span>
+
+
+<span class="k">def</span> <span class="nf">sumpy_kernel_to_lambda</span><span class="p">(</span><span class="n">sknl</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="n">Symbol</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">lambdify</span>
+
+    <span class="n">var_name_prefix</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span>
+    <span class="n">var_names</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">var_name_prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sknl</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+    <span class="n">arg_names</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="n">var_names</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">Symbol</span><span class="p">(</span><span class="n">var_name_prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sknl</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">lmd</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span>
+            <span class="n">arg_names</span><span class="p">,</span> <span class="n">sknl</span><span class="o">.</span><span class="n">get_expression</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">*</span> <span class="n">sknl</span><span class="o">.</span><span class="n">get_global_scaling_const</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">lmd</span><span class="p">(</span><span class="o">*</span><span class="n">coord</span><span class="p">[:</span> <span class="n">sknl</span><span class="o">.</span><span class="n">dim</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">func</span>
+
+
+<span class="c1"># {{{ table data structure</span>
+
+
+<div class="viewcode-block" id="NearFieldInteractionTable"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable">[docs]</a><span class="k">class</span> <span class="nc">NearFieldInteractionTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for a near-field interaction table.</span>
+
+<span class="sd">        A near-field interaction table stores precomputed singular integrals</span>
+<span class="sd">        on template boxes and supports transforms to actual boxes on lookup.</span>
+<span class="sd">        The query process is done through scaling the entries based on actual</span>
+<span class="sd">        box sized.</span>
+
+<span class="sd">        Orientations are ordered counter-clockwise.</span>
+
+<span class="sd">        A template box is one of [0,1]^dim</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># {{{ constructor</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">quad_order</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;gauss-legendre&quot;</span><span class="p">,</span>
+        <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">kernel_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kernel_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">sumpy_kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">build_method</span><span class="o">=</span><span class="s2">&quot;Transform&quot;</span><span class="p">,</span>
+        <span class="n">source_box_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        kernel_type determines how the kernel is scaled w.r.t. box size.</span>
+<span class="sd">        build_method can be &quot;Transform&quot; or &quot;DrosteSum&quot;.</span>
+
+<span class="sd">        The source box is [0, source_box_extent]^dim</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">=</span> <span class="n">quad_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+
+        <span class="k">assert</span> <span class="n">source_box_extent</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">=</span> <span class="n">source_box_extent</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_method</span> <span class="o">=</span> <span class="n">build_method</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+
+            <span class="c1"># Constant kernel can be used for fun/testing</span>
+            <span class="k">if</span> <span class="n">kernel_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kernel_func</span> <span class="o">=</span> <span class="n">constant_one</span>
+                <span class="n">kernel_type</span> <span class="o">=</span> <span class="s2">&quot;const&quot;</span>
+                <span class="c1"># for DrosteSum kernel_func is unused</span>
+                <span class="k">if</span> <span class="n">build_method</span> <span class="o">==</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;setting kernel_func to be constant.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Kernel function differs from OpenCL&#39;s kernels</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_func</span> <span class="o">=</span> <span class="n">kernel_func</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">kernel_type</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span> <span class="o">=</span> <span class="n">sumpy_kernel</span>
+
+            <span class="k">if</span> <span class="n">build_method</span> <span class="o">==</span> <span class="s2">&quot;DrosteSum&quot;</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">sumpy_kernel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">build_method</span> <span class="o">==</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use DrosteSum for 3d&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_func</span> <span class="o">=</span> <span class="n">kernel_func</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">kernel_type</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span> <span class="o">=</span> <span class="n">sumpy_kernel</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="c1"># number of quad points per box</span>
+        <span class="c1"># equals to the number of modes per box</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">**</span> <span class="n">dim</span>
+
+        <span class="c1"># Normalizers for polynomial modes</span>
+        <span class="c1"># Needed only when we want to rescale log type kernels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode_normalizers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="c1"># number of (source_mode, target_point) pairs between two boxes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># possible interaction cases</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_encode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_indices</span> <span class="o">=</span> \
+                <span class="n">gallery</span><span class="o">.</span><span class="n">generate_list1_gallery</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_cases</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;gauss-legendre&quot;</span><span class="p">:</span>
+            <span class="c1"># quad points in [-1,1]</span>
+            <span class="kn">import</span> <span class="nn">volumential.meshgen</span> <span class="k">as</span> <span class="nn">mg</span>
+
+            <span class="c1"># FIXME: 3D support</span>
+            <span class="n">q_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">make_uniform_cubic_grid</span><span class="p">(</span>
+                <span class="n">degree</span><span class="o">=</span><span class="n">quad_order</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+            <span class="p">)</span>
+            <span class="c1"># map to source box</span>
+            <span class="n">mapped_q_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">*</span> <span class="p">(</span><span class="n">qp</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">qp</span> <span class="ow">in</span> <span class="n">q_points</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="c1"># sort in dictionary order, preserve only the leading</span>
+            <span class="c1"># digits to prevent floating point errors from polluting</span>
+            <span class="c1"># the ordering.</span>
+            <span class="n">q_points_ordering</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mapped_q_points</span><span class="p">)),</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">mapped_q_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">q_points</span> <span class="o">=</span> <span class="n">mapped_q_points</span><span class="p">[</span><span class="n">q_points_ordering</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_pairs</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_cases</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+        <span class="n">total_evals</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+
+        <span class="kn">from</span> <span class="nn">pytools</span> <span class="k">import</span> <span class="n">ProgressBar</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="s2">&quot;Building table:&quot;</span><span class="p">,</span> <span class="n">total_evals</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_built</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># }}} End constructor</span>
+
+    <span class="c1"># {{{ encode to table index</span>
+
+    <span class="k">def</span> <span class="nf">get_entry_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_mode_index</span><span class="p">,</span> <span class="n">target_point_index</span><span class="p">,</span> <span class="n">case_id</span><span class="p">):</span>
+
+        <span class="k">assert</span> <span class="n">source_mode_index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">source_mode_index</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+        <span class="k">assert</span> <span class="n">target_point_index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">target_point_index</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+        <span class="n">pair_id</span> <span class="o">=</span> <span class="n">source_mode_index</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span> <span class="o">+</span> <span class="n">target_point_index</span>
+
+        <span class="k">return</span> <span class="n">case_id</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pairs</span> <span class="o">+</span> <span class="n">pair_id</span>
+
+    <span class="c1"># }}} End encode to table index</span>
+
+    <span class="c1"># {{{ decode table index to entry info</span>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.decode_index"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.decode_index">[docs]</a>    <span class="k">def</span> <span class="nf">decode_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This is the inverse function of get_entry_index()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">index_info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="n">case_id</span> <span class="o">=</span> <span class="n">entry_id</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pairs</span>
+        <span class="n">pair_id</span> <span class="o">=</span> <span class="n">entry_id</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pairs</span>
+
+        <span class="n">source_mode_index</span> <span class="o">=</span> <span class="n">pair_id</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+        <span class="n">target_point_index</span> <span class="o">=</span> <span class="n">pair_id</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+
+        <span class="n">index_info</span><span class="p">[</span><span class="s2">&quot;case_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">case_id</span>
+        <span class="n">index_info</span><span class="p">[</span><span class="s2">&quot;source_mode_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_mode_index</span>
+        <span class="n">index_info</span><span class="p">[</span><span class="s2">&quot;target_point_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_point_index</span>
+
+        <span class="k">return</span> <span class="n">index_info</span></div>
+
+    <span class="c1"># }}} End decode table index to entry info</span>
+
+    <span class="c1"># {{{ basis modes in the template box</span>
+
+    <span class="k">def</span> <span class="nf">unwrap_mode_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_index</span><span class="p">):</span>
+        <span class="c1"># NOTE: these two lines should be changed</span>
+        <span class="c1"># in accordance with the mesh generator</span>
+        <span class="c1"># to get correct xi (1d grid)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">mode_index</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">mode_index</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span> <span class="n">mode_index</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">mode_index</span> <span class="o">//</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">mode_index</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                <span class="n">mode_index</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="n">idx</span>
+
+    <span class="k">def</span> <span class="nf">get_template_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_index</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">mode_index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">mode_index</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        template modes are defined on an l_infty circle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrap_mode_index</span><span class="p">(</span><span class="n">mode_index</span><span class="p">)</span>
+
+        <span class="n">xi</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_points</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">]])</span>
+            <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span>
+
+        <span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+            <span class="n">yi</span><span class="p">[</span><span class="n">d</span><span class="p">][</span><span class="n">idx</span><span class="p">[</span><span class="n">d</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">axis_interp</span> <span class="o">=</span> <span class="p">[</span><span class="n">Interpolator</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">[</span><span class="n">d</span><span class="p">])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+
+        <span class="k">def</span> <span class="nf">mode</span><span class="p">(</span><span class="o">*</span><span class="n">coords</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)):</span>
+                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+            <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">coord</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">),</span> <span class="n">coords</span><span class="p">):</span>
+                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">fvals</span><span class="p">,</span> <span class="n">axis_interp</span><span class="p">[</span><span class="n">d</span><span class="p">](</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">fvals</span>
+
+        <span class="k">return</span> <span class="n">mode</span>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.get_mode"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.get_mode">[docs]</a>    <span class="k">def</span> <span class="nf">get_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        normal modes are deined on the source box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">mode_index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">mode_index</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrap_mode_index</span><span class="p">(</span><span class="n">mode_index</span><span class="p">)</span>
+
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_points</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">]])</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span>
+
+        <span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+            <span class="n">yi</span><span class="p">[</span><span class="n">d</span><span class="p">][</span><span class="n">idx</span><span class="p">[</span><span class="n">d</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">axis_interp</span> <span class="o">=</span> <span class="p">[</span><span class="n">Interpolator</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">[</span><span class="n">d</span><span class="p">])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+
+        <span class="k">def</span> <span class="nf">mode</span><span class="p">(</span><span class="o">*</span><span class="n">coords</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)):</span>
+                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+            <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">coord</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">),</span> <span class="n">coords</span><span class="p">):</span>
+                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">fvals</span><span class="p">,</span> <span class="n">axis_interp</span><span class="p">[</span><span class="n">d</span><span class="p">](</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">fvals</span>
+
+        <span class="k">return</span> <span class="n">mode</span></div>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.get_mode_cheb_coeffs"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.get_mode_cheb_coeffs">[docs]</a>    <span class="k">def</span> <span class="nf">get_mode_cheb_coeffs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_index</span><span class="p">,</span> <span class="n">cheb_order</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cheb coeffs of a mode.</span>
+<span class="sd">        The projection process is performed on [0,1]^dim.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="kn">import</span> <span class="nn">scipy.special</span> <span class="k">as</span> <span class="nn">sps</span>
+
+        <span class="n">cheby_nodes</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">cheby_weights</span> <span class="o">=</span> <span class="n">sps</span><span class="o">.</span><span class="n">chebyt</span><span class="p">(</span><span class="n">cheb_order</span><span class="p">)</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">cheby_nodes</span> <span class="o">=</span> <span class="n">cheby_nodes</span> <span class="o">*</span> <span class="p">(</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+        <span class="n">cheby_weights</span> <span class="o">=</span> <span class="n">cheby_weights</span> <span class="o">*</span> <span class="p">(</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template_mode</span><span class="p">(</span><span class="n">mode_index</span><span class="p">)</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">cheby_nodes</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+        <span class="n">mvals</span> <span class="o">=</span> <span class="n">mode</span><span class="p">(</span><span class="o">*</span><span class="n">grid</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">numpy.polynomial.chebyshev</span> <span class="k">import</span> <span class="n">Chebyshev</span>
+
+        <span class="n">coef_scale</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">cheb_order</span><span class="p">)</span> <span class="o">/</span> <span class="n">cheb_order</span>
+        <span class="n">coef_scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="mi">2</span>
+        <span class="n">basis_1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">Chebyshev</span><span class="p">(</span>
+                    <span class="n">coef</span><span class="o">=</span><span class="n">_orthonormal</span><span class="p">(</span><span class="n">cheb_order</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span>
+                    <span class="n">domain</span><span class="o">=</span><span class="n">window</span><span class="p">)(</span><span class="n">cheby_nodes</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cheb_order</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">product</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">basis_set</span> <span class="o">=</span> <span class="n">basis_1d</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">basis_set</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">b1</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">cheb_order</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">cheb_order</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">basis_1d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">basis_set</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">b1</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">cheb_order</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                    <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">cheb_order</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                    <span class="o">*</span> <span class="n">b3</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cheb_order</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">b3</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">basis_1d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">mode_cheb_coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mvals</span> <span class="o">*</span> <span class="n">basis</span><span class="p">)</span> <span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="n">basis_set</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">_self_tp</span><span class="p">(</span><span class="n">coef_scale</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># purge small coeffs that are 15 digits away</span>
+        <span class="n">mm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mode_cheb_coeffs</span><span class="p">))</span>
+        <span class="n">mode_cheb_coeffs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mode_cheb_coeffs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">mm</span> <span class="o">*</span> <span class="mf">1e-15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">mode_cheb_coeffs</span></div>
+
+    <span class="c1"># }}} End basis modes in the template box</span>
+
+    <span class="c1"># {{{ build table via transform</span>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.get_symmetry_transform"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.get_symmetry_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_symmetry_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_mode_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply proper transforms to map source mode to a reduced region</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">            - a transform that can be applied on the interaction case</span>
+<span class="sd">            vectors connection box centers.</span>
+<span class="sd">            - a transform that can be applied to the mode/point indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># mat = np.diag(np.ones(self.dim))</span>
+
+        <span class="c1"># q_points must be sorted in (ascending) dictionary order</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="n">resid</span> <span class="o">=</span> <span class="n">source_mode_index</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">k</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">resid</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span>
+            <span class="n">resid</span> <span class="o">=</span> <span class="n">resid</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span>
+
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">s1</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">k</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">k</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+
+        <span class="n">s2</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+        <span class="k">def</span> <span class="nf">symmetry_transform</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+            <span class="n">nv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">*</span> <span class="n">s1</span>
+            <span class="k">return</span> <span class="n">nv</span><span class="p">[</span><span class="n">s2</span><span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">qpoint_index_transform</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">resid</span> <span class="o">=</span> <span class="n">index</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">k</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">resid</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span>
+                <span class="n">resid</span> <span class="o">=</span> <span class="n">resid</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span>
+            <span class="k">assert</span> <span class="n">resid</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">s1</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">k</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">k</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="n">s2</span><span class="p">]</span>
+            <span class="n">new_id</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+                <span class="n">new_id</span> <span class="o">=</span> <span class="n">new_id</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">new_id</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">symmetry_transform</span><span class="p">,</span> <span class="n">qpoint_index_transform</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.find_target_point"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.find_target_point">[docs]</a>    <span class="k">def</span> <span class="nf">find_target_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_point_index</span><span class="p">,</span> <span class="n">case_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply proper transforms to find the target point&#39;s coordinate.</span>
+
+<span class="sd">        Only translations and scalings are allowed in this step, avoiding the</span>
+<span class="sd">        indices of quad points to be messed up.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">target_point_index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">target_point_index</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+
+        <span class="c1"># rescale to source box with size 1x1</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">[</span><span class="n">case_index</span><span class="p">])</span>
+            <span class="o">/</span> <span class="mf">4.0</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span>
+        <span class="p">)</span>
+
+        <span class="n">new_cntr</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">+</span> <span class="n">vec</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">[</span><span class="n">case_index</span><span class="p">]))))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">new_size</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_size</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">max</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">[</span><span class="n">case_index</span><span class="p">]])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+
+        <span class="c1"># print(vec, new_cntr, new_size)</span>
+
+        <span class="k">return</span> <span class="n">new_cntr</span> <span class="o">+</span> <span class="n">new_size</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">q_points</span><span class="p">[</span><span class="n">target_point_index</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.lookup_by_symmetry"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.lookup_by_symmetry">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_by_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loop up table entry that is mapped to a region where:</span>
+<span class="sd">            - k_i &lt;= q/2 in all direction i</span>
+<span class="sd">            - k_i&#39;s are sorted in ascending order</span>
+
+<span class="sd">            Returns the mapped entry_id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">entry_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_index</span><span class="p">(</span><span class="n">entry_id</span><span class="p">)</span>
+        <span class="c1"># source_mode = self.get_mode(</span>
+        <span class="c1">#    entry_info[</span>
+        <span class="c1">#        &quot;source_mode_index&quot;])</span>
+        <span class="c1"># target_point = self.find_target_point(</span>
+        <span class="c1">#    target_point_index=</span>
+        <span class="c1">#    entry_info[</span>
+        <span class="c1">#        &quot;target_point_index&quot;],</span>
+        <span class="c1">#    case_index=entry_info[</span>
+        <span class="c1">#        &quot;case_index&quot;])</span>
+
+        <span class="n">vec_map</span><span class="p">,</span> <span class="n">qp_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_symmetry_transform</span><span class="p">(</span>
+                <span class="n">entry_info</span><span class="p">[</span><span class="s2">&quot;source_mode_index&quot;</span><span class="p">])</span>
+        <span class="c1"># mapped (canonical) case_id</span>
+        <span class="n">case_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">[</span><span class="n">entry_info</span><span class="p">[</span><span class="s2">&quot;case_index&quot;</span><span class="p">]]</span>
+        <span class="n">cc_vec</span> <span class="o">=</span> <span class="n">vec_map</span><span class="p">(</span><span class="n">case_vec</span><span class="p">)</span>
+        <span class="n">cc_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_indices</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">case_encode</span><span class="p">(</span><span class="n">cc_vec</span><span class="p">)]</span>
+        <span class="n">cs_id</span> <span class="o">=</span> <span class="n">qp_map</span><span class="p">(</span><span class="n">entry_info</span><span class="p">[</span><span class="s2">&quot;source_mode_index&quot;</span><span class="p">])</span>
+        <span class="n">ct_id</span> <span class="o">=</span> <span class="n">qp_map</span><span class="p">(</span><span class="n">entry_info</span><span class="p">[</span><span class="s2">&quot;target_point_index&quot;</span><span class="p">])</span>
+        <span class="n">centry_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entry_index</span><span class="p">(</span><span class="n">cs_id</span><span class="p">,</span> <span class="n">ct_id</span><span class="p">,</span> <span class="n">cc_id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">centry_id</span></div>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.compute_table_entry"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.compute_table_entry">[docs]</a>    <span class="k">def</span> <span class="nf">compute_table_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute one entry in the table indexed by self.data[entry_id]</span>
+
+<span class="sd">        Input kernel function should be centered at origin.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entry_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_index</span><span class="p">(</span><span class="n">entry_id</span><span class="p">)</span>
+        <span class="n">source_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mode</span><span class="p">(</span><span class="n">entry_info</span><span class="p">[</span><span class="s2">&quot;source_mode_index&quot;</span><span class="p">])</span>
+        <span class="n">target_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_target_point</span><span class="p">(</span>
+            <span class="n">target_point_index</span><span class="o">=</span><span class="n">entry_info</span><span class="p">[</span><span class="s2">&quot;target_point_index&quot;</span><span class="p">],</span>
+            <span class="n">case_index</span><span class="o">=</span><span class="n">entry_info</span><span class="p">[</span><span class="s2">&quot;case_index&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># print(entry_info, target_point)</span>
+        <span class="c1"># source_point = (</span>
+        <span class="c1">#     self.q_points[entry_info[</span>
+        <span class="c1">#         &quot;source_mode_index&quot;]])</span>
+        <span class="c1"># print(source_mode(source_point[0], source_point[1]))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">integrand</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">source_mode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_func</span><span class="p">(</span>
+                    <span class="n">x</span> <span class="o">-</span> <span class="n">target_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span> <span class="o">-</span> <span class="n">target_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">)</span>
+
+            <span class="n">integral</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">squad</span><span class="o">.</span><span class="n">box_quad</span><span class="p">(</span>
+                <span class="n">func</span><span class="o">=</span><span class="n">integrand</span><span class="p">,</span>
+                <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+                <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">d</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+                <span class="n">singular_point</span><span class="o">=</span><span class="n">target_point</span><span class="p">,</span>
+                <span class="c1"># tol=1e-10,</span>
+                <span class="c1"># rtol=1e-10,</span>
+                <span class="c1"># miniter=300,</span>
+                <span class="n">maxiter</span><span class="o">=</span><span class="mi">301</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">entry_id</span><span class="p">,</span> <span class="n">integral</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">compute_nmlz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_id</span><span class="p">):</span>
+        <span class="n">mode_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mode</span><span class="p">(</span><span class="n">mode_id</span><span class="p">)</span>
+        <span class="n">nmlz</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">squad</span><span class="o">.</span><span class="n">qquad</span><span class="p">(</span>
+            <span class="n">func</span><span class="o">=</span><span class="n">mode_func</span><span class="p">,</span>
+            <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+            <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">d</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
+            <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
+            <span class="n">minitero</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+            <span class="n">miniteri</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+            <span class="n">maxitero</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">maxiteri</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">mode_id</span><span class="p">,</span> <span class="n">nmlz</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.build_normalizer_table"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.build_normalizer_table">[docs]</a>    <span class="k">def</span> <span class="nf">build_normalizer_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build normalizers only</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">multiprocess</span> <span class="k">import</span> <span class="n">Pool</span>
+
+            <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">mode_id</span><span class="p">,</span> <span class="n">nmlz</span> <span class="ow">in</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_nmlz</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">)]</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">[</span><span class="n">mode_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">nmlz</span>
+            <span class="k">if</span> <span class="n">pb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.build_table_via_transform"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.build_table_via_transform">[docs]</a>    <span class="k">def</span> <span class="nf">build_table_via_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the full data table using transforms to</span>
+<span class="sd">        remove the singularity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span>
+
+        <span class="c1"># multiprocessing cannot handle member functions</span>
+        <span class="kn">from</span> <span class="nn">multiprocess</span> <span class="k">import</span> <span class="n">Pool</span>
+
+        <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_normalizer_table</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">pb</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_normalizers</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># First compute entries that are invariant under</span>
+        <span class="c1"># symmetry lookup</span>
+        <span class="n">invariant_entry_ids</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_by_symmetry</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">i</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">entry_id</span><span class="p">,</span> <span class="n">entry_val</span> <span class="ow">in</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_table_entry</span><span class="p">,</span> <span class="n">invariant_entry_ids</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry_val</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Then complete the table via symmetry lookup</span>
+        <span class="k">for</span> <span class="n">entry_id</span><span class="p">,</span> <span class="n">centry_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lookup_by_symmetry</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))]</span>
+            <span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">centry_id</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">centry_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">centry_id</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">finished</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_built</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="c1"># }}} End build table via transform</span>
+
+    <span class="c1"># {{{ build table via adding up a Droste of bricks</span>
+
+    <span class="k">def</span> <span class="nf">build_table_via_droste_bricks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">queue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">adaptive_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">use_symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
+
+            <span class="n">cl_ctx</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">create_some_context</span><span class="p">(</span><span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">queue</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">CommandQueue</span><span class="p">(</span><span class="n">cl_ctx</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">alpha</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="s2">&quot;nlevels&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">nlev</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;nlevels&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nlev</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># extra_kernel_kwargs = {}</span>
+        <span class="c1"># if &quot;extra_kernel_kwargs&quot; in kwargs:</span>
+        <span class="c1">#     extra_kernel_kwargs = kwargs[&quot;extra_kernel_kwargs&quot;]</span>
+
+        <span class="n">cheb_coefs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_mode_cheb_coeffs</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_symmetry</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">DrosteFull</span>
+
+            <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteFull</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
+                <span class="n">n_brick_quad_points</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">DrosteReduced</span>
+
+            <span class="k">if</span> <span class="s2">&quot;knl_symietry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knl_symmetry_tags&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Maximum symmetry by default</span>
+                <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteReduced</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
+                <span class="n">n_brick_quad_points</span><span class="p">,</span>
+                <span class="n">knl_symmetry_tags</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># adaptive level refinement</span>
+        <span class="n">data0</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span>
+            <span class="n">queue</span><span class="p">,</span>
+            <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="n">nlevels</span><span class="o">=</span><span class="n">nlev</span><span class="p">,</span>
+            <span class="c1"># extra_kernel_kwargs=extra_kernel_kwargs,</span>
+            <span class="n">cheb_coefs</span><span class="o">=</span><span class="n">cheb_coefs</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        <span class="n">resid</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">adaptive_level</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">alpha</span> <span class="o">**</span> <span class="n">nlev</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                <span class="n">nlev</span> <span class="o">=</span> <span class="n">nlev</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">data1</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span>
+                    <span class="n">queue</span><span class="p">,</span>
+                    <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+                    <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                    <span class="n">nlevels</span><span class="o">=</span><span class="n">nlev</span><span class="p">,</span>
+                    <span class="c1"># extra_kernel_kwargs=extra_kernel_kwargs,</span>
+                    <span class="n">cheb_coefs</span><span class="o">=</span><span class="n">cheb_coefs</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">kwargs</span>
+                <span class="p">)</span>
+
+                <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data0</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span><span class="p">))</span>
+
+                <span class="n">data0</span> <span class="o">=</span> <span class="n">data1</span>
+
+                <span class="k">if</span> <span class="n">resid</span> <span class="o">&lt;</span> <span class="mf">1e-12</span> <span class="ow">and</span> <span class="n">resid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data0</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="s2">&quot;Adaptive level refinement &quot;</span>
+                        <span class="s2">&quot;converged at level </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nlev</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">resid</span><span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="s2">&quot;Adaptive level refinement terminated &quot;</span>
+                        <span class="s2">&quot;at </span><span class="si">%d</span><span class="s2"> before converging due to NaNs&quot;</span> <span class="o">%</span> <span class="n">nlev</span>
+                    <span class="p">)</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">resid</span> <span class="o">&gt;=</span> <span class="mf">1e-12</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adaptive level refinement failed to converge.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Residual at level </span><span class="si">%d</span><span class="s2"> equals to </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nlev</span><span class="p">,</span> <span class="n">resid</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">resid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No need for adaptive level refinement.&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data0</span>
+
+        <span class="c1"># print(&quot;Computing normalizers&quot;)</span>
+        <span class="c1"># NOTE: normalizers are not needed in 3D anyway</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_normalizer_table</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_normalizers</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_normalizers</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_built</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># }}} End build table via adding up a Droste of bricks</span>
+
+    <span class="c1"># {{{ build table (driver)</span>
+
+    <span class="k">def</span> <span class="nf">build_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_method</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Building table with transform method&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_table_via_transform</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;DrosteSum&quot;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Building table with Droste method&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_table_via_droste_bricks</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="c1"># }}} End build table (driver)</span>
+
+    <span class="c1"># {{{ query table and transform to actual box</span>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.get_potential_scaler"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.get_potential_scaler">[docs]</a>    <span class="k">def</span> <span class="nf">get_potential_scaler</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">,</span> <span class="n">source_box_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kernel_power</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a helper function to rescale the table entry based on</span>
+<span class="sd">           source_box&#39;s actual size (edge length).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">source_box_size</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">source_box_size</span>
+
+        <span class="k">if</span> <span class="n">kernel_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kernel_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span>
+
+        <span class="k">if</span> <span class="n">kernel_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s2">&quot;Specify kernel type before performing scaling queries&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kernel_type</span> <span class="o">==</span> <span class="s2">&quot;log&quot;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">kernel_power</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="n">source_mode_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_index</span><span class="p">(</span><span class="n">entry_id</span><span class="p">)[</span><span class="s2">&quot;source_mode_index&quot;</span><span class="p">]</span>
+            <span class="n">displacement</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> \
+                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">[</span><span class="n">source_mode_index</span><span class="p">]</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="n">a</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="k">elif</span> <span class="n">kernel_type</span> <span class="o">==</span> <span class="s2">&quot;const&quot;</span><span class="p">:</span>
+            <span class="n">displacement</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">elif</span> <span class="n">kernel_type</span> <span class="o">==</span> <span class="s2">&quot;inv_power&quot;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">kernel_power</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">displacement</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="n">source_box_size</span> <span class="o">**</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">kernel_power</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">kernel_type</span> <span class="o">==</span> <span class="s2">&quot;rigid&quot;</span><span class="p">:</span>
+            <span class="c1"># TODO: add assertion for source box size</span>
+            <span class="n">displacement</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unsupported kernel type&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">scaler</span><span class="p">(</span><span class="n">pot_val</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pot_val</span> <span class="o">*</span> <span class="n">scaling</span> <span class="o">+</span> <span class="n">displacement</span>
+
+        <span class="k">return</span> <span class="n">scaler</span></div></div>
+
+
+<span class="c1"># }}} End query table and transform to actual box</span>
+
+<span class="c1"># }}} End table data structure</span>
+
+<span class="c1"># vim: foldmethod=marker:filetype=pyopencl</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Xiaoyu Wei
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

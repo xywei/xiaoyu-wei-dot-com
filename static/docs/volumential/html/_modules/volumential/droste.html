@@ -1,0 +1,1620 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>volumential.droste &mdash; Volumential 2017.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Volumential
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2017
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sphinx.html">Documentation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../indices_tables.html">Indices and tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Volumential</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>volumential.droste</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for volumential.droste</h1><div class="highlight"><pre>
+<span></span><span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2018 Xiaoyu Wei&quot;</span>
+
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="s2">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="s2">in the Software without restriction, including without limitation the rights</span>
+<span class="s2">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="s2">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="s2">furnished to do so, subject to the following conditions:</span>
+
+<span class="s2">The above copyright notice and this permission notice shall be included in</span>
+<span class="s2">all copies or substantial portions of the Software.</span>
+
+<span class="s2">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="s2">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="s2">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="s2">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="s2">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="s2">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="s2">THE SOFTWARE.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">loopy</span> <span class="k">as</span> <span class="nn">lp</span>
+<span class="kn">from</span> <span class="nn">sumpy.tools</span> <span class="k">import</span> <span class="n">KernelCacheWrapper</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. autoclass:: DrosteBase</span>
+<span class="s2">   :members:</span>
+<span class="s2">.. autoclass:: DrosteFull</span>
+<span class="s2">   :members:</span>
+<span class="s2">.. autoclass:: DrosteReduced</span>
+<span class="s2">   :members:</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># logging.basicConfig(level=logging.INFO)</span>
+
+<span class="c1"># {{{ Droste base class</span>
+
+
+<div class="viewcode-block" id="DrosteBase"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteBase">[docs]</a><span class="k">class</span> <span class="nc">DrosteBase</span><span class="p">(</span><span class="n">KernelCacheWrapper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for Droste methods.</span>
+<span class="sd">    It uses sumpy tools to cache the loopy kernel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">integral_knl</span><span class="p">,</span> <span class="n">quad_order</span><span class="p">,</span> <span class="n">case_vecs</span><span class="p">,</span> <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sumpy.kernel</span> <span class="k">import</span> <span class="n">Kernel</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">integral_knl</span><span class="p">,</span> <span class="n">Kernel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span> <span class="o">=</span> <span class="n">integral_knl</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">integral_knl</span><span class="o">.</span><span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">case_vecs</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">cvec</span> <span class="ow">in</span> <span class="n">case_vecs</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cvec</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[[</span><span class="n">v</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">case_vecs</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_scls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">1</span>
+                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">))))</span> <span class="o">==</span> <span class="mi">0</span>
+                <span class="k">else</span> <span class="nb">max</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span>
+                <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">case_vecs</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">quad_order</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span> <span class="o">=</span> <span class="n">quad_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span> <span class="o">=</span> <span class="n">n_brick_quad_points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span> <span class="o">=</span> <span class="n">quad_order</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;DrosteBase&quot;</span>
+
+    <span class="k">def</span> <span class="nf">make_basis_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;f</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span>
+
+    <span class="k">def</span> <span class="nf">make_tgt_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_vars</span>
+
+    <span class="k">def</span> <span class="nf">make_quad_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quad_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;q</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_vars</span>
+
+    <span class="k">def</span> <span class="nf">make_basis_eval_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis_eval_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;p</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis_eval_vars</span>
+
+    <span class="k">def</span> <span class="nf">make_pwaffs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">islpy</span> <span class="k">as</span> <span class="nn">isl</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwaffs</span> <span class="o">=</span> <span class="n">isl</span><span class="o">.</span><span class="n">make_zero_and_vars</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tgt_vars</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis_eval_vars</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_vars</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;iside&quot;</span><span class="p">,</span> <span class="s2">&quot;iaxis&quot;</span><span class="p">,</span> <span class="s2">&quot;ibrick_side&quot;</span><span class="p">,</span> <span class="s2">&quot;ibrick_axis&quot;</span><span class="p">,</span> <span class="s2">&quot;ilevel&quot;</span><span class="p">,</span> <span class="s2">&quot;icase&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;nlevels&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwaffs</span>
+
+    <span class="k">def</span> <span class="nf">make_brick_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">lbound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ubound</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">pwaffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwaffs</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">ubound_pwaff</span> <span class="o">=</span> <span class="n">pwaffs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">ubound</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ubound_pwaff</span> <span class="o">=</span> <span class="n">pwaffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">n</span>
+
+        <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+        <span class="kn">import</span> <span class="nn">operator</span>
+
+        <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span>
+            <span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">,</span>
+            <span class="p">[(</span><span class="n">pwaffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">lbound</span><span class="p">)</span><span class="o">.</span><span class="n">le_set</span><span class="p">(</span><span class="n">pwaffs</span><span class="p">[</span><span class="n">var</span><span class="p">])</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span><span class="n">pwaffs</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">lt_set</span><span class="p">(</span><span class="n">ubound_pwaff</span><span class="p">)</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_sumpy_kernel_insns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># get sumpy kernel insns</span>
+        <span class="kn">from</span> <span class="nn">sumpy.symbolic</span> <span class="k">import</span> <span class="n">make_sym_vector</span>
+
+        <span class="n">dvec</span> <span class="o">=</span> <span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;dist&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">sumpy.assignment_collection</span> <span class="k">import</span> <span class="n">SymbolicAssignmentCollection</span>
+
+        <span class="n">sac</span> <span class="o">=</span> <span class="n">SymbolicAssignmentCollection</span><span class="p">()</span>
+        <span class="n">result_name</span> <span class="o">=</span> <span class="n">sac</span><span class="o">.</span><span class="n">assign_unique</span><span class="p">(</span>
+            <span class="s2">&quot;knl_val&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">postprocess_at_target</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">postprocess_at_source</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">get_expression</span><span class="p">(</span><span class="n">dvec</span><span class="p">),</span> <span class="n">dvec</span>
+                <span class="p">),</span>
+                <span class="n">dvec</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">sac</span><span class="o">.</span><span class="n">run_global_cse</span><span class="p">()</span>
+        <span class="kn">import</span> <span class="nn">six</span>
+        <span class="kn">from</span> <span class="nn">sumpy.codegen</span> <span class="k">import</span> <span class="n">to_loopy_insns</span>
+
+        <span class="n">loopy_insns</span> <span class="o">=</span> <span class="n">to_loopy_insns</span><span class="p">(</span>
+            <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">sac</span><span class="o">.</span><span class="n">assignments</span><span class="p">),</span>
+            <span class="n">vector_names</span><span class="o">=</span><span class="nb">set</span><span class="p">([</span><span class="s2">&quot;dist&quot;</span><span class="p">]),</span>
+            <span class="n">pymbolic_expr_maps</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">get_code_transformer</span><span class="p">()],</span>
+            <span class="n">retain_names</span><span class="o">=</span><span class="p">[</span><span class="n">result_name</span><span class="p">],</span>
+            <span class="n">complex_dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># for i in loopy_insns:</span>
+        <span class="c1">#     print(i)</span>
+        <span class="k">return</span> <span class="n">loopy_insns</span>
+
+    <span class="k">def</span> <span class="nf">get_sumpy_kernel_eval_insns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># actual integral kernel evaluation (within proper inames)</span>
+        <span class="n">knl_loopy_insns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sumpy_kernel_insns</span><span class="p">()</span>
+        <span class="n">quad_inames</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;icase&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_vars</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;ilevel&quot;</span><span class="p">,</span> <span class="s2">&quot;ibrick_axis&quot;</span><span class="p">,</span> <span class="s2">&quot;ibrick_side&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_vars</span>
+        <span class="p">)</span>
+        <span class="n">quad_kernel_insns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">insn</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">within_inames</span><span class="o">=</span><span class="n">insn</span><span class="o">.</span><span class="n">within_inames</span> <span class="o">|</span> <span class="n">quad_inames</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">insn</span> <span class="ow">in</span> <span class="n">knl_loopy_insns</span>
+        <span class="p">]</span>
+
+        <span class="kn">from</span> <span class="nn">sumpy.symbolic</span> <span class="k">import</span> <span class="n">SympyToPymbolicMapper</span>
+
+        <span class="n">sympy_conv</span> <span class="o">=</span> <span class="n">SympyToPymbolicMapper</span><span class="p">()</span>
+        <span class="n">scaling_assignment</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">Assignment</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">assignee</span><span class="o">=</span><span class="s2">&quot;knl_scaling&quot;</span><span class="p">,</span>
+            <span class="n">expression</span><span class="o">=</span><span class="n">sympy_conv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">get_global_scaling_const</span><span class="p">()),</span>
+            <span class="n">temp_var_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">quad_kernel_insns</span> <span class="o">+</span> <span class="p">[</span><span class="n">scaling_assignment</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">codegen_basis_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iaxis</span><span class="p">):</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            &lt;&gt; T0_IAXIS = 1</span>
+<span class="s2">            &lt;&gt; T1_IAXIS = template_mapped_point_tmp[IAXIS] {dep=mpoint}</span>
+<span class="s2">            &lt;&gt; Tprev_IAXIS = T0_IAXIS {id=t0_IAXIS}</span>
+<span class="s2">            &lt;&gt; Tcur_IAXIS = T1_IAXIS {id=t1_IAXIS,dep=t0_IAXIS}</span>
+
+<span class="s2">            for pIAXIS</span>
+<span class="s2">                &lt;&gt; Tnext_IAXIS = (2 * template_mapped_point_tmp[IAXIS] * Tcur_IAXIS</span>
+<span class="s2">                                - Tprev_IAXIS) {id=tnextIAXIS,dep=t1_IAXIS}</span>
+<span class="s2">                Tprev_IAXIS = Tcur_IAXIS {id=tprev_updateIAXIS,dep=tnextIAXIS}</span>
+<span class="s2">                Tcur_IAXIS = Tnext_IAXIS {id=tcur_updateIAXIS,dep=tprev_updateIAXIS}</span>
+<span class="s2">            end</span>
+
+<span class="s2">            &lt;&gt; basis_evalIAXIS = (</span>
+<span class="s2">                T0_IAXIS * if(fIAXIS == 0, 1, 0)</span>
+<span class="s2">                + T1_IAXIS * if(fIAXIS == 1, 1, 0)</span>
+<span class="s2">                + sum(pIAXIS, if(fIAXIS == pIAXIS, Tcur_IAXIS, 0))</span>
+<span class="s2">                ) {id=basisIAXIS,dep=tcur_updateIAXIS}</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">code</span>
+
+    <span class="k">def</span> <span class="nf">make_dim_independent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knlstring</span><span class="p">):</span>
+
+        <span class="c1"># replace REV_* first</span>
+        <span class="n">resknl</span> <span class="o">=</span> <span class="n">knlstring</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;REV_BASIS_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;REV_TGT_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_vars</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;BASIS_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span><span class="p">))</span>
+        <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;TGT_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_vars</span><span class="p">))</span>
+        <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;QUAD_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_vars</span><span class="p">))</span>
+
+        <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="s2">&quot;PROD_QUAD_WEIGHT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; * &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="s2">&quot;quadrature_weights[QID]&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;QID&quot;</span><span class="p">,</span> <span class="n">qvar</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">qvar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_vars</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;TPLTGT_ASSIGNMENT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;target_nodes[t0]&quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;QUAD_PT_ASSIGNMENT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;quadrature_nodes[q0]&quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;DENSITY_VAL_ASSIGNMENT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;basis_eval0&quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;PREPARE_BASIS_VALS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">codegen_basis_eval</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                ... nop {id=basis_evals,dep=basis0}</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;TPLTGT_ASSIGNMENT&quot;</span><span class="p">,</span>
+                <span class="sd">&quot;&quot;&quot;if(iaxis == 0, target_nodes[t0], target_nodes[t1])&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;QUAD_PT_ASSIGNMENT&quot;</span><span class="p">,</span>
+                <span class="sd">&quot;&quot;&quot;if(iaxis == 0, quadrature_nodes[q0], quadrature_nodes[q1])&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;DENSITY_VAL_ASSIGNMENT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;basis_eval0 * basis_eval1&quot;&quot;&quot;</span>
+            <span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;PREPARE_BASIS_VALS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">codegen_basis_eval</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                ... nop {id=basis_evals,dep=basis0:basis1}</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;TPLTGT_ASSIGNMENT&quot;</span><span class="p">,</span>
+                <span class="sd">&quot;&quot;&quot;if(iaxis == 0, target_nodes[t0], if(</span>
+<span class="sd">                          iaxis == 1, target_nodes[t1], target_nodes[t2]))&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;QUAD_PT_ASSIGNMENT&quot;</span><span class="p">,</span>
+                <span class="sd">&quot;&quot;&quot;if(iaxis == 0, quadrature_nodes[q0], if(</span>
+<span class="sd">                  iaxis == 1, quadrature_nodes[q1], quadrature_nodes[q2]))&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;DENSITY_VAL_ASSIGNMENT&quot;</span><span class="p">,</span>
+                <span class="sd">&quot;&quot;&quot;basis_eval0 * basis_eval1 * basis_eval2&quot;&quot;&quot;</span>
+            <span class="p">)</span>
+            <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;PREPARE_BASIS_VALS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">codegen_basis_eval</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+                <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                ... nop {id=basis_evals,dep=basis0:basis1:basis2}</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="k">return</span> <span class="n">resknl</span>
+
+<div class="viewcode-block" id="DrosteBase.make_result_array"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteBase.make_result_array">[docs]</a>    <span class="k">def</span> <span class="nf">make_result_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Allocate memory space for results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># by default uses double type returns</span>
+        <span class="k">if</span> <span class="s2">&quot;result_dtype&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">result_dtype</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;result_dtype&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+
+        <span class="c1"># allocate return arrays</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">),</span>
+                        <span class="n">result_dtype</span>
+                        <span class="p">)</span>
+                    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">,</span>
+                            <span class="p">),</span>
+                        <span class="n">result_dtype</span>
+                        <span class="p">)</span>
+                    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                    <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">,</span>
+                            <span class="p">),</span>
+                        <span class="n">result_dtype</span>
+                        <span class="p">)</span>
+                    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                    <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">return</span> <span class="n">result_array</span></div>
+
+    <span class="k">def</span> <span class="nf">get_kernel_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">make_dim_independent</span><span class="p">(</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        for iaxis</span>
+<span class="sd">            &lt;&gt; root_center[iaxis] = 0.5 * (</span>
+<span class="sd">                    root_brick[iaxis, 1] + root_brick[iaxis, 0]) {dup=iaxis}</span>
+<span class="sd">            &lt;&gt; root_extent[iaxis] = (root_brick[iaxis, 1]</span>
+<span class="sd">                    - root_brick[iaxis, 0]) {dup=iaxis}</span>
+<span class="sd">        end</span>
+
+<span class="sd">        for ilevel, BASIS_VARS, TGT_VARS, icase</span>
+
+<span class="sd">            # Targets outside projected onto the boundary</span>
+<span class="sd">            for iaxis</span>
+<span class="sd">                &lt;&gt; template_target[iaxis] = TPLTGT_ASSIGNMENT \</span>
+<span class="sd">                        {id=tplt_tgt_pre,dup=iaxis}</span>
+<span class="sd">            end</span>
+
+<span class="sd">            # True targets are used for kernel evaluation</span>
+<span class="sd">            for iaxis</span>
+<span class="sd">                &lt;&gt; true_target[iaxis] = ( root_center[iaxis]</span>
+<span class="sd">                         + interaction_case_vecs[iaxis, icase]</span>
+<span class="sd">                            * 0.25 * root_extent[iaxis]</span>
+<span class="sd">                         + interaction_case_scls[icase]</span>
+<span class="sd">                            * (template_target[iaxis] - 0.5)</span>
+<span class="sd">                            * root_extent[iaxis]</span>
+<span class="sd">                         ) {id=true_targets,dup=iaxis,dep=tplt_tgt_pre}</span>
+
+<span class="sd">            end</span>
+
+<span class="sd">            # Projected targets are used for brick construction</span>
+<span class="sd">            for iaxis</span>
+<span class="sd">                &lt;&gt; target[iaxis] = if(</span>
+<span class="sd">                    true_target[iaxis] &gt; root_brick[iaxis, 1],</span>
+<span class="sd">                    root_brick[iaxis, 1],</span>
+<span class="sd">                    if(</span>
+<span class="sd">                        true_target[iaxis] &lt; root_brick[iaxis, 0],</span>
+<span class="sd">                        root_brick[iaxis, 0],</span>
+<span class="sd">                        true_target[iaxis])) {dup=iaxis,dep=true_targets}</span>
+<span class="sd">            end</span>
+
+<span class="sd">            for iaxis</span>
+<span class="sd">                template_target[iaxis] = (0.5</span>
+<span class="sd">                    + interaction_case_vecs[iaxis, icase] * 0.25</span>
+<span class="sd">                    + interaction_case_scls[icase] * (template_target[iaxis] - 0.5)</span>
+<span class="sd">                    ) {id=tplt_tgt3,dup=iaxis,dep=tplt_tgt_pre:true_targets}</span>
+<span class="sd">            end</span>
+
+<span class="sd">            for iaxis</span>
+<span class="sd">                template_target[iaxis] = if(</span>
+<span class="sd">                    template_target[iaxis] &gt; 1,</span>
+<span class="sd">                    1,</span>
+<span class="sd">                    if(</span>
+<span class="sd">                        template_target[iaxis] &lt; 0,</span>
+<span class="sd">                        0,</span>
+<span class="sd">                        template_target[iaxis])</span>
+<span class="sd">                    ) {id=tplt_tgt4,dup=iaxis,dep=tplt_tgt3}</span>
+<span class="sd">            end</span>
+
+<span class="sd">            ... nop {id=tplt_tgt,dep=tplt_tgt_pre:tplt_tgt4:true_targets}</span>
+
+<span class="sd">            # Debug output</span>
+<span class="sd">            #for iaxis</span>
+<span class="sd">            #    projected_template_targets[TGT_VARS, icase, iaxis] = \</span>
+<span class="sd">            #            template_target[iaxis] {dup=iaxis,dep=tplt_tgt}</span>
+<span class="sd">            #end</span>
+
+<span class="sd">            # Debug output</span>
+<span class="sd">            #for iaxis</span>
+<span class="sd">            #    target_points[ilevel, BASIS_VARS, TGT_VARS, icase, iaxis</span>
+<span class="sd">            #        ] = true_target[iaxis] {dup=iaxis,dep=true_targets}</span>
+<span class="sd">            #end</span>
+
+<span class="sd">            for iaxis, iside</span>
+<span class="sd">                &lt;&gt; outer_brick[iaxis, iside] = (</span>
+<span class="sd">                        (alpha**ilevel)*root_brick[iaxis,iside]</span>
+<span class="sd">                        + (1-alpha**ilevel) * target[iaxis])  {dup=iaxis:iside}</span>
+<span class="sd">                &lt;&gt; inner_brick[iaxis, iside] = (</span>
+<span class="sd">                        alpha*outer_brick[iaxis,iside]</span>
+<span class="sd">                        + (1-alpha) * target[iaxis])  {dup=iaxis:iside}</span>
+<span class="sd">            end</span>
+
+<span class="sd">            for iaxis</span>
+<span class="sd">                &lt;&gt; ob_ext[iaxis] = (outer_brick[iaxis, 1]</span>
+<span class="sd">                    - outer_brick[iaxis, 0])  {dup=iaxis}</span>
+<span class="sd">            end</span>
+
+<span class="sd">            for ibrick_axis, ibrick_side, QUAD_VARS</span>
+<span class="sd">                for iaxis</span>
+<span class="sd">                    &lt;&gt; point[iaxis] = QUAD_PT_ASSIGNMENT {dup=iaxis}</span>
+<span class="sd">                end</span>
+
+<span class="sd">                &lt;&gt; deform = point[ibrick_axis]*(1-alpha)</span>
+
+<span class="sd">                for iaxis</span>
+<span class="sd">                    if iaxis == ibrick_axis</span>
+<span class="sd">                        &lt;&gt; mapped_point_tmp[iaxis] = (</span>
+<span class="sd">                            point[ibrick_axis]*(</span>
+<span class="sd">                                inner_brick[ibrick_axis, ibrick_side]</span>
+<span class="sd">                                - outer_brick[ibrick_axis, ibrick_side])</span>
+<span class="sd">                                + outer_brick[ibrick_axis, ibrick_side]) \</span>
+<span class="sd">                            {id=mpoint1}</span>
+<span class="sd">                    else</span>
+<span class="sd">                        &lt;&gt; pre_scale = (</span>
+<span class="sd">                            point[iaxis]</span>
+<span class="sd">                            + deform*(template_target[iaxis]-point[iaxis])</span>
+<span class="sd">                            ) {dep=tplt_tgt}</span>
+
+<span class="sd">                        mapped_point_tmp[iaxis] = \</span>
+<span class="sd">                            ob_ext[iaxis] * pre_scale + outer_brick[iaxis, 0] \</span>
+<span class="sd">                            {id=mpoint2}</span>
+<span class="sd">                    end</span>
+
+<span class="sd">                    ... nop {id=mpoint,dep=mpoint1:mpoint2}</span>
+
+<span class="sd">                    # Re-map the mapped points to [-1,1]^dim for Chebyshev evals</span>
+<span class="sd">                    &lt;&gt; template_mapped_point_tmp[iaxis] = 0.0 + (</span>
+<span class="sd">                            mapped_point_tmp[iaxis] - root_center[iaxis]</span>
+<span class="sd">                            ) / root_extent[iaxis] * 2 {dep=mpoint}</span>
+
+<span class="sd">                    # Debug output</span>
+<span class="sd">                    #mapped_points[ilevel, ibrick_axis,</span>
+<span class="sd">                    #          ibrick_side, TGT_VARS, icase, iaxis, QUAD_VARS] = \</span>
+<span class="sd">                    #    mapped_point_tmp[iaxis]  {dep=mpoint}</span>
+<span class="sd">                    #mapped_target[TGT_VARS, icase, iaxis] = target[iaxis]</span>
+<span class="sd">                end</span>
+
+<span class="sd">                for iaxis</span>
+<span class="sd">                    if iaxis == ibrick_axis</span>
+<span class="sd">                        &lt;&gt; jac_part = (</span>
+<span class="sd">                            inner_brick[ibrick_axis, ibrick_side]</span>
+<span class="sd">                            - outer_brick[ibrick_axis, ibrick_side]</span>
+<span class="sd">                            )    {id=jpart1}</span>
+<span class="sd">                    else</span>
+<span class="sd">                        jac_part = ob_ext[iaxis] * (1-deform)  {id=jpart2}</span>
+<span class="sd">                    end</span>
+<span class="sd">                end</span>
+
+<span class="sd">                &lt;&gt; jacobian = abs(product(iaxis,</span>
+<span class="sd">                                          jac_part)) {id=jac,dep=jpart1:jpart2}</span>
+
+<span class="sd">                # in our case 0 * inf = 0</span>
+<span class="sd">                &lt;&gt; knl_val_finished = if(abs(knl_val) &gt; 1e16,</span>
+<span class="sd">                    0, knl_val) {id=finish_kval}</span>
+
+<span class="sd">                &lt;&gt; dist[iaxis] = (true_target[iaxis]</span>
+<span class="sd">                                - mapped_point_tmp[iaxis]) {dep=mpoint:true_targets}</span>
+
+<span class="sd">            end</span>
+
+<span class="sd">        end</span>
+
+<span class="sd">        for BASIS_VARS, TGT_VARS, icase</span>
+<span class="sd">            for ilevel</span>
+<span class="sd">                for ibrick_axis, ibrick_side, QUAD_VARS</span>
+
+<span class="sd">                    PREPARE_BASIS_VALS</span>
+
+<span class="sd">                    &lt;&gt; density_val = DENSITY_VAL_ASSIGNMENT \</span>
+<span class="sd">                            {id=density,dep=basis_evals}</span>
+
+<span class="sd">                end</span>
+<span class="sd">            end</span>
+<span class="sd">        end</span>
+
+<span class="sd">        for BASIS_VARS, TGT_VARS, icase</span>
+<span class="sd">            # the first index is contiguous</span>
+<span class="sd">            result[REV_BASIS_VARS, REV_TGT_VARS, icase] = (sum(</span>
+<span class="sd">                    (ilevel, ibrick_axis, ibrick_side, QUAD_VARS),</span>
+<span class="sd">                    PROD_QUAD_WEIGHT</span>
+<span class="sd">                    * jacobian</span>
+<span class="sd">                    * knl_val_finished</span>
+<span class="sd">                    * density_val</span>
+<span class="sd">                    )</span>
+<span class="sd">                    *  knl_scaling</span>
+<span class="sd">                ) {id=result,dep=jac:mpoint:density:finish_kval}</span>
+<span class="sd">        end</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_target_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">volumential.meshgen</span> <span class="k">as</span> <span class="nn">mg</span>
+
+        <span class="n">q_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">make_uniform_cubic_grid</span><span class="p">(</span>
+            <span class="n">degree</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="p">)</span>
+        <span class="c1"># map to [0,1]^d</span>
+        <span class="n">mapped_q_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">qp</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">qp</span> <span class="ow">in</span> <span class="n">q_points</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+        <span class="c1"># sort in dictionary order, preserve only the leading</span>
+        <span class="c1"># digits to prevent floating point errors from polluting</span>
+        <span class="c1"># the ordering.</span>
+        <span class="n">q_points_ordering</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mapped_q_points</span><span class="p">)),</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">mapped_q_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">mapped_q_points</span><span class="p">[</span><span class="n">q_points_ordering</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">postprocess_cheb_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cheb_table</span><span class="p">,</span> <span class="n">cheb_coefs</span><span class="p">):</span>
+        <span class="c1"># Cheb table is indexed by f0, f1, t0, t1, icase</span>
+        <span class="n">nfp_table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">,</span> <span class="o">*</span><span class="n">cheb_table</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">:]])</span>
+        <span class="c1"># transform to interpolatory basis functions</span>
+        <span class="n">concat_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">iaxis</span> <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">):</span>
+            <span class="n">mccoefs</span> <span class="o">=</span> <span class="n">cheb_coefs</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span>
+            <span class="n">nfp_table</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span>
+                <span class="n">mccoefs</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span> <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]),</span>
+                <span class="n">cheb_table</span><span class="p">,</span>
+                <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="n">concat_axes</span><span class="p">,</span> <span class="n">concat_axes</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="c1"># transform to self.data format</span>
+        <span class="n">transpose_axes</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">transpose_axes</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">nfp_table</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">transpose_axes</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># }}} End Droste base class</span>
+
+<span class="c1"># {{{ full Droste method</span>
+
+
+<div class="viewcode-block" id="DrosteFull"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteFull">[docs]</a><span class="k">class</span> <span class="nc">DrosteFull</span><span class="p">(</span><span class="n">DrosteBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build the full table directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">integral_knl</span><span class="p">,</span> <span class="n">quad_order</span><span class="p">,</span> <span class="n">case_vecs</span><span class="p">,</span> <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">integral_knl</span><span class="p">,</span> <span class="n">quad_order</span><span class="p">,</span> <span class="n">case_vecs</span><span class="p">,</span> <span class="n">n_brick_quad_points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;DrosteFull&quot;</span>
+
+    <span class="k">def</span> <span class="nf">make_loop_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tgt_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_tgt_vars</span><span class="p">()</span>
+        <span class="n">quad_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_quad_vars</span><span class="p">()</span>
+        <span class="n">basis_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_basis_vars</span><span class="p">()</span>
+        <span class="n">basis_eval_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_basis_eval_vars</span><span class="p">()</span>
+        <span class="n">pwaffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_pwaffs</span><span class="p">()</span>  <span class="c1"># noqa: F841</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loop_domain</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">tgt_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">quad_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_eval_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="n">lbound</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iside&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iaxis&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ibrick_side&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ibrick_axis&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ilevel&quot;</span><span class="p">],</span> <span class="s2">&quot;nlevels&quot;</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;icase&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop_domain</span>
+
+    <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_loop_domain</span><span class="p">()</span>
+
+        <span class="n">extra_kernel_kwarg_types</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;extra_kernel_kwarg_types&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">extra_kernel_kwarg_types</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;extra_kernel_kwarg_types&quot;</span><span class="p">]</span>
+
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">make_kernel</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+            <span class="p">[</span><span class="n">domain</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_code</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sumpy_kernel_eval_insns</span><span class="p">(),</span>
+            <span class="p">[</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;n_cases, nfunctions, quad_order, dim&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;interaction_case_vecs&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;dim, n_cases&quot;</span><span class="p">),</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;interaction_case_scls&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;n_cases&quot;</span><span class="p">),</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span>
+                    <span class="s2">&quot;result&quot;</span><span class="p">,</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span>
+                    <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="p">[</span><span class="s2">&quot;nfunctions&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+                        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;quad_order&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+                    <span class="p">)</span>
+                    <span class="o">+</span> <span class="s2">&quot;, n_cases&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="o">*</span><span class="n">extra_kernel_kwarg_types</span><span class="p">,</span>
+                <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brick_map&quot;</span><span class="p">,</span>
+            <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">fix_parameters</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">write_cl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">loopy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">prepare_loopy_kernel</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">loopy_knl</span>
+
+    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># FIXME</span>
+        <span class="c1"># nproc = 16 on porter</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;icase&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">outer_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">knl</span>
+
+<div class="viewcode-block" id="DrosteFull.call_loopy_kernel"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteFull.call_loopy_kernel">[docs]</a>    <span class="k">def</span> <span class="nf">call_loopy_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :arg source_box_extent</span>
+<span class="sd">        :arg alpha</span>
+<span class="sd">        :arg nlevels</span>
+<span class="sd">        :arg extra_kernel_kwargs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="s2">&quot;source_box_extent&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;source_box_extent&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="n">source_box_extent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;source_box_extent&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">source_box_extent</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">extra_kernel_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;extra_kernel_kwargs&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">extra_kernel_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;extra_kernel_kwargs&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;alpha&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">alpha</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="s2">&quot;nlevels&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">nlevels</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;nlevels&quot;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">nlevels</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Single level is equivalent to Duffy transform</span>
+            <span class="n">nlevels</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">missing_measure</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">**</span> <span class="n">nlevels</span> <span class="o">*</span> <span class="n">source_box_extent</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">missing_measure</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+
+            <span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Droste probably has too few levels, missing measure = &quot;</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">missing_measure</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;result_array&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;result_array&quot;</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_result_array</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># root brick</span>
+        <span class="n">root_brick</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">root_brick</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_box_extent</span>
+
+        <span class="c1"># target points in 1D</span>
+        <span class="n">q_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_target_points</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_points</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">q_points</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">]])</span>
+
+        <span class="c1"># quad formula for each brick (normalized to [0,1])</span>
+        <span class="c1"># sps.legendre blows up easily at high order</span>
+        <span class="kn">import</span> <span class="nn">scipy.special</span> <span class="k">as</span> <span class="nn">sps</span>
+
+        <span class="c1"># legendre_nodes, _, legendre_weights = sps.legendre(</span>
+        <span class="c1">#        nquad_points).weights.T</span>
+        <span class="n">legendre_nodes</span><span class="p">,</span> <span class="n">legendre_weights</span> <span class="o">=</span> <span class="n">sps</span><span class="o">.</span><span class="n">p_roots</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">)</span>
+        <span class="n">legendre_nodes</span> <span class="o">=</span> <span class="n">legendre_nodes</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.5</span>
+        <span class="n">legendre_weights</span> <span class="o">=</span> <span class="n">legendre_weights</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
+        <span class="n">evt</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">knl</span><span class="p">(</span>
+            <span class="n">queue</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">result_array</span><span class="p">,</span>
+            <span class="n">root_brick</span><span class="o">=</span><span class="n">root_brick</span><span class="p">,</span>
+            <span class="n">target_nodes</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">quadrature_nodes</span><span class="o">=</span><span class="n">legendre_nodes</span><span class="p">,</span>
+            <span class="n">quadrature_weights</span><span class="o">=</span><span class="n">legendre_weights</span><span class="p">,</span>
+            <span class="n">interaction_case_vecs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">),</span>
+            <span class="n">interaction_case_scls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_scls</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">),</span>
+            <span class="n">n_cases</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">,</span>
+            <span class="n">nfunctions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+            <span class="n">quad_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+            <span class="n">nlevels</span><span class="o">=</span><span class="n">nlevels</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">extra_kernel_kwargs</span>
+        <span class="p">)</span>
+
+        <span class="n">cheb_table</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">cheb_table</span></div>
+
+    <span class="k">def</span> <span class="nf">get_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(),</span>
+            <span class="s2">&quot;quad_order-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">),</span>
+            <span class="s2">&quot;brick_order-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :arg source_box_extent</span>
+<span class="sd">        :arg alpha</span>
+<span class="sd">        :arg nlevels</span>
+<span class="sd">        :arg extra_kernel_kwargs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;cheb_coefs&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cheb_coefs&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+            <span class="k">for</span> <span class="n">ccoef</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cheb_coefs&quot;</span><span class="p">]:</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ccoef</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+            <span class="n">cheb_coefs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cheb_coefs&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocess_cheb_table</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">call_loopy_kernel</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">cheb_coefs</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Returning cheb table directly&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_loopy_kernel</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<span class="c1"># }}} End full Droste method</span>
+
+<span class="c1"># {{{ reduced Droste method</span>
+
+
+<div class="viewcode-block" id="DrosteReduced"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteReduced">[docs]</a><span class="k">class</span> <span class="nc">DrosteReduced</span><span class="p">(</span><span class="n">DrosteBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reduce the workload by only building part of the table and infer the</span>
+<span class="sd">    rest of the table by symmetry.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">integral_knl</span><span class="p">,</span>
+        <span class="n">quad_order</span><span class="p">,</span>
+        <span class="n">case_vecs</span><span class="p">,</span>
+        <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">knl_symmetry_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">integral_knl</span><span class="p">,</span> <span class="n">quad_order</span><span class="p">,</span> <span class="n">case_vecs</span><span class="p">,</span> <span class="n">n_brick_quad_points</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">volumential.list1_symmetry</span> <span class="k">import</span> <span class="n">CaseVecReduction</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span> <span class="o">=</span> <span class="n">CaseVecReduction</span><span class="p">(</span><span class="n">case_vecs</span><span class="p">,</span> <span class="n">knl_symmetry_tags</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Reduction ratio by symmetry = &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">get_full_reduction_ratio</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbcases</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">reduced_vecs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loop_domains</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">bvec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">reduced_vecs</span><span class="p">]</span>
+
+        <span class="c1"># state of the object that determines behavior of functions like</span>
+        <span class="c1"># get_kernel()</span>
+        <span class="c1"># get_kernel() returns the kernel for actual quadrature when</span>
+        <span class="c1">#   get_kernel_id = 0,</span>
+        <span class="c1"># while it returns the kernel for expansion within the same case when = 1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">make_loop_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_case_id</span><span class="p">):</span>
+        <span class="c1"># The icase is just a dummy variable that allows resusing some of the</span>
+        <span class="c1"># code (e.g. kernel evals) from the base class</span>
+        <span class="k">assert</span> <span class="n">base_case_id</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">base_case_id</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbcases</span>
+
+        <span class="n">tgt_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_tgt_vars</span><span class="p">()</span>  <span class="c1"># noqa: F841</span>
+        <span class="n">quad_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_quad_vars</span><span class="p">()</span>
+        <span class="n">basis_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_basis_vars</span><span class="p">()</span>
+        <span class="n">basis_eval_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_basis_eval_vars</span><span class="p">()</span>
+        <span class="n">pwaffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_pwaffs</span><span class="p">()</span>
+        <span class="n">loop_domain_common_parts</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">quad_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_eval_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="n">lbound</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iside&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iaxis&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ibrick_side&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ibrick_axis&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ilevel&quot;</span><span class="p">],</span> <span class="s2">&quot;nlevels&quot;</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;icase&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># target brick domain depends on symmetry group of the case vec</span>
+        <span class="c1"># upper bounds account for flippings, and lower bounds account for swappings</span>
+        <span class="n">flippable</span><span class="p">,</span> <span class="n">swappable_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">parse_symmetry_tags</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">reduced_invariant_groups</span><span class="p">[</span><span class="n">base_case_id</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">prev_swappable</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">swappable_groups</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+                    <span class="n">axid</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">axid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">prev_swappable</span><span class="p">[</span><span class="n">iaxis</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">)[</span><span class="n">axid</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+        <span class="kn">import</span> <span class="nn">operator</span>
+
+        <span class="n">tgt_domain_ubounds</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span>
+            <span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">,</span>
+            <span class="p">[</span>
+                <span class="n">pwaffs</span><span class="p">[</span><span class="s2">&quot;t&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)]</span><span class="o">.</span><span class="n">lt_set</span><span class="p">(</span>
+                    <span class="n">pwaffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="p">(</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+                        <span class="k">if</span> <span class="n">flippable</span><span class="p">[</span><span class="n">iaxis</span><span class="p">]</span>
+                        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">tgt_domain_lbounds</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span>
+            <span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">,</span>
+            <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="n">pwaffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">prev_swappable</span><span class="p">[</span><span class="n">iaxis</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="k">else</span> <span class="n">pwaffs</span><span class="p">[</span><span class="s2">&quot;t&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">prev_swappable</span><span class="p">[</span><span class="n">iaxis</span><span class="p">])]</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">le_set</span><span class="p">(</span><span class="n">pwaffs</span><span class="p">[</span><span class="s2">&quot;t&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)])</span>
+                <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">tgt_domain</span> <span class="o">=</span> <span class="n">tgt_domain_ubounds</span> <span class="o">&amp;</span> <span class="n">tgt_domain_lbounds</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loop_domains</span><span class="p">[</span><span class="n">base_case_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">loop_domain_common_parts</span> <span class="o">&amp;</span> <span class="n">tgt_domain</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop_domains</span><span class="p">[</span><span class="n">base_case_id</span><span class="p">]</span>
+
+<div class="viewcode-block" id="DrosteReduced.make_result_array"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteReduced.make_result_array">[docs]</a>    <span class="k">def</span> <span class="nf">make_result_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Allocate memory space for results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># by default uses double type returns</span>
+        <span class="k">if</span> <span class="s2">&quot;result_dtype&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">result_dtype</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;result_dtype&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+
+        <span class="c1"># allocate return arrays</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">),</span>
+                        <span class="n">result_dtype</span>
+                        <span class="p">)</span>
+                    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="mi">1</span><span class="p">,</span>
+                            <span class="p">),</span>
+                        <span class="n">result_dtype</span>
+                        <span class="p">)</span>
+                    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                    <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                            <span class="mi">1</span><span class="p">,</span>
+                            <span class="p">),</span>
+                        <span class="n">result_dtype</span>
+                        <span class="p">)</span>
+                    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                    <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">return</span> <span class="n">result_array</span></div>
+
+<div class="viewcode-block" id="DrosteReduced.get_kernel_expansion_by_symmetry_code"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteReduced.get_kernel_expansion_by_symmetry_code">[docs]</a>    <span class="k">def</span> <span class="nf">get_kernel_expansion_by_symmetry_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extra assignments that performs expansion by symmetry within the</span>
+<span class="sd">        current case.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># case_id = self.reduce_by_symmetry.reduced_vec_ids[self.current_base_case]</span>
+        <span class="c1"># case_vec = self.reduce_by_symmetry.reduced_vecs[self.current_base_case]</span>
+        <span class="n">invariant_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">reduced_invariant_groups</span><span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span>
+        <span class="p">]</span>
+
+        <span class="n">flippable</span><span class="p">,</span> <span class="n">swappable_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">parse_symmetry_tags</span><span class="p">(</span>
+            <span class="n">invariant_group</span>
+        <span class="p">)</span>
+        <span class="n">nflippables</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">flippable</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">flippable</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="n">flippable_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">flippable</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">base_tgt_ordering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_dim_independent</span><span class="p">(</span><span class="s2">&quot;TGT_VARS&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">base_fun_ordering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_dim_independent</span><span class="p">(</span><span class="s2">&quot;BASIS_VARS&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">base_tgt_ordering</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+
+        <span class="k">def</span> <span class="nf">flip_tgt</span><span class="p">(</span><span class="n">tgt_var</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tgt_var</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">tgt_var</span> <span class="o">+</span> <span class="s2">&quot; - 1&quot;</span>
+
+        <span class="k">def</span> <span class="nf">conjunct</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+            <span class="c1"># conjunct(v_i) = v_{dim-1-i}</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="n">vid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">var</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="k">assert</span> <span class="n">vid</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">vid</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+            <span class="k">return</span> <span class="n">var</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">vid</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">permutations</span>
+
+        <span class="n">ext_ids</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">ext</span>
+            <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">fid</span> <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="n">product</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">nflippables</span><span class="p">)],</span>
+                <span class="o">*</span><span class="p">[</span>
+                    <span class="p">[</span><span class="n">sid</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">sgroup</span><span class="p">)]</span>
+                    <span class="k">for</span> <span class="n">sgroup</span> <span class="ow">in</span> <span class="n">swappable_groups</span>
+                    <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># print(ext_ids)</span>
+
+        <span class="c1"># The idea is that, any member of the hyperoctahedral group</span>
+        <span class="c1"># has the decomposition m = f * s, where f is a flip and s</span>
+        <span class="c1"># is a swap.</span>
+        <span class="c1"># Conversely, by iterating all combinations of flips and swaps,</span>
+        <span class="c1"># the whole group is iterated over.</span>
+
+        <span class="n">expansion_code</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ext_index</span><span class="p">,</span> <span class="n">ext_id</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ext_ids</span><span class="p">)),</span> <span class="n">ext_ids</span><span class="p">):</span>
+            <span class="n">ext_tgt_ordering</span> <span class="o">=</span> <span class="n">base_tgt_ordering</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">ext_fun_ordering</span> <span class="o">=</span> <span class="n">base_fun_ordering</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1"># apply s</span>
+            <span class="k">for</span> <span class="n">swap</span> <span class="ow">in</span> <span class="n">ext_id</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">ns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">swap</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
+                    <span class="n">original_part</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">swap</span><span class="p">)</span>
+                    <span class="n">ext_tgt_ordering</span><span class="p">[</span><span class="n">original_part</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">base_tgt_ordering</span><span class="p">[</span><span class="n">swap</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                    <span class="n">ext_fun_ordering</span><span class="p">[</span><span class="n">original_part</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">base_fun_ordering</span><span class="p">[</span><span class="n">swap</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="c1"># apply f, also figure out the rule for sign changes</span>
+            <span class="n">ext_sign</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+            <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nflippables</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">ext_id</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">fid</span><span class="p">]:</span>
+                    <span class="n">iaxis</span> <span class="o">=</span> <span class="n">flippable_ids</span><span class="p">[</span><span class="n">fid</span><span class="p">]</span>
+                    <span class="n">itgt</span> <span class="o">=</span> <span class="n">ext_tgt_ordering</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;t&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">))</span>
+                    <span class="n">ext_tgt_ordering</span><span class="p">[</span><span class="n">itgt</span><span class="p">]</span> <span class="o">=</span> <span class="n">flip_tgt</span><span class="p">(</span><span class="n">ext_tgt_ordering</span><span class="p">[</span><span class="n">itgt</span><span class="p">])</span>
+                    <span class="n">ext_sign</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">ext_sign</span>
+                        <span class="o">+</span> <span class="s2">&quot; * if(&quot;</span>
+                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span><span class="p">[</span><span class="n">iaxis</span><span class="p">]</span>
+                        <span class="o">+</span> <span class="s2">&quot; % 2 == 0, 1, -1)&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="c1"># print(&#39;, &#39;.join(ext_tgt_ordering))</span>
+            <span class="n">ext_tgt_ordering</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="n">ext_fun_ordering</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+            <span class="n">expansion_code</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">make_dim_independent</span><span class="p">(</span>
+                    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                for BASIS_VARS, TGT_VARS, icase</span>
+<span class="sd">                    result[EXT_BASIS_VARS, EXT_TGT_VARS, icase] = (</span>
+<span class="sd">                        EXT_SIGN *</span>
+<span class="sd">                        result[REV_BASIS_VARS, REV_TGT_VARS, icase]</span>
+<span class="sd">                        ) {id=result_ext_EXT_ID}</span>
+<span class="sd">                end</span>
+<span class="sd">                &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                        <span class="s2">&quot;EXT_TGT_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ext_tgt_ordering</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;EXT_BASIS_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ext_fun_ordering</span><span class="p">))</span>
+                    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;EXT_SIGN&quot;</span><span class="p">,</span> <span class="n">ext_sign</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;EXT_ID&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ext_index</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">expansion_code</span></div>
+
+    <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_loop_domain</span><span class="p">(</span><span class="n">base_case_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">)</span>
+
+        <span class="n">extra_kernel_kwarg_types</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;extra_kernel_kwarg_types&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">extra_kernel_kwarg_types</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;extra_kernel_kwarg_types&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">make_kernel</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+                <span class="p">[</span><span class="n">domain</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_code</span><span class="p">()</span>
+                <span class="c1"># FIXME: cannot have expansion in the same kernel, since it</span>
+                <span class="c1"># will require a global barrier</span>
+                <span class="c1"># + self.get_kernel_expansion_by_symmetry_code()</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sumpy_kernel_eval_insns</span><span class="p">(),</span>
+                <span class="p">[</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;n_cases, nfunctions, quad_order, dim&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;interaction_case_vecs&quot;</span><span class="p">,</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;dim, n_cases&quot;</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;interaction_case_scls&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;n_cases&quot;</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;target_nodes&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;quad_order&quot;</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span>
+                        <span class="s2">&quot;result&quot;</span><span class="p">,</span>
+                        <span class="n">lp</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span>
+                        <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="p">[</span><span class="s2">&quot;nfunctions&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+                            <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;quad_order&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+                        <span class="p">)</span>
+                        <span class="o">+</span> <span class="s2">&quot;, n_cases&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="o">*</span><span class="n">extra_kernel_kwarg_types</span><span class="p">,</span>
+                    <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brick_map&quot;</span><span class="p">,</span>
+                <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">make_kernel</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+                <span class="p">[</span><span class="n">domain</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_expansion_by_symmetry_code</span><span class="p">(),</span>
+                <span class="p">[</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;n_cases, nfunctions, quad_order, dim&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span>
+                        <span class="s2">&quot;result&quot;</span><span class="p">,</span>
+                        <span class="n">lp</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span>
+                        <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="p">[</span><span class="s2">&quot;nfunctions&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+                            <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;quad_order&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+                        <span class="p">)</span>
+                        <span class="o">+</span> <span class="s2">&quot;, n_cases&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="o">*</span><span class="n">extra_kernel_kwarg_types</span><span class="p">,</span>
+                    <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brick_map_expansion&quot;</span><span class="p">,</span>
+                <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">fix_parameters</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">write_cl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">loopy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">prepare_loopy_kernel</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">loopy_knl</span>
+
+    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># FIXME</span>
+        <span class="c1"># nproc = 16 on porter</span>
+        <span class="c1"># The returned kernel depends on the state variable</span>
+        <span class="c1"># self.current_base_case</span>
+        <span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+        <span class="n">n_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+
+        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">join_inames</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="n">inames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span><span class="p">,</span> <span class="n">new_iname</span><span class="o">=</span><span class="s2">&quot;func&quot;</span><span class="p">)</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="n">n_cores</span><span class="p">,</span> <span class="n">outer_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">knl</span>
+
+<div class="viewcode-block" id="DrosteReduced.call_loopy_kernel_case"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteReduced.call_loopy_kernel_case">[docs]</a>    <span class="k">def</span> <span class="nf">call_loopy_kernel_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">base_case_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call the table builder on one base case, as given in :self.current_base_case:</span>
+<span class="sd">        :arg source_box_extent</span>
+<span class="sd">        :arg alpha</span>
+<span class="sd">        :arg nlevels</span>
+<span class="sd">        :arg extra_kernel_kwargs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">base_case_id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span> <span class="o">=</span> <span class="n">base_case_id</span>
+
+        <span class="k">if</span> <span class="s2">&quot;source_box_extent&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;source_box_extent&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="n">source_box_extent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;source_box_extent&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">source_box_extent</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">extra_kernel_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;extra_kernel_kwargs&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">extra_kernel_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;extra_kernel_kwargs&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;alpha&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">alpha</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="s2">&quot;nlevels&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">nlevels</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;nlevels&quot;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">nlevels</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Single level is equivalent to Duffy transform</span>
+            <span class="n">nlevels</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">missing_measure</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">**</span> <span class="n">nlevels</span> <span class="o">*</span> <span class="n">source_box_extent</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">missing_measure</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+
+            <span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Droste probably has too few levels, missing measure = &quot;</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">missing_measure</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;result_array&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;result_array&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_result_array</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># root brick</span>
+        <span class="n">root_brick</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">root_brick</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_box_extent</span>
+
+        <span class="c1"># target points in 1D</span>
+        <span class="n">q_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_target_points</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_points</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">q_points</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">]])</span>
+
+        <span class="n">base_case_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">reduced_vecs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">][</span><span class="n">d</span><span class="p">]]</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">base_case_scl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_scls</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">reduced_vec_ids</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">]</span>
+                <span class="p">]</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># quad formula for each brick (normalized to [0,1])</span>
+        <span class="c1"># sps.legendre blows up easily at high order</span>
+        <span class="kn">import</span> <span class="nn">scipy.special</span> <span class="k">as</span> <span class="nn">sps</span>
+
+        <span class="c1"># legendre_nodes, _, legendre_weights = sps.legendre(</span>
+        <span class="c1">#        nquad_points).weights.T</span>
+        <span class="n">legendre_nodes</span><span class="p">,</span> <span class="n">legendre_weights</span> <span class="o">=</span> <span class="n">sps</span><span class="o">.</span><span class="n">p_roots</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">)</span>
+        <span class="n">legendre_nodes</span> <span class="o">=</span> <span class="n">legendre_nodes</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.5</span>
+        <span class="n">legendre_weights</span> <span class="o">=</span> <span class="n">legendre_weights</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_memoize_dic_get_cached_optimized_kernel&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
+        <span class="n">evt</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">knl</span><span class="p">(</span>
+            <span class="n">queue</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">result_array</span><span class="p">,</span>
+            <span class="n">root_brick</span><span class="o">=</span><span class="n">root_brick</span><span class="p">,</span>
+            <span class="n">target_nodes</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">quadrature_nodes</span><span class="o">=</span><span class="n">legendre_nodes</span><span class="p">,</span>
+            <span class="n">quadrature_weights</span><span class="o">=</span><span class="n">legendre_weights</span><span class="p">,</span>
+            <span class="n">interaction_case_vecs</span><span class="o">=</span><span class="n">base_case_vec</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">interaction_case_scls</span><span class="o">=</span><span class="n">base_case_scl</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">n_cases</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">nfunctions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+            <span class="n">quad_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+            <span class="n">nlevels</span><span class="o">=</span><span class="n">nlevels</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">extra_kernel_kwargs</span>
+        <span class="p">)</span>
+        <span class="n">raw_cheb_table_case</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_memoize_dic_get_cached_optimized_kernel&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">knl2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
+        <span class="n">evt</span><span class="p">,</span> <span class="n">res2</span> <span class="o">=</span> <span class="n">knl2</span><span class="p">(</span>
+            <span class="n">queue</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">raw_cheb_table_case</span><span class="p">,</span>
+            <span class="n">n_cases</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">nfunctions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+            <span class="n">quad_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+            <span class="n">nlevels</span><span class="o">=</span><span class="n">nlevels</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">extra_kernel_kwargs</span>
+        <span class="p">)</span>
+        <span class="n">cheb_table_case</span> <span class="o">=</span> <span class="n">res2</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">cheb_table_case</span></div>
+
+    <span class="k">def</span> <span class="nf">build_cheb_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Build the table using Cheb modes as sources</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">cheb_table</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">cheb_table</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">cheb_table</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="k">for</span> <span class="n">base_case_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbcases</span><span class="p">):</span>
+            <span class="c1"># print(base_case_id)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span> <span class="o">=</span> <span class="n">base_case_id</span>
+            <span class="n">case_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">reduced_vec_ids</span><span class="p">[</span><span class="n">base_case_id</span><span class="p">]</span>
+            <span class="n">cheb_table</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">case_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_loopy_kernel_case</span><span class="p">(</span>
+                <span class="n">queue</span><span class="p">,</span> <span class="n">base_case_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># print(&quot;Loopy kernel finished&quot;)</span>
+
+            <span class="c1"># {{{ expansion by symmetry</span>
+            <span class="n">flippable</span><span class="p">,</span> <span class="n">swappable_groups</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">parse_symmetry_tags</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">symmetry_tags</span>
+                            <span class="p">)</span>
+            <span class="n">nflippables</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">flippable</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">flippable</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+            <span class="n">flippable_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">flippable</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+            <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">permutations</span>
+
+            <span class="n">ext_ids</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">ext</span>
+                <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">fid</span> <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="n">product</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">nflippables</span><span class="p">)],</span>
+                    <span class="o">*</span><span class="p">[</span>
+                        <span class="p">[</span><span class="n">sid</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">sgroup</span><span class="p">)]</span>
+                        <span class="k">for</span> <span class="n">sgroup</span> <span class="ow">in</span> <span class="n">swappable_groups</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+
+            <span class="n">base_case_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">full_vecs</span><span class="p">[</span><span class="n">case_id</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="n">base_case_vec</span>
+                    <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">reduced_vecs</span><span class="p">[</span><span class="n">base_case_id</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">ext_index</span><span class="p">,</span> <span class="n">ext_id</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ext_ids</span><span class="p">)),</span> <span class="n">ext_ids</span><span class="p">):</span>
+                <span class="c1"># start from the base vec</span>
+                <span class="n">ext_vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">base_case_vec</span><span class="p">)</span>
+                <span class="n">swapped_axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">))</span>
+
+                <span class="c1"># apply s</span>
+                <span class="c1"># Note that fi and ti are in reverse order</span>
+                <span class="k">for</span> <span class="n">swap</span> <span class="ow">in</span> <span class="n">ext_id</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                    <span class="n">ns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">swap</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
+                        <span class="n">original_part</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">swap</span><span class="p">)</span>
+                        <span class="n">ext_vec</span><span class="p">[</span><span class="n">original_part</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">base_case_vec</span><span class="p">[</span><span class="n">swap</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                        <span class="n">swapped_axes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">original_part</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">swap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="p">)</span>
+                <span class="n">swapped_basis_axes</span> <span class="o">=</span> <span class="n">swapped_axes</span>
+                <span class="n">swapped_tgt_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">swapped_basis_axes</span><span class="p">]</span>
+                <span class="n">tmp_table_part</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">cheb_table</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">case_id</span><span class="p">]</span>
+                    <span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">swapped_basis_axes</span> <span class="o">+</span> <span class="n">swapped_tgt_axes</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="p">)</span>
+
+                <span class="c1"># if case_id == 69:</span>
+                <span class="c1">#    print(&quot;after swapping:&quot;,</span>
+                <span class="c1">#           np.linalg.norm(tmp_table_part - cheb_table[...,case_id]))</span>
+
+                <span class="c1"># apply f, also figure out the rule for sign changes</span>
+                <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nflippables</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">ext_id</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">fid</span><span class="p">]:</span>
+                        <span class="n">iaxis</span> <span class="o">=</span> <span class="n">flippable_ids</span><span class="p">[</span><span class="n">fid</span><span class="p">]</span>
+
+                        <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># ext_vec[swapped_iaxis] == 0:</span>
+                            <span class="k">continue</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">ext_vec</span><span class="p">[</span><span class="n">iaxis</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">ext_vec</span><span class="p">[</span><span class="n">iaxis</span><span class="p">]</span>
+                            <span class="c1"># flips.append(</span>
+                            <span class="c1">#   lambda x:</span>
+                            <span class="c1">#     np.flip(x, (self.dim - 1 - iaxis)</span>
+                            <span class="c1">#     + self.dim))</span>
+                            <span class="n">full_slice</span> <span class="o">=</span> <span class="p">[</span>
+                                <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">axid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+                            <span class="p">]</span>
+                            <span class="k">for</span> <span class="n">basis_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="n">basis_id</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="k">continue</span>
+                                <span class="n">sign_slice</span> <span class="o">=</span> <span class="n">full_slice</span>
+                                <span class="n">sign_slice</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">iaxis</span><span class="p">]</span> <span class="o">=</span> <span class="n">basis_id</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">tmp_table_part</span><span class="p">,</span> <span class="n">sign_slice</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+                        <span class="n">tmp_table_part</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span>
+                            <span class="n">tmp_table_part</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">iaxis</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+                        <span class="p">)</span>
+
+                <span class="c1"># if case_id == 69:</span>
+                <span class="c1">#    print(&quot;after flipping:&quot;,</span>
+                <span class="c1">#       np.linalg.norm(tmp_table_part - cheb_table[...,case_id]))</span>
+                <span class="c1">#    print(&quot;Filling by symmetry&quot;,</span>
+                <span class="c1">#       base_case_vec, &quot;--&gt;&quot;, ext_vec, swapped_axes, ext_id)</span>
+
+                <span class="k">assert</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ext_vec</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">full_vecs</span>
+                <span class="n">ext_case_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">full_vecs</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ext_vec</span><span class="p">))</span>
+                <span class="n">cheb_table</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">ext_case_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_table_part</span>
+
+                <span class="c1"># }}} End expansion by symmetry</span>
+
+        <span class="k">return</span> <span class="n">cheb_table</span>
+
+    <span class="k">def</span> <span class="nf">get_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(),</span>
+            <span class="s2">&quot;quad_order-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">),</span>
+            <span class="s2">&quot;brick_order-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">),</span>
+            <span class="s2">&quot;case-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">),</span>
+            <span class="s2">&quot;kernel_id-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :arg source_box_extent</span>
+<span class="sd">        :arg alpha</span>
+<span class="sd">        :arg nlevels</span>
+<span class="sd">        :arg extra_kernel_kwargs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;cheb_coefs&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cheb_coefs&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
+            <span class="k">for</span> <span class="n">ccoef</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cheb_coefs&quot;</span><span class="p">]:</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ccoef</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+            <span class="n">cheb_coefs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cheb_coefs&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocess_cheb_table</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">build_cheb_table</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">cheb_coefs</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Returning cheb table directly&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_cheb_table</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<span class="c1"># }}} End reduced Droste method</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Xiaoyu Wei
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

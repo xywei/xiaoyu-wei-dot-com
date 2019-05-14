@@ -1,0 +1,765 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>volumential.function_extension &mdash; Volumential 2017.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Volumential
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2017
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sphinx.html">Documentation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../indices_tables.html">Indices and tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Volumential</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>volumential.function_extension</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for volumential.function_extension</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Function extension with regularity contraints:</span>
+
+<span class="sd">1. :math:`L^2`: extend with constant value</span>
+
+<span class="sd">.. autofunction:: compute_constant_extension</span>
+
+<span class="sd">2. :math:`C^0`: harmonic extension</span>
+
+<span class="sd">.. autofunction:: compute_harmonic_extension</span>
+
+<span class="sd">3. :math:`C^1`: biharmonic extension</span>
+
+<span class="sd">.. autofunction:: compute_biharmonic_extension</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2018 Xiaoyu Wei&quot;</span>
+
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="s2">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="s2">in the Software without restriction, including without limitation the rights</span>
+<span class="s2">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="s2">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="s2">furnished to do so, subject to the following conditions:</span>
+
+<span class="s2">The above copyright notice and this permission notice shall be included in</span>
+<span class="s2">all copies or substantial portions of the Software.</span>
+
+<span class="s2">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="s2">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="s2">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="s2">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="s2">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="s2">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="s2">THE SOFTWARE.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
+<span class="kn">from</span> <span class="nn">pytools.obj_array</span> <span class="k">import</span> <span class="n">make_obj_array</span>
+<span class="kn">from</span> <span class="nn">pymbolic</span> <span class="k">import</span> <span class="n">var</span>
+<span class="kn">from</span> <span class="nn">pytential</span> <span class="k">import</span> <span class="n">bind</span><span class="p">,</span> <span class="n">sym</span>
+<span class="kn">from</span> <span class="nn">pytential.solve</span> <span class="k">import</span> <span class="n">gmres</span>
+<span class="kn">from</span> <span class="nn">pytential.symbolic.stokes</span> <span class="k">import</span> <span class="n">StressletWrapper</span><span class="p">,</span> <span class="n">StokesletWrapper</span>
+
+<span class="c1"># {{{ helper functions</span>
+
+
+<span class="k">def</span> <span class="nf">setup_cl_ctx</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cl</span><span class="o">.</span><span class="n">create_some_context</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">queue</span><span class="o">.</span><span class="n">context</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ctx</span>
+
+
+<span class="k">def</span> <span class="nf">setup_command_queue</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cl_ctx</span> <span class="o">=</span> <span class="n">setup_cl_ctx</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cl</span><span class="o">.</span><span class="n">CommandQueue</span><span class="p">(</span><span class="n">cl_ctx</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">queue</span>
+
+
+<span class="k">def</span> <span class="nf">get_normal_vectors</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">loc_sign</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">loc_sign</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">bind</span><span class="p">(</span><span class="n">density_discr</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">as_vector</span><span class="p">())(</span><span class="n">queue</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">loc_sign</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="n">density_discr</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">as_vector</span><span class="p">())(</span><span class="n">queue</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_tangent_vectors</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">loc_sign</span><span class="p">):</span>
+    <span class="c1"># the domain is on the left.</span>
+    <span class="n">normal</span> <span class="o">=</span> <span class="n">get_normal_vectors</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">loc_sign</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">normal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">normal</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+
+
+<span class="k">def</span> <span class="nf">get_path_length</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="n">density_discr</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))(</span><span class="n">queue</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_arclength_parametrization_derivative</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return x&#39;(s), y&#39;(s). s Follows the same direction as the parametrization.</span>
+<span class="sd">    (Remark: t is the reference-to-global parametrization of the discretization).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">setup_command_queue</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="c1"># xp = dx/dt, yp = dy/dt, sp = ds/dt</span>
+    <span class="n">xp</span><span class="p">,</span> <span class="n">yp</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">parametrization_derivative_matrix</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">where</span><span class="p">)</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="p">(</span><span class="n">xp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">yp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">xps</span> <span class="o">=</span> <span class="n">xp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">sp</span>
+    <span class="n">yps</span> <span class="o">=</span> <span class="n">yp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">sp</span>
+
+    <span class="k">return</span> <span class="n">bind</span><span class="p">(</span><span class="n">density_discr</span><span class="p">,</span> <span class="n">xps</span><span class="p">)(</span><span class="n">queue</span><span class="p">),</span> <span class="n">bind</span><span class="p">(</span><span class="n">density_discr</span><span class="p">,</span> <span class="n">yps</span><span class="p">)(</span><span class="n">queue</span><span class="p">)</span>
+
+<span class="c1"># }}} End helper functions</span>
+
+<span class="c1"># {{{ constant extension</span>
+
+
+<div class="viewcode-block" id="compute_constant_extension"><a class="viewcode-back" href="../../api/modules.html#volumential.function_extension.compute_constant_extension">[docs]</a><span class="k">def</span> <span class="nf">compute_constant_extension</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">,</span>
+        <span class="n">qbx</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">constant_val</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Constant extension.&quot;&quot;&quot;</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">setup_command_queue</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span>
+    <span class="n">debugging_info</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">ext_f</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>
+                 <span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
+                 <span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">+</span> <span class="n">constant_val</span><span class="p">,</span>
+                <span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+
+    <span class="k">return</span> <span class="n">ext_f</span><span class="p">,</span> <span class="n">debugging_info</span></div>
+
+<span class="c1"># }}} End constant extension</span>
+
+<span class="c1"># {{{ harmonic extension</span>
+
+
+<div class="viewcode-block" id="compute_harmonic_extension"><a class="viewcode-back" href="../../api/modules.html#volumential.function_extension.compute_harmonic_extension">[docs]</a><span class="k">def</span> <span class="nf">compute_harmonic_extension</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">,</span>
+        <span class="n">qbx</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span>
+        <span class="n">loc_sign</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">target_association_tolerance</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">gmres_tolerance</span><span class="o">=</span><span class="mf">1e-14</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Harmonic extension.</span>
+
+<span class="sd">    :param: loc_sign indicates the domain for extension,</span>
+<span class="sd">            which equals to the negation of the loc_sign</span>
+<span class="sd">            for the original problem.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">qbx</span><span class="o">.</span><span class="n">ambient_dim</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">setup_command_queue</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span>
+
+    <span class="c1"># {{{ describe bvp</span>
+
+    <span class="kn">from</span> <span class="nn">sumpy.kernel</span> <span class="k">import</span> <span class="n">LaplaceKernel</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">LaplaceKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+
+    <span class="n">cse</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">cse</span>
+
+    <span class="n">sigma_sym</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">)</span>
+    <span class="c1">#sqrt_w = sym.sqrt_jac_q_weight(3)</span>
+    <span class="n">sqrt_w</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">inv_sqrt_w_sigma</span> <span class="o">=</span> <span class="n">cse</span><span class="p">(</span><span class="n">sigma_sym</span><span class="o">/</span><span class="n">sqrt_w</span><span class="p">)</span>
+
+    <span class="n">bdry_op_sym</span> <span class="o">=</span> <span class="p">(</span><span class="n">loc_sign</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sigma_sym</span>
+            <span class="o">+</span> <span class="n">sqrt_w</span><span class="o">*</span><span class="p">(</span>
+                <span class="n">sym</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">inv_sqrt_w_sigma</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">sym</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">inv_sqrt_w_sigma</span><span class="p">)</span>
+                <span class="p">))</span>
+
+    <span class="c1"># }}}</span>
+
+    <span class="n">bound_op</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">bdry_op_sym</span><span class="p">)</span>
+
+    <span class="c1"># {{{ fix rhs and solve</span>
+
+    <span class="n">bvp_rhs</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">sqrt_w</span><span class="o">*</span><span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;bc&quot;</span><span class="p">))(</span><span class="n">queue</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">pytential.solve</span> <span class="k">import</span> <span class="n">gmres</span>
+    <span class="n">gmres_result</span> <span class="o">=</span> <span class="n">gmres</span><span class="p">(</span>
+            <span class="n">bound_op</span><span class="o">.</span><span class="n">scipy_op</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+            <span class="n">bvp_rhs</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">gmres_tolerance</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">stall_iterations</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">hard_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt_w</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">gmres_result</span><span class="o">.</span><span class="n">solution</span><span class="p">)</span>
+
+    <span class="c1"># }}}</span>
+
+    <span class="n">debugging_info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;gmres_result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gmres_result</span>
+
+    <span class="c1"># {{{ postprocess</span>
+
+    <span class="n">repr_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">qbx_forced_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">representation_sym</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">sym</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">inv_sqrt_w_sigma</span><span class="p">,</span> <span class="o">**</span><span class="n">repr_kwargs</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">sym</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">inv_sqrt_w_sigma</span><span class="p">,</span> <span class="o">**</span><span class="n">repr_kwargs</span><span class="p">))</span>
+
+    <span class="n">qbx_stick_out</span> <span class="o">=</span> <span class="n">qbx</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">target_stick_out_factor</span><span class="o">=</span><span class="n">target_association_tolerance</span><span class="p">)</span>
+
+    <span class="n">ext_f</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
+            <span class="n">representation_sym</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+
+    <span class="c1"># }}}</span>
+
+    <span class="k">return</span> <span class="n">ext_f</span><span class="p">,</span> <span class="n">debugging_info</span></div>
+
+
+<span class="c1"># }}} End harmonic extension</span>
+
+<span class="c1"># {{{ biharmonic extension</span>
+
+<span class="c1"># {{{ Goursat kernels</span>
+
+<span class="kn">from</span> <span class="nn">sumpy.kernel</span> <span class="k">import</span> <span class="n">ExpressionKernel</span><span class="p">,</span> <span class="n">AxisTargetDerivative</span>
+
+
+<span class="k">class</span> <span class="nc">ComplexLogKernel</span><span class="p">(</span><span class="n">ExpressionKernel</span><span class="p">):</span>
+
+    <span class="n">init_arg_names</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;dim&quot;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">conj_z</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;sqrt&quot;</span><span class="p">)(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">conj_z</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="n">expr</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)(</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;pi&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;unsupported dimensionality&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComplexLogKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="n">dim</span><span class="p">,</span>
+                <span class="n">expression</span><span class="o">=</span><span class="n">expr</span><span class="p">,</span>
+                <span class="n">global_scaling_const</span><span class="o">=</span><span class="n">scaling</span><span class="p">,</span>
+                <span class="n">is_complex_valued</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">has_efficient_scale_adjustment</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">adjust_for_kernel_scaling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">rscale</span><span class="p">,</span> <span class="n">nderivatives</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Efficient rescaling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">nderivatives</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">sumpy.symbolic</span> <span class="k">as</span> <span class="nn">sp</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">expr</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rscale</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">expr</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;unsupported dimensionality&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getinitargs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;CplxLogKnl</span><span class="si">%d</span><span class="s2">D&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="n">mapper_method</span> <span class="o">=</span> <span class="s2">&quot;map_expression_kernel&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">ComplexLinearLogKernel</span><span class="p">(</span><span class="n">ExpressionKernel</span><span class="p">):</span>
+
+    <span class="n">init_arg_names</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;dim&quot;</span><span class="p">,)</span>
+    <span class="n">has_efficient_scale_adjustment</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">conj_z</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;sqrt&quot;</span><span class="p">)(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">conj_z</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="n">expr</span> <span class="o">=</span> <span class="n">conj_z</span> <span class="o">*</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)(</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;pi&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;unsupported dimensionality&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComplexLinearLogKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="n">dim</span><span class="p">,</span>
+                <span class="n">expression</span><span class="o">=</span><span class="n">expr</span><span class="p">,</span>
+                <span class="n">global_scaling_const</span><span class="o">=</span><span class="n">scaling</span><span class="p">,</span>
+                <span class="n">is_complex_valued</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getinitargs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;CplxLinLogKnl</span><span class="si">%d</span><span class="s2">D&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="n">mapper_method</span> <span class="o">=</span> <span class="s2">&quot;map_expression_kernel&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">ComplexLinearKernel</span><span class="p">(</span><span class="n">ExpressionKernel</span><span class="p">):</span>
+
+    <span class="n">init_arg_names</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;dim&quot;</span><span class="p">,)</span>
+    <span class="n">has_efficient_scale_adjustment</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">expr</span> <span class="o">=</span> <span class="n">z</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">8</span><span class="o">*</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;pi&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;unsupported dimensionality&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComplexLinearKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="n">dim</span><span class="p">,</span>
+                <span class="n">expression</span><span class="o">=</span><span class="n">expr</span><span class="p">,</span>
+                <span class="n">global_scaling_const</span><span class="o">=</span><span class="n">scaling</span><span class="p">,</span>
+                <span class="n">is_complex_valued</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">has_efficient_scale_adjustment</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">adjust_for_kernel_scaling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">rscale</span><span class="p">,</span> <span class="n">nderivatives</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Efficient rescaling of the kernel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">rscale</span> <span class="o">*</span> <span class="n">expr</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;unsupported dimensionality&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getinitargs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;CplxLinKnl</span><span class="si">%d</span><span class="s2">D&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="n">mapper_method</span> <span class="o">=</span> <span class="s2">&quot;map_expression_kernel&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">ComplexFractionalKernel</span><span class="p">(</span><span class="n">ExpressionKernel</span><span class="p">):</span>
+
+    <span class="n">init_arg_names</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;dim&quot;</span><span class="p">,)</span>
+    <span class="n">has_efficient_scale_adjustment</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">conj_z</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">expr</span> <span class="o">=</span> <span class="n">conj_z</span> <span class="o">/</span> <span class="n">z</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;pi&quot;</span><span class="p">)</span><span class="o">*</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;unsupported dimensionality&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComplexFractionalKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="n">dim</span><span class="p">,</span>
+                <span class="n">expression</span><span class="o">=</span><span class="n">expr</span><span class="p">,</span>
+                <span class="n">global_scaling_const</span><span class="o">=</span><span class="n">scaling</span><span class="p">,</span>
+                <span class="n">is_complex_valued</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getinitargs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;CplxFracKnl</span><span class="si">%d</span><span class="s2">D&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="n">mapper_method</span> <span class="o">=</span> <span class="s2">&quot;map_expression_kernel&quot;</span>
+
+
+<span class="c1"># }}} End Goursat kernels</span>
+
+<span class="k">def</span> <span class="nf">get_extension_bie_symbolic_operator</span><span class="p">(</span><span class="n">loc_sign</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    loc_sign:</span>
+<span class="sd">      -1 for interior Dirichlet</span>
+<span class="sd">      +1 for exterior Dirichlet</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;SETUP&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+    <span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">cse</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">cse</span>
+
+    <span class="n">sigma_sym</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="n">int_sigma</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">Ones</span><span class="p">()</span> <span class="o">*</span> <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sigma_sym</span><span class="p">)</span>
+
+    <span class="n">nvec_sym</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="n">mu_sym</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;mu&quot;</span><span class="p">)</span>
+
+    <span class="n">stresslet_obj</span> <span class="o">=</span> <span class="n">StressletWrapper</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">stokeslet_obj</span> <span class="o">=</span> <span class="n">StokesletWrapper</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">bdry_op_sym</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">loc_sign</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_sym</span>
+            <span class="o">-</span> <span class="n">stresslet_obj</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sigma_sym</span><span class="p">,</span> <span class="n">nvec_sym</span><span class="p">,</span> <span class="n">mu_sym</span><span class="p">,</span>
+                <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">)</span>
+            <span class="o">-</span> <span class="n">stokeslet_obj</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sigma_sym</span><span class="p">,</span> <span class="n">mu_sym</span><span class="p">,</span>
+                <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">int_sigma</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bdry_op_sym</span>
+
+
+<div class="viewcode-block" id="compute_biharmonic_extension"><a class="viewcode-back" href="../../api/modules.html#volumential.function_extension.compute_biharmonic_extension">[docs]</a><span class="k">def</span> <span class="nf">compute_biharmonic_extension</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">,</span>
+        <span class="n">qbx</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span>
+        <span class="n">target_association_tolerance</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Biharmoc extension. Currently only support</span>
+<span class="sd">    interior domains in 2D (i.e., extension is on the exterior).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">setup_command_queue</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span>
+    <span class="n">qbx_forced_limit</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">normal</span> <span class="o">=</span> <span class="n">get_normal_vectors</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">loc_sign</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">bdry_op_sym</span> <span class="o">=</span> <span class="n">get_extension_bie_symbolic_operator</span><span class="p">(</span><span class="n">loc_sign</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">bound_op</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">bdry_op_sym</span><span class="p">)</span>
+
+    <span class="n">bc</span> <span class="o">=</span> <span class="p">[</span><span class="n">fy</span><span class="p">,</span> <span class="o">-</span><span class="n">fx</span><span class="p">]</span>
+    <span class="n">bvp_rhs</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;bc&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">))(</span>
+            <span class="n">queue</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">bc</span><span class="p">)</span>
+    <span class="n">gmres_result</span> <span class="o">=</span> <span class="n">gmres</span><span class="p">(</span>
+             <span class="n">bound_op</span><span class="o">.</span><span class="n">scipy_op</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="n">normal</span><span class="p">),</span>
+             <span class="n">bvp_rhs</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+             <span class="n">stall_iterations</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">hard_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">gmres_result</span><span class="o">.</span><span class="n">solution</span>
+
+    <span class="n">arclength_parametrization_derivatives_sym</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span>
+            <span class="s2">&quot;arclength_parametrization_derivatives&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="n">density_mu_sym</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span><span class="s2">&quot;mu&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="n">dxids_sym</span> <span class="o">=</span> <span class="n">arclength_parametrization_derivatives_sym</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> \
+            <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">arclength_parametrization_derivatives_sym</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">dxids_conj_sym</span> <span class="o">=</span> <span class="n">arclength_parametrization_derivatives_sym</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> \
+            <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">arclength_parametrization_derivatives_sym</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">density_rho_sym</span> <span class="o">=</span> <span class="n">density_mu_sym</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">density_mu_sym</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">density_conj_rho_sym</span> <span class="o">=</span> <span class="n">density_mu_sym</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">density_mu_sym</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># convolutions</span>
+    <span class="n">GS1</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">IntG</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">ComplexLinearLogKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">density_rho_sym</span><span class="p">,</span>
+            <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">GS2</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">IntG</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">ComplexLinearKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">density_conj_rho_sym</span><span class="p">,</span>
+            <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">GD1</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">IntG</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">ComplexFractionalKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">density_rho_sym</span> <span class="o">*</span> <span class="n">dxids_sym</span><span class="p">,</span>
+            <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">GD2</span> <span class="o">=</span> <span class="p">[</span><span class="n">sym</span><span class="o">.</span><span class="n">IntG</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">AxisTargetDerivative</span><span class="p">(</span><span class="n">iaxis</span><span class="p">,</span> <span class="n">ComplexLogKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">)),</span>
+            <span class="n">density_conj_rho_sym</span> <span class="o">*</span> <span class="n">dxids_sym</span> <span class="o">+</span> <span class="n">density_rho_sym</span> <span class="o">*</span> <span class="n">dxids_conj_sym</span><span class="p">,</span>
+            <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="n">qbx_forced_limit</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+
+    <span class="n">GS1_bdry</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">IntG</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">ComplexLinearLogKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">density_rho_sym</span><span class="p">,</span>
+            <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="n">qbx_forced_limit</span><span class="p">)</span>
+    <span class="n">GS2_bdry</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">IntG</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">ComplexLinearKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">density_conj_rho_sym</span><span class="p">,</span>
+            <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="n">qbx_forced_limit</span><span class="p">)</span>
+    <span class="n">GD1_bdry</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">IntG</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">ComplexFractionalKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">density_rho_sym</span> <span class="o">*</span> <span class="n">dxids_sym</span><span class="p">,</span>
+            <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="n">qbx_forced_limit</span><span class="p">)</span>
+
+    <span class="n">xp</span><span class="p">,</span> <span class="n">yp</span> <span class="o">=</span> <span class="n">get_arclength_parametrization_derivative</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">)</span>
+    <span class="n">xp</span> <span class="o">=</span> <span class="o">-</span><span class="n">xp</span>
+    <span class="n">yp</span> <span class="o">=</span> <span class="o">-</span><span class="n">yp</span>
+    <span class="n">tangent</span> <span class="o">=</span> <span class="n">get_tangent_vectors</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">,</span> <span class="n">loc_sign</span><span class="o">=</span><span class="n">qbx_forced_limit</span><span class="p">)</span>
+
+    <span class="c1"># check and fix the direction of parametrization</span>
+    <span class="c1"># logger.info(&quot;Fix all negative signs in:&quot; +</span>
+    <span class="c1">#        str(xp * tangent[0] + yp * tangent[1]))</span>
+
+    <span class="n">grad_v2</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">GD2</span><span class="p">[</span><span class="n">iaxis</span><span class="p">])(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span>
+                <span class="n">arclength_parametrization_derivatives</span><span class="o">=</span><span class="n">make_obj_array</span><span class="p">([</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">]))</span><span class="o">.</span><span class="n">real</span>
+            <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+    <span class="n">v2_tangent_der</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">tangent</span><span class="p">[</span><span class="n">iaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">grad_v2</span><span class="p">[</span><span class="n">iaxis</span><span class="p">]</span> <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
+
+    <span class="kn">from</span> <span class="nn">pytential.symbolic.pde.scalar</span> <span class="k">import</span> <span class="n">NeumannOperator</span>
+    <span class="kn">from</span> <span class="nn">sumpy.kernel</span> <span class="k">import</span> <span class="n">LaplaceKernel</span>
+    <span class="n">operator_v1</span> <span class="o">=</span> <span class="n">NeumannOperator</span><span class="p">(</span><span class="n">LaplaceKernel</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">loc_sign</span><span class="o">=</span><span class="n">qbx_forced_limit</span><span class="p">)</span>
+    <span class="n">bound_op_v1</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">operator_v1</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">)))</span>
+    <span class="c1"># FIXME: the positive sign works here</span>
+    <span class="n">rhs_v1</span> <span class="o">=</span> <span class="n">operator_v1</span><span class="o">.</span><span class="n">prepare_rhs</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">v2_tangent_der</span><span class="p">)</span>
+    <span class="n">gmres_result</span> <span class="o">=</span> <span class="n">gmres</span><span class="p">(</span>
+            <span class="n">bound_op_v1</span><span class="o">.</span><span class="n">scipy_op</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+            <span class="n">rhs_v1</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">stall_iterations</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">hard_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">gmres_result</span><span class="o">.</span><span class="n">solution</span>
+    <span class="n">qbx_stick_out</span> <span class="o">=</span> <span class="n">qbx</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+            <span class="n">target_association_tolerance</span><span class="o">=</span><span class="n">target_association_tolerance</span><span class="p">)</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
+            <span class="n">operator_v1</span><span class="o">.</span><span class="n">representation</span><span class="p">(</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">),</span> <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">grad_v1</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
+            <span class="n">operator_v1</span><span class="o">.</span><span class="n">representation</span><span class="p">(</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">),</span> <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">map_potentials</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pot</span><span class="p">:</span> <span class="n">sym</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">pot</span><span class="p">))</span>
+            <span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">v1_bdry</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">operator_v1</span><span class="o">.</span><span class="n">representation</span><span class="p">(</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">),</span>
+        <span class="n">qbx_forced_limit</span><span class="o">=</span><span class="n">qbx_forced_limit</span><span class="p">))(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+
+    <span class="n">z_conj</span> <span class="o">=</span> <span class="n">target_discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">target_discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">z_conj_bdry</span> <span class="o">=</span> <span class="n">density_discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span><span class="o">.</span><span class="n">with_queue</span><span class="p">(</span><span class="n">queue</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> \
+            <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">density_discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span><span class="o">.</span><span class="n">with_queue</span><span class="p">(</span><span class="n">queue</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">int_rho</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span>
+            <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">density_rho_sym</span><span class="p">))(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span>
+
+    <span class="n">omega_S1</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span> <span class="n">GS1</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">omega_S2</span> <span class="o">=</span> <span class="o">-</span> <span class="n">bind</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span> <span class="n">GS2</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">omega_S3</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_conj</span> <span class="o">*</span> <span class="n">int_rho</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>  <span class="c1"># noqa: N806</span>
+    <span class="n">omega_S</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">omega_S1</span> <span class="o">+</span> <span class="n">omega_S2</span> <span class="o">+</span> <span class="n">omega_S3</span><span class="p">)</span>  <span class="c1"># noqa: N806</span>
+
+    <span class="n">grad_omega_S1</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
+            <span class="n">sym</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">GS1</span><span class="p">))(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">grad_omega_S2</span> <span class="o">=</span> <span class="o">-</span> <span class="n">bind</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
+            <span class="n">sym</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">GS2</span><span class="p">))(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">grad_omega_S3</span> <span class="o">=</span> <span class="p">(</span><span class="n">int_rho</span> <span class="o">*</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">]))</span><span class="o">.</span><span class="n">real</span>  <span class="c1"># noqa: N806</span>
+    <span class="n">grad_omega_S</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">grad_omega_S1</span> <span class="o">+</span> <span class="n">grad_omega_S2</span> <span class="o">+</span> <span class="n">grad_omega_S3</span><span class="p">)</span>  <span class="c1"># noqa: N806</span>
+
+    <span class="n">omega_S1_bdry</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">GS1_bdry</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>  <span class="c1"># noqa: N806</span>
+    <span class="n">omega_S2_bdry</span> <span class="o">=</span> <span class="o">-</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">GS2_bdry</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>  <span class="c1"># noqa: N806</span>
+    <span class="n">omega_S3_bdry</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_conj_bdry</span> <span class="o">*</span> <span class="n">int_rho</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>  <span class="c1"># noqa: N806</span>
+    <span class="n">omega_S_bdry</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">omega_S1_bdry</span> <span class="o">+</span> <span class="n">omega_S2_bdry</span> <span class="o">+</span> <span class="n">omega_S3_bdry</span><span class="p">)</span>  <span class="c1"># noqa: N806</span>
+
+    <span class="n">omega_D1</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span> <span class="n">GD1</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span>
+            <span class="n">arclength_parametrization_derivatives</span><span class="o">=</span><span class="n">make_obj_array</span><span class="p">([</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">]))</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">omega_D</span> <span class="o">=</span> <span class="p">(</span><span class="n">omega_D1</span> <span class="o">+</span> <span class="n">v1</span><span class="p">)</span>  <span class="c1"># noqa: N806</span>
+
+    <span class="n">grad_omega_D1</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
+            <span class="n">sym</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">GD1</span><span class="p">)</span>
+            <span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span>
+                    <span class="n">arclength_parametrization_derivatives</span><span class="o">=</span><span class="n">make_obj_array</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">]</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">grad_omega_D</span> <span class="o">=</span> <span class="n">grad_omega_D1</span> <span class="o">+</span> <span class="n">grad_v1</span>  <span class="c1"># noqa: N806</span>
+
+    <span class="n">omega_D1_bdry</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">qbx</span><span class="p">,</span> <span class="n">GD1_bdry</span><span class="p">)(</span>
+                    <span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span>
+                    <span class="n">arclength_parametrization_derivatives</span><span class="o">=</span><span class="n">make_obj_array</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">])</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">omega_D_bdry</span> <span class="o">=</span> <span class="p">(</span><span class="n">omega_D1_bdry</span> <span class="o">+</span> <span class="n">v1_bdry</span><span class="p">)</span>  <span class="c1"># noqa: N806</span>
+
+    <span class="n">int_bdry_mu</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">make_sym_vector</span><span class="p">(</span>
+        <span class="s2">&quot;mu&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="p">)))(</span><span class="n">queue</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span>
+    <span class="n">omega_W</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">int_bdry_mu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">target_discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="o">-</span> <span class="n">int_bdry_mu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">target_discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">grad_omega_W</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">int_bdry_mu</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">int_bdry_mu</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">omega_W_bdry</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># noqa: N806</span>
+            <span class="n">int_bdry_mu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">density_discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span><span class="o">.</span><span class="n">with_queue</span><span class="p">(</span><span class="n">queue</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="o">-</span> <span class="n">int_bdry_mu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">density_discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span><span class="o">.</span><span class="n">with_queue</span><span class="p">(</span><span class="n">queue</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">int_bdry</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;integrand&quot;</span><span class="p">)))(</span>
+            <span class="n">queue</span><span class="p">,</span> <span class="n">integrand</span><span class="o">=</span><span class="n">omega_S_bdry</span><span class="o">+</span><span class="n">omega_D_bdry</span><span class="o">+</span><span class="n">omega_W_bdry</span><span class="p">)</span>
+
+    <span class="n">debugging_info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;omega_S&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">omega_S</span>
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;omega_D&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">omega_D</span>
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;omega_W&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">omega_W</span>
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;omega_v1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;omega_D1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">omega_D1</span>
+
+    <span class="n">int_interior_func_bdry</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">qbx</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;integrand&quot;</span><span class="p">)))(</span>
+            <span class="n">queue</span><span class="p">,</span> <span class="n">integrand</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">path_length</span> <span class="o">=</span> <span class="n">get_path_length</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">density_discr</span><span class="p">)</span>
+    <span class="n">ext_f</span> <span class="o">=</span> <span class="n">omega_S</span> <span class="o">+</span> <span class="n">omega_D</span> <span class="o">+</span> <span class="n">omega_W</span> <span class="o">+</span> <span class="p">(</span>
+            <span class="n">int_interior_func_bdry</span> <span class="o">-</span> <span class="n">int_bdry</span><span class="p">)</span> <span class="o">/</span> <span class="n">path_length</span>
+    <span class="n">grad_f</span> <span class="o">=</span> <span class="n">grad_omega_S</span> <span class="o">+</span> <span class="n">grad_omega_D</span> <span class="o">+</span> <span class="n">grad_omega_W</span>
+
+    <span class="k">return</span> <span class="n">ext_f</span><span class="p">,</span> <span class="n">grad_f</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">grad_f</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">debugging_info</span></div>
+
+<span class="c1"># }}} End biharmonic extension</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Xiaoyu Wei
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
