@@ -1,0 +1,834 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>volumential.singular_integral_2d &mdash; Volumential 2017.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Volumential
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2017
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sphinx.html">Documentation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../indices_tables.html">Indices and tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Volumential</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>volumential.singular_integral_2d</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for volumential.singular_integral_2d</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2017 - 2018 Xiaoyu Wei&quot;</span>
+
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="s2">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="s2">in the Software without restriction, including without limitation the rights</span>
+<span class="s2">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="s2">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="s2">furnished to do so, subject to the following conditions:</span>
+
+<span class="s2">The above copyright notice and this permission notice shall be included in</span>
+<span class="s2">all copies or substantial portions of the Software.</span>
+
+<span class="s2">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="s2">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="s2">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="s2">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="s2">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="s2">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="s2">THE SOFTWARE.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.integrate.quadrature</span> <span class="k">as</span> <span class="nn">quad</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sp</span>
+
+<span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;The 2D singular integrals are computed using the transform</span>
+<span class="s2">described in http://link.springer.com/10.1007/BF00370482.</span>
+
+<span class="s2">.. autofunction:: box_quad</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># {{{ quadrature on rectangular box with no singularity</span>
+
+<span class="n">quad_points_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+<span class="n">quad_points_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+<span class="n">quad_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+
+<span class="k">def</span> <span class="nf">update_qquad_leggauss_formula</span><span class="p">(</span><span class="n">deg1</span><span class="p">,</span> <span class="n">deg2</span><span class="p">):</span>
+
+    <span class="n">x1</span><span class="p">,</span> <span class="n">w1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">legendre</span><span class="o">.</span><span class="n">leggauss</span><span class="p">(</span><span class="n">deg1</span><span class="p">)</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">w1</span> <span class="o">=</span> <span class="n">w1</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="n">x2</span><span class="p">,</span> <span class="n">w2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">legendre</span><span class="o">.</span><span class="n">leggauss</span><span class="p">(</span><span class="n">deg2</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">w2</span> <span class="o">=</span> <span class="n">w2</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="n">quad_points_x</span><span class="p">,</span> <span class="n">quad_points_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+    <span class="n">ww1</span><span class="p">,</span> <span class="n">ww2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)</span>
+    <span class="k">global</span> <span class="n">quad_weights</span>
+    <span class="n">quad_weights</span> <span class="o">=</span> <span class="n">ww1</span> <span class="o">*</span> <span class="n">ww2</span>
+
+
+<span class="k">def</span> <span class="nf">qquad</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">,</span>
+    <span class="n">a</span><span class="p">,</span>
+    <span class="n">b</span><span class="p">,</span>
+    <span class="n">c</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">tol</span><span class="o">=</span><span class="mf">1.49e-08</span><span class="p">,</span>
+    <span class="n">rtol</span><span class="o">=</span><span class="mf">1.49e-08</span><span class="p">,</span>
+    <span class="n">maxitero</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">maxiteri</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">vec_func</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">minitero</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">miniteri</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;Adaptive&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes a (tensor product) double integral.</span>
+
+<span class="sd">    Integrate func on [a, b]X[c, d] using Gaussian quadrature with absolute</span>
+<span class="sd">    tolerance tol.</span>
+
+<span class="sd">    :param func: A double variable Python function or method to integrate.</span>
+<span class="sd">    :type func: function.</span>
+<span class="sd">    :param a: Lower-left corner of integration region.</span>
+<span class="sd">    :type a: float.</span>
+<span class="sd">    :param b: Lower-right corner of integration region.</span>
+<span class="sd">    :type b: float.</span>
+<span class="sd">    :param c: Upper-left corner of integration region.</span>
+<span class="sd">    :type c: float.</span>
+<span class="sd">    :param d: Upper-right corner of integration region.</span>
+<span class="sd">    :type d: float.</span>
+<span class="sd">    :param args: Extra arguments to pass to function.</span>
+<span class="sd">    :type args: tuple, optional.</span>
+<span class="sd">    :param tol: rtol Iteration stops when error between last two iterates is</span>
+<span class="sd">                less than tol OR the relative change is less than rtol.</span>
+<span class="sd">    :type tol: float, optional.</span>
+<span class="sd">    :param rtol: Iteration stops when error between last two iterates is less</span>
+<span class="sd">                than tol OR the relative change is less than rtol.</span>
+<span class="sd">    :type rtol: float, optional.</span>
+<span class="sd">    :param maxitero: Maximum order of outer Gaussian quadrature.</span>
+<span class="sd">    :type maxitero: int, optional.</span>
+<span class="sd">    :param maxiteri: Maximum order of inner Gaussian quadrature.</span>
+<span class="sd">    :type maxiteri: int, optional.</span>
+<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a “vector”</span>
+<span class="sd">                function). Default is True.</span>
+<span class="sd">    :type vec_func: bool, optional.</span>
+<span class="sd">    :param minitero: Minimum order of outer Gaussian quadrature.</span>
+<span class="sd">    :type minitero: int, optional.</span>
+<span class="sd">    :param miniteri: Minimum order of inner Gaussian quadrature.</span>
+<span class="sd">    :type miniteri: int, optional.</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        - **val**: Gaussian quadrature approximation (within tolerance) to integral.</span>
+<span class="sd">        - **err**: Difference between last two estimates of the integral.</span>
+<span class="sd">    :rtype: tuple(float,float).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">l1</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span>
+    <span class="n">l2</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="n">c</span>
+    <span class="k">assert</span> <span class="n">l1</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">l2</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">toli</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="n">l2</span>
+    <span class="n">rtoli</span> <span class="o">=</span> <span class="n">rtol</span> <span class="o">/</span> <span class="n">l2</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;Adaptive&quot;</span><span class="p">:</span>
+
+        <span class="c1"># Using lambda for readability</span>
+        <span class="k">def</span> <span class="nf">outer_integrand</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">quad</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
+                <span class="n">a</span><span class="p">,</span>
+                <span class="n">b</span><span class="p">,</span>
+                <span class="p">(),</span>
+                <span class="n">toli</span><span class="p">,</span>
+                <span class="n">rtoli</span><span class="p">,</span>
+                <span class="n">maxiteri</span><span class="p">,</span>
+                <span class="n">vec_func</span><span class="p">,</span>
+                <span class="n">miniteri</span><span class="p">,</span>
+            <span class="p">)[</span>
+                <span class="mi">0</span>
+            <span class="p">]</span>  <span class="c1"># NOQA</span>
+
+        <span class="c1"># Is there a simple way to retrieve err info from the inner quad calls?</span>
+
+        <span class="n">val</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span>
+            <span class="n">outer_integrand</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="p">(),</span> <span class="n">tol</span><span class="p">,</span> <span class="n">rtol</span><span class="p">,</span> <span class="n">maxitero</span><span class="p">,</span> <span class="n">vec_func</span><span class="p">,</span> <span class="n">minitero</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;Gauss&quot;</span><span class="p">:</span>
+
+        <span class="c1"># Gauss quadrature with orders equal to maxiters</span>
+
+        <span class="c1"># Using lambda for readability</span>
+        <span class="k">def</span> <span class="nf">outer_integrand</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">integrate</span><span class="o">.</span><span class="n">fixed_quad</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)),</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="p">(),</span> <span class="n">maxiteri</span>
+            <span class="p">)[</span>
+                <span class="mi">0</span>
+            <span class="p">]</span>  <span class="c1"># NOQA</span>
+
+        <span class="c1"># Is there a simple way to retrieve err info from the inner quad calls?</span>
+
+        <span class="n">val</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">integrate</span><span class="o">.</span><span class="n">fixed_quad</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">outer_integrand</span><span class="p">),</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="p">(),</span> <span class="n">maxitero</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">err</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unsupported quad method: &quot;</span> <span class="o">+</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+
+
+<span class="c1"># }}}</span>
+
+<span class="c1"># {{{ affine mappings</span>
+
+
+<span class="k">def</span> <span class="nf">solve_affine_map_2d</span><span class="p">(</span><span class="n">source_tria</span><span class="p">,</span> <span class="n">target_tria</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the affine map and its inverse that maps the source_tria to</span>
+<span class="sd">       target_tria.</span>
+
+<span class="sd">       :param source_tria: The triangle to be mapped.</span>
+<span class="sd">       :type source_tria:</span>
+<span class="sd">            tuple(tuple(float,float),tuple(float,float),tuple(float,float)).</span>
+<span class="sd">       :param target_tria: The triangle to map to.</span>
+<span class="sd">       :type target_tria:</span>
+<span class="sd">            tuple(tuple(float,float),tuple(float,float),tuple(float,float)).</span>
+
+<span class="sd">       :returns:</span>
+<span class="sd">        - **mapping**: the forward map.</span>
+<span class="sd">        - **J**: the Jacobian.</span>
+<span class="sd">        - **invmap**: the inverse map.</span>
+<span class="sd">        - **invJ**: the Jacobian of inverse map.</span>
+<span class="sd">       :rtype:</span>
+<span class="sd">        tuple(lambda, float, lambda, float)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">source_tria</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">source_tria</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_tria</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">target_tria</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+    <span class="c1"># DOFs: A11, A12, A21, A22, b1, b2</span>
+    <span class="n">rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">target_tria</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">target_tria</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">target_tria</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">target_tria</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">target_tria</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">target_tria</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">coef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">[</span><span class="n">source_tria</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">source_tria</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">source_tria</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">source_tria</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="c1"># x, residuals, _, _ = np.linalg.lstsq(coef, rhs)</span>
+    <span class="c1"># assert (np.allclose(residuals, 0))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;source:&quot;</span><span class="p">,</span> <span class="n">source_tria</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;target:&quot;</span><span class="p">,</span> <span class="n">target_tria</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;Error: Singular source triangle encountered&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">rhs</span><span class="p">)</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]]])</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]])</span>
+
+    <span class="c1"># Using default value is the idiomatic way to &quot;capture by value&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="n">b</span>  <span class="c1"># NOQA</span>
+    <span class="n">jacob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="n">inva</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">invb</span> <span class="o">=</span> <span class="o">-</span><span class="n">inva</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">invmap</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">inva</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">invb</span><span class="p">:</span> <span class="n">inva</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="n">invb</span>  <span class="c1"># NOQA</span>
+    <span class="n">inv_jacob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">inva</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">jacob</span> <span class="o">*</span> <span class="n">inv_jacob</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">jacob</span><span class="p">,</span> <span class="n">invmap</span><span class="p">,</span> <span class="n">inv_jacob</span><span class="p">)</span>
+
+
+<span class="c1"># }}}</span>
+
+<span class="c1"># {{{ standard-triangle-to-rectangle mappings</span>
+
+
+<span class="k">def</span> <span class="nf">tria2rect_map_2d</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns the mapping and its inverse that maps a template triangle to a</span>
+<span class="sd">       template rectangle.</span>
+
+<span class="sd">            - Template triangle [T]: (0,0)--(1,0)--(0,1)--(0,0)</span>
+<span class="sd">            - Template rectangle [R]: (0,0)--(1,0)--(1,pi/2)--(0,pi/2)--(0,0)</span>
+
+<span class="sd">       :returns: The mapping, its Jacobian, its inverse, and the Jacobian of its</span>
+<span class="sd">                inverse. Note that the Jacobians are returned as lambdas since</span>
+<span class="sd">                they are not constants.</span>
+<span class="sd">       :rtype: tuple(lambda, lambda, lambda, lambda)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># (x,y) --&gt; (rho, theta): T --&gt; R</span>
+    <span class="k">def</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+
+    <span class="k">def</span> <span class="nf">jacob</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># x = rho * cos^2(theta), y = rho * sin^2(theta)</span>
+    <span class="c1"># J = rho * sin(2*theta)</span>
+    <span class="k">def</span> <span class="nf">invmap</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">inv_jacob</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">jacob</span><span class="p">,</span> <span class="n">invmap</span><span class="p">,</span> <span class="n">inv_jacob</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">is_in_t</span><span class="p">(</span><span class="n">pt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Checks if a point is in the template triangle T.</span>
+
+<span class="sd">       :param pt: The point to be checked.</span>
+<span class="sd">       :type pt: tuple(float,float).</span>
+
+<span class="sd">       :returns: True if pt is in T.</span>
+<span class="sd">       :rtype: bool.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">flag</span>
+
+
+<span class="k">def</span> <span class="nf">is_in_r</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Checks if a point is in the (template) rectangle R.</span>
+
+<span class="sd">       :param pt: The point to be checked.</span>
+<span class="sd">       :type pt: tuple(float,float).</span>
+
+<span class="sd">       :returns: True if pt is in R.</span>
+<span class="sd">       :rtype: bool.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="ow">or</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="ow">or</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">d</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">flag</span>
+
+
+<span class="c1"># }}}</span>
+
+<span class="c1"># {{{ quadrature on arbitrary triangle</span>
+
+
+<span class="k">def</span> <span class="nf">is_collinear</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+    <span class="c1"># v1 = p0 --&gt; p1</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># v2 = p0 --&gt; p2</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># v1 cross v2 == 0 &lt;==&gt; collinearity</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">x2</span> <span class="o">*</span> <span class="n">y1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-16</span>
+
+
+<span class="k">def</span> <span class="nf">is_positive_triangle</span><span class="p">(</span><span class="n">tria</span><span class="p">):</span>
+    <span class="n">p0</span> <span class="o">=</span> <span class="n">tria</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">tria</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">tria</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># v1 = p0 --&gt; p1</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># v2 = p0 --&gt; p2</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># v1 cross v2 &gt; 0 &lt;==&gt; is positive</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">x2</span> <span class="o">*</span> <span class="n">y1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">tria_quad</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">,</span>
+    <span class="n">tria</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">tol</span><span class="o">=</span><span class="mf">1.49e-08</span><span class="p">,</span>
+    <span class="n">rtol</span><span class="o">=</span><span class="mf">1.49e-08</span><span class="p">,</span>
+    <span class="n">maxiter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">vec_func</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">miniter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes a double integral on a general triangular region.</span>
+
+<span class="sd">    Integrate func on tria by transforming the region into a rectangle and</span>
+<span class="sd">    using Gaussian quadrature with absolute tolerance tol.</span>
+
+<span class="sd">    The integrand, func, is allowed to have singularity at most $O(r)$ at the</span>
+<span class="sd">    first virtex of the tiangle. It is okay if func does not evaluate at the</span>
+<span class="sd">    singular point. This function handles that automatically.</span>
+
+<span class="sd">    :param func: A double variable Python function or method to integrate.</span>
+<span class="sd">    :type func: function.</span>
+<span class="sd">    :param tria: The triangular region to do quadrature.</span>
+<span class="sd">    :type tria:</span>
+<span class="sd">        tuple(tuple(float,float), tuple(float,float), tuple(float,float)).</span>
+<span class="sd">    :param args: Extra arguments to pass to function.</span>
+<span class="sd">    :type args: tuple, optional.</span>
+<span class="sd">    :param tol: rtol Iteration stops when error between last two iterates is</span>
+<span class="sd">        less than tol OR the relative change is less than rtol.</span>
+<span class="sd">    :type tol: float, optional.</span>
+<span class="sd">    :param rtol: Iteration stops when error between last two iterates is less</span>
+<span class="sd">        than tol OR the relative change is less than rtol.</span>
+<span class="sd">    :type rtol: float, optional.</span>
+<span class="sd">    :param maxiter: Maximum order of Gaussian quadrature.</span>
+<span class="sd">    :type maxiter: int, optional.</span>
+<span class="sd">    :param vec_func: True if func handles arrays as arguments</span>
+<span class="sd">        (is a “vector” function). Default is True.</span>
+<span class="sd">    :type vec_func: bool, optional.</span>
+<span class="sd">    :param miniter: Minimum order of Gaussian quadrature.</span>
+<span class="sd">    :type miniter: int, optional.</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        - **val**: Gaussian quadrature approximation (within tolerance)</span>
+<span class="sd">            to integral.</span>
+<span class="sd">        - **err**: Difference between last two estimates of the integral.</span>
+<span class="sd">    :rtype: tuple(float,float).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tria</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">tria</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+    <span class="c1"># Handle degenerate triangles</span>
+    <span class="k">if</span> <span class="n">is_collinear</span><span class="p">(</span><span class="o">*</span><span class="n">tria</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="c1"># The function must be regular at the last two vertices</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">tria</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">tria</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
+
+    <span class="c1"># Solve for transforms</span>
+    <span class="n">template_tria</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">afmp</span><span class="p">,</span> <span class="n">j_afmp</span><span class="p">,</span> <span class="n">inv_afmp</span><span class="p">,</span> <span class="n">j_inv_afmp</span> <span class="o">=</span> <span class="n">solve_affine_map_2d</span><span class="p">(</span><span class="n">tria</span><span class="p">,</span> <span class="n">template_tria</span><span class="p">)</span>
+    <span class="n">nlmp</span><span class="p">,</span> <span class="n">j_nlmp</span><span class="p">,</span> <span class="n">inv_nlmp</span><span class="p">,</span> <span class="n">j_inv_nlmp</span> <span class="o">=</span> <span class="n">tria2rect_map_2d</span><span class="p">()</span>
+
+    <span class="c1"># tria --&gt; rect</span>
+    <span class="k">def</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">nlmp</span><span class="p">(</span><span class="n">afmp</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">j_afmp</span> <span class="o">*</span> <span class="n">j_nlmp</span><span class="p">(</span><span class="n">afmp</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)))</span>
+
+    <span class="c1"># rect --&gt; tria</span>
+    <span class="k">def</span> <span class="nf">inv_mapping</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inv_afmp</span><span class="p">(</span><span class="n">inv_nlmp</span><span class="p">((</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">inv_jacobian</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">j_inv_afmp</span> <span class="o">*</span> <span class="n">j_inv_nlmp</span><span class="p">((</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
+
+    <span class="c1"># Transformed function is defined on [0,1]X[0,pi/2]</span>
+    <span class="k">def</span> <span class="nf">transformed_func</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="n">preimage</span> <span class="o">=</span> <span class="n">inv_mapping</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">preimage</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="c1"># Transformed function, when multiplied by jacobian, should have no</span>
+    <span class="c1"># singularity (numerically special treatment still needed)</span>
+
+    <span class="c1"># integrand = func * jacobian</span>
+
+    <span class="k">def</span> <span class="nf">integrand</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="n">prior</span> <span class="o">=</span> <span class="n">transformed_func</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">inv_jacobian</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+        <span class="c1"># If something blows up, it is near the singular point</span>
+        <span class="k">if</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">prior</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">rho</span> <span class="o">&lt;</span> <span class="mf">1e-3</span>
+            <span class="k">assert</span> <span class="n">inv_jacobian</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+            <span class="n">prior</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">prior</span>
+
+    <span class="k">return</span> <span class="n">qquad</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">integrand</span><span class="p">,</span>
+        <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">d</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+        <span class="n">rtol</span><span class="o">=</span><span class="n">rtol</span><span class="p">,</span>
+        <span class="n">maxiteri</span><span class="o">=</span><span class="n">maxiter</span><span class="p">,</span>
+        <span class="n">maxitero</span><span class="o">=</span><span class="n">maxiter</span><span class="p">,</span>
+        <span class="n">vec_func</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">miniteri</span><span class="o">=</span><span class="n">miniter</span><span class="p">,</span>
+        <span class="n">minitero</span><span class="o">=</span><span class="n">miniter</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># }}}</span>
+
+<span class="c1"># {{{ quadrature on a 2d box with a singular point inside</span>
+
+
+<div class="viewcode-block" id="box_quad"><a class="viewcode-back" href="../../api/modules.html#volumential.singular_integral_2d.box_quad">[docs]</a><span class="k">def</span> <span class="nf">box_quad</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">,</span>
+    <span class="n">a</span><span class="p">,</span>
+    <span class="n">b</span><span class="p">,</span>
+    <span class="n">c</span><span class="p">,</span>
+    <span class="n">d</span><span class="p">,</span>
+    <span class="n">singular_point</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">tol</span><span class="o">=</span><span class="mf">1.49e-08</span><span class="p">,</span>
+    <span class="n">rtol</span><span class="o">=</span><span class="mf">1.49e-08</span><span class="p">,</span>
+    <span class="n">maxiter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">vec_func</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">miniter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes a (tensor product) double integral, with the integrand being</span>
+<span class="sd">        singular at some point inside the region.</span>
+
+<span class="sd">    Integrate func on [a, b]X[c, d] using transformed Gaussian quadrature with</span>
+<span class="sd">    absolute tolerance tol.</span>
+
+<span class="sd">    :param func: A double variable Python function or method to integrate.</span>
+<span class="sd">    :type func: function.</span>
+<span class="sd">    :param a: Lower-left corner of integration region.</span>
+<span class="sd">    :type a: float.</span>
+<span class="sd">    :param b: Lower-right corner of integration region.</span>
+<span class="sd">    :type b: float.</span>
+<span class="sd">    :param c: Upper-left corner of integration region.</span>
+<span class="sd">    :type c: float.</span>
+<span class="sd">    :param d: Upper-right corner of integration region.</span>
+<span class="sd">    :type d: float.</span>
+<span class="sd">    :param singular_point: The singular point of the integrand func.</span>
+<span class="sd">    :type singular_point: tuple(float, float).</span>
+<span class="sd">    :param args: Extra arguments to pass to function.</span>
+<span class="sd">    :type args: tuple, optional.</span>
+<span class="sd">    :param tol: rtol Iteration stops when error between last two iterates is</span>
+<span class="sd">                less than tol OR the relative change is less than rtol.</span>
+<span class="sd">    :type tol: float, optional.</span>
+<span class="sd">    :param rtol: Iteration stops when error between last two iterates is less</span>
+<span class="sd">                than tol OR the relative change is less than rtol.</span>
+<span class="sd">    :type rtol: float, optional.</span>
+<span class="sd">    :param maxiter: Maximum order of Gaussian quadrature.</span>
+<span class="sd">    :type maxiter: int, optional.</span>
+<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a “vector”</span>
+<span class="sd">                function). Default is True.</span>
+<span class="sd">    :type vec_func: bool, optional.</span>
+<span class="sd">    :param miniter: Minimum order of Gaussian quadrature.</span>
+<span class="sd">    :type miniter: int, optional.</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        - **val**: Gaussian quadrature approximation (within tolerance) to integral.</span>
+<span class="sd">        - **err**: Difference between last two estimates of the integral.</span>
+<span class="sd">    :rtype: tuple(float,float).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">box</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">singular_point</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">singular_point</span> <span class="o">=</span> <span class="p">(</span><span class="n">singular_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">singular_point</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># When singular point is outside, project it onto the box bounday</span>
+    <span class="c1"># This can import speed by not integrating around the actual singularity</span>
+    <span class="c1"># when not necessary. (The splitting is still needed since it can be quite</span>
+    <span class="c1"># close to singular).</span>
+    <span class="n">singular_point</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">singular_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">singular_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">))</span>
+    <span class="n">singular_point</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">singular_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">singular_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">d</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">quadri_quad</span><span class="p">(</span>
+        <span class="n">func</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">singular_point</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">rtol</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">vec_func</span><span class="p">,</span> <span class="n">miniter</span>
+    <span class="p">)</span></div>
+
+
+<span class="c1"># quadrilateral</span>
+<span class="k">def</span> <span class="nf">quadri_quad</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">,</span>
+    <span class="n">quadrilateral</span><span class="p">,</span>
+    <span class="n">singular_point</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">tol</span><span class="o">=</span><span class="mf">1.49e-08</span><span class="p">,</span>
+    <span class="n">rtol</span><span class="o">=</span><span class="mf">1.49e-08</span><span class="p">,</span>
+    <span class="n">maxiter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">vec_func</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">miniter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes a double integral over a (non-twisted) quadrilateral, with the</span>
+<span class="sd">        integrand being singular at some point inside the region.</span>
+
+<span class="sd">    Integrate func on [a, b]X[c, d] using transformed Gaussian quadrature with</span>
+<span class="sd">    absolute tolerance tol.</span>
+
+<span class="sd">    :param func: A double variable Python function or method to integrate.</span>
+<span class="sd">    :type func: function.</span>
+<span class="sd">    :param quadrilateral: The integration region.</span>
+<span class="sd">    :type quadrilateral: tuple(tuple(float,float),</span>
+<span class="sd">        tuple(float,float), tuple(float,float), tuple(float,float)).</span>
+<span class="sd">    :param singular_point: The singular point of the integrand func.</span>
+<span class="sd">    :type singular_point: tuple(float, float).</span>
+<span class="sd">    :param args: Extra arguments to pass to function.</span>
+<span class="sd">    :type args: tuple, optional.</span>
+<span class="sd">    :param tol: rtol Iteration stops when error between last two iterates is</span>
+<span class="sd">                less than tol OR the relative change is less than rtol.</span>
+<span class="sd">    :type tol: float, optional.</span>
+<span class="sd">    :param rtol: Iteration stops when error between last two iterates is less</span>
+<span class="sd">                than tol OR the relative change is less than rtol.</span>
+<span class="sd">    :type rtol: float, optional.</span>
+<span class="sd">    :param maxiter: Maximum order of Gaussian quadrature.</span>
+<span class="sd">    :type maxiter: int, optional.</span>
+<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a “vector”</span>
+<span class="sd">                function). Default is True.</span>
+<span class="sd">    :type vec_func: bool, optional.</span>
+<span class="sd">    :param miniter: Minimum order of Gaussian quadrature.</span>
+<span class="sd">    :type miniter: int, optional.</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        - **val**: Gaussian quadrature approximation (within tolerance) to integral.</span>
+<span class="sd">        - **err**: Difference between last two estimates of the integral.</span>
+<span class="sd">    :rtype: tuple(float,float).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">quadrilateral</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">quadrilateral</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+    <span class="c1"># split the quadrilateral into four triangles</span>
+    <span class="n">trias</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">singular_point</span><span class="p">,</span> <span class="n">quadrilateral</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">quadrilateral</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">singular_point</span><span class="p">,</span> <span class="n">quadrilateral</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">quadrilateral</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">singular_point</span><span class="p">,</span> <span class="n">quadrilateral</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">quadrilateral</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">singular_point</span><span class="p">,</span> <span class="n">quadrilateral</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">quadrilateral</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">tria</span> <span class="ow">in</span> <span class="n">trias</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_positive_triangle</span><span class="p">(</span><span class="n">tria</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">is_collinear</span><span class="p">(</span><span class="o">*</span><span class="n">tria</span><span class="p">)</span>
+
+    <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+        <span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">err</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tria_quad</span><span class="p">(</span>
+            <span class="n">func</span><span class="p">,</span> <span class="n">trias</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">args</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">rtol</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">vec_func</span><span class="p">,</span> <span class="n">miniter</span>
+        <span class="p">)</span>
+
+    <span class="n">integral</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">integral</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+
+
+<span class="c1"># }}}</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">class DesingularizationMapping:</span>
+<span class="sd">    def __init__(self, nquad_points_1d):</span>
+
+<span class="sd">def build_singular_box_quadrature(</span>
+<span class="sd">        kernel,</span>
+<span class="sd">        desing_mapping,</span>
+
+<span class="sd">        ):</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    :arg kernel: an instance of :class:`sumpy.kernel.Kernel`</span>
+<span class="sd">    :arg desing_mapping: an instance of :class:`sumpy.kernel.Kernel`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1"># vim: filetype=pyopencl.python:fdm=marker</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Xiaoyu Wei
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
