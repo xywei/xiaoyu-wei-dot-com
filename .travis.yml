@@ -19,6 +19,7 @@ before_script:
 script:
     - hugo
     - echo "$CNAME_URL" > public/CNAME
+    - touch public/.nojekyll
 
 deploy:
   provider: pages
