@@ -338,6 +338,22 @@ current case.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="volumential.droste.InverseDrosteReduced">
+<em class="property">class </em><code class="descclassname">volumential.droste.</code><code class="descname">InverseDrosteReduced</code><span class="sig-paren">(</span><em>integral_knl</em>, <em>quad_order</em>, <em>case_vecs</em>, <em>n_brick_quad_points=50</em>, <em>knl_symmetry_tags=None</em>, <em>window_radius=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>A variant of the Droste method.
+Instead of computing a volume potential, it computes the “inverse” to a
+Riesz potential, aka a “fractional Laplacian”.</p>
+<p>Specifically, given an integral kernel G(r), this class supports the
+precomputation for integrals of the form</p>
+<div class="math">
+<p><span class="math">\int_B G(r) (u(x) - u(y)) dy</span></p>
+</div><p>For k-dimensional fractional Laplacian, :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>G(r) =</p>
+</div></blockquote>
+<p>rac{1}{r^{k+2s}}`.</p>
+</dd></dl>
+
 </div>
 </div>
 <div class="section" id="near-field-tabulation">
