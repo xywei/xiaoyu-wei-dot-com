@@ -193,7 +193,8 @@
 <span class="s2">   :members:</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="c1"># logging.basicConfig(level=logging.INFO)</span>
+<span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
 <span class="c1"># {{{ Droste base class</span>
 
@@ -343,7 +344,10 @@
 
         <span class="k">return</span> <span class="n">quad_kernel_insns</span> <span class="o">+</span> <span class="p">[</span><span class="n">scaling_assignment</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">codegen_basis_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iaxis</span><span class="p">):</span>
+<div class="viewcode-block" id="DrosteBase.codegen_basis_eval"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteBase.codegen_basis_eval">[docs]</a>    <span class="k">def</span> <span class="nf">codegen_basis_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iaxis</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate instructions to evaluate Chebyshev polynomial basis.</span>
+<span class="sd">        (Chebyshev polynomials of the first kind T_n).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">            &lt;&gt; T0_IAXIS = 1</span>
 <span class="s2">            &lt;&gt; T1_IAXIS = template_mapped_point_tmp[IAXIS] {dep=mpoint}</span>
@@ -365,7 +369,7 @@
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">code</span>
+        <span class="k">return</span> <span class="n">code</span></div>
 
     <span class="k">def</span> <span class="nf">make_dim_independent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knlstring</span><span class="p">):</span>
 
@@ -1593,14 +1597,14 @@
 
 
 <div class="viewcode-block" id="InverseDrosteReduced"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.InverseDrosteReduced">[docs]</a><span class="k">class</span> <span class="nc">InverseDrosteReduced</span><span class="p">(</span><span class="n">DrosteReduced</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A variant of the Droste method.</span>
 <span class="sd">    Instead of computing a volume potential, it computes the &quot;inverse&quot; to a</span>
 <span class="sd">    Riesz potential, aka a &quot;fractional Laplacian&quot;.</span>
 
 <span class="sd">    Specifically, given an integral kernel G(r), this class supports the</span>
 <span class="sd">    precomputation for integrals of the form</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. math::</span>
 
 <span class="sd">       \int_B G(r) (u(x) - u(y)) dy</span>
@@ -1634,7 +1638,38 @@
             <span class="s2">&quot;brick_order-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">),</span>
             <span class="s2">&quot;case-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">),</span>
             <span class="s2">&quot;kernel_id-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span><span class="p">),</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="InverseDrosteReduced.codegen_basis2_eval"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.InverseDrosteReduced.codegen_basis2_eval">[docs]</a>    <span class="k">def</span> <span class="nf">codegen_basis2_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iaxis</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate instructions to evaluate Chebyshev polynomial basis.</span>
+<span class="sd">        (Chebyshev polynomials of the second kind U_n).</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \frac{d T_n}{dx} = n * U_{n-1}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            &lt;&gt; U0_IAXIS = 1</span>
+<span class="s2">            &lt;&gt; U1_IAXIS = 2 * template_mapped_point_tmp[IAXIS] {dep=mpoint}</span>
+<span class="s2">            &lt;&gt; Uprev_IAXIS = U0_IAXIS {id=u0_IAXIS}</span>
+<span class="s2">            &lt;&gt; Ucur_IAXIS = U1_IAXIS {id=u1_IAXIS,dep=u0_IAXIS}</span>
+
+<span class="s2">            for pIAXIS</span>
+<span class="s2">                &lt;&gt; Unext_IAXIS = (2 * template_mapped_point_tmp[IAXIS] * Ucur_IAXIS</span>
+<span class="s2">                                - Uprev_IAXIS) {id=unextIAXIS,dep=u1_IAXIS}</span>
+<span class="s2">                Uprev_IAXIS = Ucur_IAXIS {id=uprev_updateIAXIS,dep=unextIAXIS}</span>
+<span class="s2">                Ucur_IAXIS = Unext_IAXIS {id=ucur_updateIAXIS,dep=uprev_updateIAXIS}</span>
+<span class="s2">            end</span>
+
+<span class="s2">            &lt;&gt; basis2_evalIAXIS = (</span>
+<span class="s2">                U0_IAXIS * if(fIAXIS == 0, 1, 0)</span>
+<span class="s2">                + U1_IAXIS * if(fIAXIS == 1, 1, 0)</span>
+<span class="s2">                + sum(pIAXIS, if(fIAXIS == pIAXIS, Ucur_IAXIS, 0))</span>
+<span class="s2">                ) {id=basis2IAXIS,dep=ucur_updateIAXIS}</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                    <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="n">code</span></div></div>
 
 
 <span class="c1"># }}} End inverse Droste method</span>
