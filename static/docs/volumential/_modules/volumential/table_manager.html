@@ -307,9 +307,6 @@
 
         <span class="n">is_recomputed</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="n">kernel_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">supported_kernels</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Kernel type not supported: &quot;</span> <span class="o">+</span> <span class="n">kernel_type</span><span class="p">)</span>
-
         <span class="n">q_order</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">q_order</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">q_order</span> <span class="o">&gt;=</span> <span class="mi">1</span>
 
@@ -457,9 +454,6 @@
         <span class="sd">&quot;&quot;&quot;Load a table saved in the hdf5 file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">kernel_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">supported_kernels</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Kernel type not supported.&quot;</span><span class="p">)</span>
-
         <span class="n">q_order</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">q_order</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">q_order</span> <span class="o">&gt;=</span> <span class="mi">1</span>
 
@@ -483,11 +477,17 @@
         <span class="k">assert</span> <span class="n">q_order</span> <span class="o">==</span> <span class="n">grp</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;quad_order&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">compute_method</span> <span class="o">==</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
-            <span class="n">knl_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_function</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;knl_func&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">knl_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_function</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">knl_func</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;knl_func&#39;</span><span class="p">]</span>
             <span class="n">sumpy_knl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">elif</span> <span class="n">compute_method</span> <span class="o">==</span> <span class="s2">&quot;DrosteSum&quot;</span><span class="p">:</span>
             <span class="n">knl_func</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">sumpy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sumpy_kernel</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;sumpy_knl&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">sumpy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sumpy_kernel</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sumpy_knl</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;sumpy_knl&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
 
@@ -664,11 +664,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Kernel scaling not supported&quot;</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">kernel_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">supported_kernels</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Kernel scaling not supported&quot;</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="NearFieldInteractionTableManager.update_dataset"><a class="viewcode-back" href="../../api/modules.html#volumential.table_manager.NearFieldInteractionTableManager.update_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">update_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">,</span> <span class="n">data_array</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update stored data.</span>
@@ -698,9 +695,6 @@
         <span class="sd">&quot;&quot;&quot;Performs the precomputation and stores the results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">kernel_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">supported_kernels</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Kernel type not supported.&quot;</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">compute_method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using default compute_method (Transform)&quot;</span><span class="p">)</span>
             <span class="n">compute_method</span> <span class="o">=</span> <span class="s2">&quot;Transform&quot;</span>
@@ -713,11 +707,17 @@
         <span class="k">assert</span> <span class="s2">&quot;Order_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">q_order</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D&quot;</span><span class="p">][</span><span class="n">kernel_type</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">compute_method</span> <span class="o">==</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
-            <span class="n">knl_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_function</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;knl_func&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">knl_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_function</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">knl_func</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;knl_func&#39;</span><span class="p">]</span>
             <span class="n">sumpy_knl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">elif</span> <span class="n">compute_method</span> <span class="o">==</span> <span class="s2">&quot;DrosteSum&quot;</span><span class="p">:</span>
             <span class="n">knl_func</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">sumpy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sumpy_kernel</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;sumpy_knl&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">sumpy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sumpy_kernel</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sumpy_knl</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;sumpy_knl&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unsupported compute_method.&quot;</span><span class="p">)</span>
 

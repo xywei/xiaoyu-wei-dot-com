@@ -189,6 +189,8 @@
 <span class="s2">   :members:</span>
 <span class="s2">.. autoclass:: DrosteReduced</span>
 <span class="s2">   :members:</span>
+<span class="s2">.. autoclass:: InverseDrosteReduced</span>
+<span class="s2">   :members:</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="c1"># logging.basicConfig(level=logging.INFO)</span>
@@ -598,7 +600,7 @@
 <span class="sd">                                inner_brick[ibrick_axis, ibrick_side]</span>
 <span class="sd">                                - outer_brick[ibrick_axis, ibrick_side])</span>
 <span class="sd">                                + outer_brick[ibrick_axis, ibrick_side]) \</span>
-<span class="sd">                            {id=mpoint1}</span>
+<span class="sd">                            {id=mpoint1,nosync=mpoint2}</span>
 <span class="sd">                    else</span>
 <span class="sd">                        &lt;&gt; pre_scale = (</span>
 <span class="sd">                            point[iaxis]</span>
@@ -607,7 +609,7 @@
 
 <span class="sd">                        mapped_point_tmp[iaxis] = \</span>
 <span class="sd">                            ob_ext[iaxis] * pre_scale + outer_brick[iaxis, 0] \</span>
-<span class="sd">                            {id=mpoint2}</span>
+<span class="sd">                            {id=mpoint2,nosync=mpoint1}</span>
 <span class="sd">                    end</span>
 
 <span class="sd">                    ... nop {id=mpoint,dep=mpoint1:mpoint2}</span>
@@ -800,11 +802,14 @@
 
         <span class="k">return</span> <span class="n">loopy_knl</span>
 
-    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># FIXME</span>
-        <span class="c1"># nproc = 16 on porter</span>
+    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="c1"># NOTE: this detects the number of logical cores, which</span>
+            <span class="c1"># may result in suboptimal performance.</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;icase&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">outer_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;icase&quot;</span><span class="p">,</span> <span class="n">ncpus</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knl</span>
 
 <div class="viewcode-block" id="DrosteFull.call_loopy_kernel"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteFull.call_loopy_kernel">[docs]</a>    <span class="k">def</span> <span class="nf">call_loopy_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1171,6 +1176,12 @@
             <span class="n">ext_tgt_ordering</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
             <span class="n">ext_fun_ordering</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
 
+            <span class="n">ext_instruction_ids</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="s1">&#39;result_ext_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">eid</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ext_ids</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">eid</span> <span class="o">!=</span> <span class="n">ext_index</span>
+                <span class="p">])</span>
+
             <span class="n">expansion_code</span> <span class="o">+=</span> <span class="p">[</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">make_dim_independent</span><span class="p">(</span>
                     <span class="sd">&quot;&quot;&quot;</span>
@@ -1178,7 +1189,7 @@
 <span class="sd">                    result[EXT_BASIS_VARS, EXT_TGT_VARS, icase] = (</span>
 <span class="sd">                        EXT_SIGN *</span>
 <span class="sd">                        result[REV_BASIS_VARS, REV_TGT_VARS, icase]</span>
-<span class="sd">                        ) {id=result_ext_EXT_ID}</span>
+<span class="sd">                        ) {id=result_ext_EXT_ID,nosync=EXT_INSN_IDS}</span>
 <span class="sd">                end</span>
 <span class="sd">                &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                         <span class="s2">&quot;EXT_TGT_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ext_tgt_ordering</span><span class="p">)</span>
@@ -1186,6 +1197,7 @@
                     <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;EXT_BASIS_VARS&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ext_fun_ordering</span><span class="p">))</span>
                     <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;EXT_SIGN&quot;</span><span class="p">,</span> <span class="n">ext_sign</span><span class="p">)</span>
                     <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;EXT_ID&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ext_index</span><span class="p">))</span>
+                    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;EXT_INSN_IDS&quot;</span><span class="p">,</span> <span class="n">ext_instruction_ids</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">]</span>
 
@@ -1266,18 +1278,18 @@
 
         <span class="k">return</span> <span class="n">loopy_knl</span>
 
-    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># FIXME</span>
-        <span class="c1"># nproc = 16 on porter</span>
+    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># The returned kernel depends on the state variable</span>
-        <span class="c1"># self.current_base_case</span>
-        <span class="kn">import</span> <span class="nn">multiprocessing</span>
-
-        <span class="n">n_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="c1"># self.current_base_case, self.get_kernel_id</span>
+        <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="c1"># NOTE: this detects the number of logical cores, which</span>
+            <span class="c1"># may result in suboptimal performance.</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
 
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">join_inames</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="n">inames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">basis_vars</span><span class="p">,</span> <span class="n">new_iname</span><span class="o">=</span><span class="s2">&quot;func&quot;</span><span class="p">)</span>
-        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="n">n_cores</span><span class="p">,</span> <span class="n">outer_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="n">ncpus</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knl</span>
 
 <div class="viewcode-block" id="DrosteReduced.call_loopy_kernel_case"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteReduced.call_loopy_kernel_case">[docs]</a>    <span class="k">def</span> <span class="nf">call_loopy_kernel_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">base_case_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1576,6 +1588,56 @@
 
 
 <span class="c1"># }}} End reduced Droste method</span>
+
+<span class="c1"># {{{ inverse Droste method</span>
+
+
+<div class="viewcode-block" id="InverseDrosteReduced"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.InverseDrosteReduced">[docs]</a><span class="k">class</span> <span class="nc">InverseDrosteReduced</span><span class="p">(</span><span class="n">DrosteReduced</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A variant of the Droste method.</span>
+<span class="sd">    Instead of computing a volume potential, it computes the &quot;inverse&quot; to a</span>
+<span class="sd">    Riesz potential, aka a &quot;fractional Laplacian&quot;.</span>
+
+<span class="sd">    Specifically, given an integral kernel G(r), this class supports the</span>
+<span class="sd">    precomputation for integrals of the form</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \int_B G(r) (u(x) - u(y)) dy</span>
+
+<span class="sd">    For k-dimensional fractional Laplacian, :math:`G(r) = \frac{1}{r^{k+2s}}`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">integral_knl</span><span class="p">,</span>
+            <span class="n">quad_order</span><span class="p">,</span>
+            <span class="n">case_vecs</span><span class="p">,</span>
+            <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">knl_symmetry_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">window_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param window_radius: radius of the support of the windowing function.</span>
+<span class="sd">                              Set to None to auto-detect.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">integral_knl</span><span class="p">,</span> <span class="n">quad_order</span><span class="p">,</span> <span class="n">case_vecs</span><span class="p">,</span>
+            <span class="n">n_brick_quad_points</span><span class="p">,</span> <span class="n">knl_symmetry_tags</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_radius</span> <span class="o">=</span> <span class="n">window_radius</span>
+
+    <span class="k">def</span> <span class="nf">get_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(),</span>
+            <span class="s2">&quot;quad_order-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">),</span>
+            <span class="s2">&quot;brick_order-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">),</span>
+            <span class="s2">&quot;case-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">),</span>
+            <span class="s2">&quot;kernel_id-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<span class="c1"># }}} End inverse Droste method</span>
 </pre></div>
 
            </div>
