@@ -25,6 +25,7 @@
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
         <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -353,9 +354,9 @@ Instead of computing a volume potential, it computes the “inverse” to a
 Riesz potential, aka a “fractional Laplacian”.</p>
 <p>Specifically, given an integral kernel G(r), this class supports the
 precomputation for integrals of the form</p>
-<div class="math">
-<p><span class="math">\int_B G(r) (u(x) - u(y)) dy</span></p>
-</div><p>For k-dimensional fractional Laplacian, <span class="math">G(r) = \frac{1}{r^{k+2s}}</span>.</p>
+<div class="math notranslate nohighlight">
+\[\int_B G(r) (u(x) - u(y)) dy\]</div>
+<p>For k-dimensional fractional Laplacian, <span class="math notranslate nohighlight">\(G(r) = \frac{1}{r^{k+2s}}\)</span>.</p>
 <p>The core part of concern (that is to be modified based on DrosteReduces):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
@@ -391,14 +392,14 @@ precomputation for integrals of the form</p>
 <code class="descname">codegen_basis2_eval</code><span class="sig-paren">(</span><em>iaxis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_basis2_eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_basis2_eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate instructions to evaluate Chebyshev polynomial basis.
 (Chebyshev polynomials of the second kind U_n).</p>
-<div class="math">
-<p><span class="math">\frac{d T_n}{dx} = n * U_{n-1}</span></p>
-</div></dd></dl>
+<div class="math notranslate nohighlight">
+\[\frac{d T_n}{dx} = n * U_{n-1}\]</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="volumential.droste.InverseDrosteReduced.codegen_windowing_function">
 <code class="descname">codegen_windowing_function</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_windowing_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_windowing_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given <span class="math">dist = x - y</span>, compute the windowing function.</p>
+<dd><p>Given <span class="math notranslate nohighlight">\(dist = x - y\)</span>, compute the windowing function.</p>
 </dd></dl>
 
 <dl class="method">
@@ -406,15 +407,15 @@ precomputation for integrals of the form</p>
 <code class="descname">get_kernel</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.get_kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.get_kernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get loopy kernel for computation, the get_kernel_id determines
 what task to perform.</p>
-<p>0:    Integrate <span class="math">W(r) G(r) [u(x) - u(y) + grad(u)(y - x)]</span>
-1:    Add the integral of <span class="math">[1 - W(r)] G(r) [u(x) - u(y)]</span>
+<p>0:    Integrate <span class="math notranslate nohighlight">\(W(r) G(r) [u(x) - u(y) + grad(u)(y - x)]\)</span>
+1:    Add the integral of <span class="math notranslate nohighlight">\([1 - W(r)] G(r) [u(x) - u(y)]\)</span>
 2:    Expansion by symmetry.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="volumential.droste.InverseDrosteReduced.make_dim_independent">
 <code class="descname">make_dim_independent</code><span class="sig-paren">(</span><em>knlstring</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.make_dim_independent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.make_dim_independent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Produce the correct <span class="math">DENSITY_VAL_ASSIGNMENT = u(x) - u(y)</span>.</p>
+<dd><p>Produce the correct <span class="math notranslate nohighlight">\(DENSITY_VAL_ASSIGNMENT = u(x) - u(y)\)</span>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -803,8 +804,8 @@ the resulting expansion into the box’s local expansion in <em>local_exps</em>.
 <h2>Volume FMM<a class="headerlink" href="#volume-fmm" title="Permalink to this headline">¶</a></h2>
 <p>The volume potential obtained from the volume FMM is over the internal box mesh.
 To obtain the values on your own mesh points, an interpolation method is provided.
-Although the interpolation is <span class="math">O(N log N)</span>, it is almost always indistinguishable from
-<span class="math">O(N)</span> in practice as the geometry lookup usually takes up a very small fraction of
+Although the interpolation is <span class="math notranslate nohighlight">\(O(N log N)\)</span>, it is almost always indistinguishable from
+<span class="math notranslate nohighlight">\(O(N)\)</span> in practice as the geometry lookup usually takes up a very small fraction of
 the total runtime.</p>
 <span class="target" id="module-volumential.volume_fmm"></span><dl class="function">
 <dt id="volumential.volume_fmm.drive_volume_fmm">
@@ -847,7 +848,7 @@ target_points and potential should be an cl array.</p>
 <p>The <a class="reference internal" href="#module-volumential.function_extension" title="volumential.function_extension"><code class="xref py py-mod docutils literal notranslate"><span class="pre">volumential.function_extension</span></code></a> module provides helper functions to perform source density extensions using layer potentials.</p>
 <span class="target" id="module-volumential.function_extension"></span><p>Function extension with regularity contraints:</p>
 <ol class="arabic simple">
-<li><p><span class="math">L^2</span>: extend with constant value</p></li>
+<li><p><span class="math notranslate nohighlight">\(L^2\)</span>: extend with constant value</p></li>
 </ol>
 <dl class="function">
 <dt id="volumential.function_extension.compute_constant_extension">
@@ -856,7 +857,7 @@ target_points and potential should be an cl array.</p>
 </dd></dl>
 
 <ol class="arabic simple" start="2">
-<li><p><span class="math">C^0</span>: harmonic extension</p></li>
+<li><p><span class="math notranslate nohighlight">\(C^0\)</span>: harmonic extension</p></li>
 </ol>
 <dl class="function">
 <dt id="volumential.function_extension.compute_harmonic_extension">
@@ -872,7 +873,7 @@ for the original problem.</p>
 </dd></dl>
 
 <ol class="arabic simple" start="3">
-<li><p><span class="math">C^1</span>: biharmonic extension</p></li>
+<li><p><span class="math notranslate nohighlight">\(C^1\)</span>: biharmonic extension</p></li>
 </ol>
 <dl class="function">
 <dt id="volumential.function_extension.compute_biharmonic_extension">
