@@ -356,6 +356,36 @@ precomputation for integrals of the form</p>
 <div class="math">
 <p><span class="math">\int_B G(r) (u(x) - u(y)) dy</span></p>
 </div><p>For k-dimensional fractional Laplacian, <span class="math">G(r) = \frac{1}{r^{k+2s}}</span>.</p>
+<p>The core part of concern (that is to be modified based on DrosteReduces):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">for</span> <span class="n">BASIS_VARS</span><span class="p">,</span> <span class="n">TGT_VARS</span><span class="p">,</span> <span class="n">icase</span>
+    <span class="k">for</span> <span class="n">ilevel</span>
+        <span class="k">for</span> <span class="n">ibrick_axis</span><span class="p">,</span> <span class="n">ibrick_side</span><span class="p">,</span> <span class="n">QUAD_VARS</span>
+
+            <span class="n">PREPARE_BASIS_VALS</span>
+
+            <span class="o">&lt;&gt;</span> <span class="n">density_val</span> <span class="o">=</span> <span class="n">DENSITY_VAL_ASSIGNMENT</span> \
+                    <span class="p">{</span><span class="nb">id</span><span class="o">=</span><span class="n">density</span><span class="p">,</span><span class="n">dep</span><span class="o">=</span><span class="n">basis_evals</span><span class="p">}</span>
+
+        <span class="n">end</span>
+    <span class="n">end</span>
+<span class="n">end</span>
+
+<span class="o">...</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="volumential.droste.InverseDrosteReduced.call_loopy_kernel_case">
+<code class="descname">call_loopy_kernel_case</code><span class="sig-paren">(</span><em>queue</em>, <em>base_case_id</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.call_loopy_kernel_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.call_loopy_kernel_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the table builder on one base case, as given in :self.current_base_case:
+:arg source_box_extent
+:arg alpha
+:arg delta
+:arg nlevels
+:arg extra_kernel_kwargs</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="volumential.droste.InverseDrosteReduced.codegen_basis2_eval">
 <code class="descname">codegen_basis2_eval</code><span class="sig-paren">(</span><em>iaxis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_basis2_eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_basis2_eval" title="Permalink to this definition">¶</a></dt>
@@ -364,6 +394,28 @@ precomputation for integrals of the form</p>
 <div class="math">
 <p><span class="math">\frac{d T_n}{dx} = n * U_{n-1}</span></p>
 </div></dd></dl>
+
+<dl class="method">
+<dt id="volumential.droste.InverseDrosteReduced.codegen_windowing_function">
+<code class="descname">codegen_windowing_function</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_windowing_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_windowing_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given <span class="math">dist = x - y</span>, compute the windowing function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.droste.InverseDrosteReduced.get_kernel">
+<code class="descname">get_kernel</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.get_kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.get_kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get loopy kernel for computation, the get_kernel_id determines
+what task to perform.</p>
+<p>0:    Integrate <span class="math">W(r) G(r) [u(x) - u(y) + grad(u)(y - x)]</span>
+1:    Add the integral of <span class="math">[1 - W(r)] G(r) [u(x) - u(y)]</span>
+2:    Expansion by symmetry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.droste.InverseDrosteReduced.make_dim_independent">
+<code class="descname">make_dim_independent</code><span class="sig-paren">(</span><em>knlstring</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.make_dim_independent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.make_dim_independent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce the correct <span class="math">DENSITY_VAL_ASSIGNMENT = u(x) - u(y)</span>.</p>
+</dd></dl>
 
 </dd></dl>
 
