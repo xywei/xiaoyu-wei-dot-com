@@ -286,6 +286,24 @@ function). Default is True.</p></li>
 <em class="property">class </em><code class="descclassname">volumential.droste.</code><code class="descname">DrosteBase</code><span class="sig-paren">(</span><em>integral_knl</em>, <em>quad_order</em>, <em>case_vecs</em>, <em>n_brick_quad_points=15</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#DrosteBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.DrosteBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Droste methods.
 It uses sumpy tools to cache the loopy kernel.</p>
+<dl class="attribute">
+<dt id="volumential.droste.DrosteBase.integral_knl">
+<code class="descname">integral_knl</code><a class="headerlink" href="#volumential.droste.DrosteBase.integral_knl" title="Permalink to this definition">¶</a></dt>
+<dd><p>The integral kernel of sumpy.kernel type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="volumential.droste.DrosteBase.interaction_case_vecs">
+<code class="descname">interaction_case_vecs</code><a class="headerlink" href="#volumential.droste.DrosteBase.interaction_case_vecs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The relative positions of the target box for each case.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="volumential.droste.DrosteBase.interaction_case_scls">
+<code class="descname">interaction_case_scls</code><a class="headerlink" href="#volumential.droste.DrosteBase.interaction_case_scls" title="Permalink to this definition">¶</a></dt>
+<dd><p>The relative sizes of the target box for each case.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="volumential.droste.DrosteBase.codegen_basis_eval">
 <code class="descname">codegen_basis_eval</code><span class="sig-paren">(</span><em>iaxis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#DrosteBase.codegen_basis_eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.DrosteBase.codegen_basis_eval" title="Permalink to this definition">¶</a></dt>
@@ -388,10 +406,25 @@ precomputation for integrals of the form</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.droste.InverseDrosteReduced.codegen_basis2_eval">
-<code class="descname">codegen_basis2_eval</code><span class="sig-paren">(</span><em>iaxis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_basis2_eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_basis2_eval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate instructions to evaluate Chebyshev polynomial basis.
-(Chebyshev polynomials of the second kind U_n).</p>
+<dt id="volumential.droste.InverseDrosteReduced.codegen_basis_tgt_eval">
+<code class="descname">codegen_basis_tgt_eval</code><span class="sig-paren">(</span><em>iaxis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_basis_tgt_eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_basis_tgt_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate instructions to evaluate Chebyshev polynomial basis
+at the target point, given that the target point lies in the
+source box. (Chebyshev polynomials of the first kind T_n).</p>
+<p>If the target point is not in the source box, the concerned instructions
+will return 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.droste.InverseDrosteReduced.codegen_grad_basis_tgt_eval">
+<code class="descname">codegen_grad_basis_tgt_eval</code><span class="sig-paren">(</span><em>iaxis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_grad_basis_tgt_eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_grad_basis_tgt_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate instructions to evaluate the gradient of Chebyshev
+polynomial basis at the target point, given that the target point
+lies in the source box. (Chebyshev polynomials of the first kind T_n).</p>
+<p>If the target point is not in the source box, the concerned instructions
+will return 0.</p>
+<p>The evaluation is based on Chebyshev polynomials of the second kind
+<span class="math notranslate nohighlight">\(U_n\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\frac{d T_n}{dx} = n * U_{n-1}\]</div>
 </dd></dl>
@@ -407,15 +440,19 @@ precomputation for integrals of the form</p>
 <code class="descname">get_kernel</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.get_kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.get_kernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get loopy kernel for computation, the get_kernel_id determines
 what task to perform.</p>
-<p>0:    Integrate <span class="math notranslate nohighlight">\(W(r) G(r) [u(x) - u(y) + grad(u)(y - x)]\)</span>
-1:    Add the integral of <span class="math notranslate nohighlight">\([1 - W(r)] G(r) [u(x) - u(y)]\)</span>
-2:    Expansion by symmetry.</p>
+<ul class="simple">
+<li><p>0:    Integrate <span class="math notranslate nohighlight">\(W(r) G(r) [u(x) - u(y) + grad(u)(y - x)]\)</span></p></li>
+<li><p>1:    Add the integral of <span class="math notranslate nohighlight">\([1 - W(r)] G(r) [u(x) - u(y)]\)</span></p></li>
+<li><p>2:    Expansion by symmetry.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="volumential.droste.InverseDrosteReduced.make_dim_independent">
 <code class="descname">make_dim_independent</code><span class="sig-paren">(</span><em>knlstring</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.make_dim_independent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.make_dim_independent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Produce the correct <span class="math notranslate nohighlight">\(DENSITY_VAL_ASSIGNMENT = u(x) - u(y)\)</span>.</p>
+<dd><p>Produce the correct
+<span class="math notranslate nohighlight">\(\text{DENSITY_VAL_ASSIGNMENT} = u(x) - u(y)\)</span>
+for self-interactions.</p>
 </dd></dl>
 
 </dd></dl>
