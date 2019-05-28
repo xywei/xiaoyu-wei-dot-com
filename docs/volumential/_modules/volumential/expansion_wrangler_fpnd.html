@@ -527,6 +527,9 @@
         <span class="c1"># sorted_target_ids=self.tree.user_source_ids,</span>
         <span class="c1"># user_source_ids=self.tree.user_source_ids)</span>
 
+        <span class="c1"># FIXME: lazy evaluation sometimes returns incorrect results</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="n">out_pot</span><span class="p">,</span> <span class="n">evt</span>
 
 <div class="viewcode-block" id="FPNDExpansionWrangler.eval_direct"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_direct">[docs]</a>    <span class="k">def</span> <span class="nf">eval_direct</span><span class="p">(</span>

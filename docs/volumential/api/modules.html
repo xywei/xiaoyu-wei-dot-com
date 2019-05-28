@@ -366,7 +366,7 @@ current case.</p>
 
 <dl class="class">
 <dt id="volumential.droste.InverseDrosteReduced">
-<em class="property">class </em><code class="descclassname">volumential.droste.</code><code class="descname">InverseDrosteReduced</code><span class="sig-paren">(</span><em>integral_knl</em>, <em>quad_order</em>, <em>case_vecs</em>, <em>n_brick_quad_points=50</em>, <em>knl_symmetry_tags=None</em>, <em>window_radius=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">volumential.droste.</code><code class="descname">InverseDrosteReduced</code><span class="sig-paren">(</span><em>integral_knl</em>, <em>quad_order</em>, <em>case_vecs</em>, <em>n_brick_quad_points=50</em>, <em>knl_symmetry_tags=None</em>, <em>auto_windowing=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced" title="Permalink to this definition">¶</a></dt>
 <dd><p>A variant of the Droste method.
 Instead of computing a volume potential, it computes the “inverse” to a
 Riesz potential, aka a “fractional Laplacian”.</p>
@@ -514,7 +514,21 @@ interactions with given dimension and order.</p>
 <dl class="class">
 <dt id="volumential.list1.NearFieldFromCSR">
 <em class="property">class </em><code class="descclassname">volumential.list1.</code><code class="descname">NearFieldFromCSR</code><span class="sig-paren">(</span><em>integral_kernel</em>, <em>table_data_shapes</em>, <em>options=[]</em>, <em>name=None</em>, <em>device=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/list1.html#NearFieldFromCSR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.list1.NearFieldFromCSR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate the near-field potentials from CSR representation of the tree.</p>
+<dd><p>Evaluate the near-field potentials from CSR representation of the tree.
+The class supports auto-scaling of simple kernels.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">volumential.list1.</code><code class="descname">NearFieldEvalBase</code><span class="sig-paren">(</span><em>integral_kernel</em>, <em>table_data_shapes</em>, <em>options=[]</em>, <em>name=None</em>, <em>device=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/list1.html#NearFieldEvalBase"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Base class of near-field evalulator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">volumential.list1.</code><code class="descname">NearFieldFromCSR</code><span class="sig-paren">(</span><em>integral_kernel</em>, <em>table_data_shapes</em>, <em>options=[]</em>, <em>name=None</em>, <em>device=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/list1.html#NearFieldFromCSR"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Evaluate the near-field potentials from CSR representation of the tree.
+The class supports auto-scaling of simple kernels.</p>
 </dd></dl>
 
 <div class="admonition warning">
@@ -527,7 +541,7 @@ interactions with given dimension and order.</p>
 <p>The tables are stored in <code class="docutils literal notranslate"><span class="pre">hdf5</span></code> format and managed through <code class="xref py py-class docutils literal notranslate"><span class="pre">NearFieldInteractionTableManager</span></code>.</p>
 <span class="target" id="module-volumential.nearfield_potential_table"></span><dl class="class">
 <dt id="volumential.nearfield_potential_table.NearFieldInteractionTable">
-<em class="property">class </em><code class="descclassname">volumential.nearfield_potential_table.</code><code class="descname">NearFieldInteractionTable</code><span class="sig-paren">(</span><em>quad_order</em>, <em>method='gauss-legendre'</em>, <em>dim=2</em>, <em>kernel_func=None</em>, <em>kernel_type=None</em>, <em>sumpy_kernel=None</em>, <em>build_method='Transform'</em>, <em>source_box_extent=1</em>, <em>dtype=&lt;class 'numpy.float64'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/nearfield_potential_table.html#NearFieldInteractionTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.nearfield_potential_table.NearFieldInteractionTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">volumential.nearfield_potential_table.</code><code class="descname">NearFieldInteractionTable</code><span class="sig-paren">(</span><em>quad_order</em>, <em>method='gauss-legendre'</em>, <em>dim=2</em>, <em>kernel_func=None</em>, <em>kernel_type=None</em>, <em>sumpy_kernel=None</em>, <em>build_method='Transform'</em>, <em>source_box_extent=1</em>, <em>dtype=&lt;class 'numpy.float64'&gt;</em>, <em>inverse_droste=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/nearfield_potential_table.html#NearFieldInteractionTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.nearfield_potential_table.NearFieldInteractionTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for a near-field interaction table.</p>
 <p>A near-field interaction table stores precomputed singular integrals
 on template boxes and supports transforms to actual boxes on lookup.
@@ -612,7 +626,7 @@ vectors connection box centers.
 
 <span class="target" id="module-volumential.table_manager"></span><dl class="class">
 <dt id="volumential.table_manager.NearFieldInteractionTableManager">
-<em class="property">class </em><code class="descclassname">volumential.table_manager.</code><code class="descname">NearFieldInteractionTableManager</code><span class="sig-paren">(</span><em>dataset_filename='nft.hdf5'</em>, <em>root_extent=1</em>, <em>dtype=&lt;class 'numpy.float64'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/table_manager.html#NearFieldInteractionTableManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.table_manager.NearFieldInteractionTableManager" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">volumential.table_manager.</code><code class="descname">NearFieldInteractionTableManager</code><span class="sig-paren">(</span><em>dataset_filename='nft.hdf5'</em>, <em>root_extent=1</em>, <em>dtype=&lt;class 'numpy.float64'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/table_manager.html#NearFieldInteractionTableManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.table_manager.NearFieldInteractionTableManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class that manages near field interaction table computation and
 storage.</p>
 <p>Tables are stored under ‘Dimension/KernelName/QuadOrder/BoxLevel/dataset_name’
@@ -877,6 +891,19 @@ Passed unmodified to <em>expansion_wrangler</em>.</p></li>
 <dd><p>Interpolate the volume potential.
 target_points and potential should be an cl array.</p>
 <p>wrangler is used only for general info (nothing sumpy kernel specific)</p>
+</dd></dl>
+
+<span class="target" id="module-volumential.list1"></span><dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">volumential.list1.</code><code class="descname">NearFieldEvalBase</code><span class="sig-paren">(</span><em>integral_kernel</em>, <em>table_data_shapes</em>, <em>options=[]</em>, <em>name=None</em>, <em>device=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/list1.html#NearFieldEvalBase"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Base class of near-field evalulator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">volumential.list1.</code><code class="descname">NearFieldFromCSR</code><span class="sig-paren">(</span><em>integral_kernel</em>, <em>table_data_shapes</em>, <em>options=[]</em>, <em>name=None</em>, <em>device=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/list1.html#NearFieldFromCSR"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Evaluate the near-field potentials from CSR representation of the tree.
+The class supports auto-scaling of simple kernels.</p>
 </dd></dl>
 
 </div>

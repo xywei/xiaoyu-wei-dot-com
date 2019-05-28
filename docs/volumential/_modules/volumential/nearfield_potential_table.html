@@ -368,16 +368,20 @@
         <span class="n">build_method</span><span class="o">=</span><span class="s2">&quot;Transform&quot;</span><span class="p">,</span>
         <span class="n">source_box_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+        <span class="n">inverse_droste</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        kernel_type determines how the kernel is scaled w.r.t. box size.</span>
 <span class="sd">        build_method can be &quot;Transform&quot; or &quot;DrosteSum&quot;.</span>
 
 <span class="sd">        The source box is [0, source_box_extent]^dim</span>
+
+<span class="sd">        :arg inverse_droste True if computing with the fractional Laplacian kernel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">=</span> <span class="n">quad_order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inverse_droste</span> <span class="o">=</span> <span class="n">inverse_droste</span>
 
         <span class="k">assert</span> <span class="n">source_box_extent</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">=</span> <span class="n">source_box_extent</span>
@@ -922,17 +926,8 @@
             <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">)</span>
         <span class="p">]</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_symmetry</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">DrosteFull</span>
-
-            <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteFull</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
-                <span class="n">n_brick_quad_points</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">DrosteReduced</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_droste</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">InverseDrosteReduced</span>
 
             <span class="k">if</span> <span class="s2">&quot;knl_symietry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                 <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knl_symmetry_tags&quot;</span><span class="p">]</span>
@@ -940,13 +935,41 @@
                 <span class="c1"># Maximum symmetry by default</span>
                 <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="kc">None</span>
 
-            <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteReduced</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
-                <span class="n">n_brick_quad_points</span><span class="p">,</span>
-                <span class="n">knl_symmetry_tags</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="n">drf</span> <span class="o">=</span> <span class="n">InverseDrosteReduced</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
+                    <span class="n">n_brick_quad_points</span><span class="p">,</span>
+                    <span class="n">knl_symmetry_tags</span><span class="p">,</span>
+                    <span class="n">auto_windowing</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">use_symmetry</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">DrosteFull</span>
+
+                <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteFull</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
+                    <span class="n">n_brick_quad_points</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">DrosteReduced</span>
+
+                <span class="k">if</span> <span class="s2">&quot;knl_symietry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knl_symmetry_tags&quot;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Maximum symmetry by default</span>
+                    <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteReduced</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
+                    <span class="n">n_brick_quad_points</span><span class="p">,</span>
+                    <span class="n">knl_symmetry_tags</span><span class="p">,</span>
+                <span class="p">)</span>
 
         <span class="c1"># adaptive level refinement</span>
         <span class="n">data0</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span>
@@ -1004,7 +1027,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data0</span>
 
         <span class="c1"># print(&quot;Computing normalizers&quot;)</span>
-        <span class="c1"># NOTE: normalizers are not needed in 3D anyway</span>
+        <span class="c1"># NOTE: normalizers are for log kernels and not needed in 3D</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">build_normalizer_table</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">has_normalizers</span> <span class="o">=</span> <span class="kc">True</span>
