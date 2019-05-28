@@ -242,7 +242,8 @@
 <span class="sd">    e.g., &#39;2D/Laplace/Order_1/Level_0/data&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_filename</span><span class="o">=</span><span class="s2">&quot;nft.hdf5&quot;</span><span class="p">,</span> <span class="n">root_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_filename</span><span class="o">=</span><span class="s2">&quot;nft.hdf5&quot;</span><span class="p">,</span>
+            <span class="n">root_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
@@ -252,6 +253,8 @@
 
         <span class="c1"># Read/write if exists, create otherwise</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_extra_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="c1"># If the file exists, it must be for the same root_extent</span>
         <span class="k">if</span> <span class="s2">&quot;root_extent&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
@@ -505,6 +508,7 @@
             <span class="n">kernel_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_function_type</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">),</span>
             <span class="n">sumpy_kernel</span><span class="o">=</span><span class="n">sumpy_knl</span><span class="p">,</span>
             <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">source_box_level</span><span class="p">)),</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">table_extra_kwargs</span>
         <span class="p">)</span>
 
         <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">-</span> <span class="n">grp</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;source_box_extent&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-15</span>
@@ -735,6 +739,7 @@
             <span class="n">sumpy_kernel</span><span class="o">=</span><span class="n">sumpy_knl</span><span class="p">,</span>
             <span class="n">build_method</span><span class="o">=</span><span class="n">compute_method</span><span class="p">,</span>
             <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">source_box_level</span><span class="p">)),</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">table_extra_kwargs</span>
         <span class="p">)</span>
         <span class="n">table</span><span class="o">.</span><span class="n">build_table</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">table</span><span class="o">.</span><span class="n">is_built</span>

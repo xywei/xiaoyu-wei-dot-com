@@ -175,6 +175,13 @@
 <span class="s2">THE SOFTWARE.</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
+<span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. autoclass:: NearFieldEvalBase</span>
+<span class="s2">   :members:</span>
+<span class="s2">.. autoclass:: NearFieldFromCSR</span>
+<span class="s2">   :members:</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">loopy</span>
 
@@ -216,8 +223,16 @@
 
         <span class="c1"># Allow user to pass more tables to force using multiple tables</span>
         <span class="c1"># instead of performing kernel scaling</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;infer_kernel_scaling&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;infer_kernel_scaling&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;infer_kernel_scaling&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">==</span> <span class="mi">1</span>
+
+        <span class="c1"># Do not infer scaling rules when user defined rules are present</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;kernel_scaling_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="s2">&quot;kernel_displacement_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;infer_kernel_scaling&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># the two codes must be simultaneously given</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="s2">&quot;kernel_scaling_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="s2">&quot;kernel_displacement_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_kernel</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_kernel</span><span class="o">.</span><span class="n">dim</span>
@@ -238,6 +253,7 @@
 
 <div class="viewcode-block" id="NearFieldFromCSR"><a class="viewcode-back" href="../../api/modules.html#volumential.list1.NearFieldFromCSR">[docs]</a><span class="k">class</span> <span class="nc">NearFieldFromCSR</span><span class="p">(</span><span class="n">NearFieldEvalBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Evaluate the near-field potentials from CSR representation of the tree.</span>
+<span class="sd">    The class supports auto-scaling of simple kernels.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">default_name</span> <span class="o">=</span> <span class="s2">&quot;near_field_from_csr&quot;</span>
@@ -302,6 +318,13 @@
                     <span class="s2">&quot;tree is uniform and only needs one table.&quot;</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="s2">&quot;1.0&quot;</span>
+        <span class="k">elif</span> <span class="s2">&quot;kernel_scaling_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">:</span>
+            <span class="c1"># user-defined scaling rule</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_scaling_code&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using scaling rule </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_scaling_code&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span>
+                        <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_scaling_code&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;not scaling for &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;(using multiple tables)&quot;</span><span class="p">)</span>
@@ -340,6 +363,15 @@
                     <span class="s2">&quot;tree is uniform and only needs one table.&quot;</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+        <span class="k">elif</span> <span class="s2">&quot;kernel_displacement_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">:</span>
+            <span class="c1"># user-defined displacement rule</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_displacement_code&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using displacement </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_displacement_code&#39;</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">kname</span>
+                        <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_displacement_code&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no displacement for &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;(using multiple tables)&quot;</span><span class="p">)</span>
@@ -364,6 +396,9 @@
                     <span class="s2">&quot;tree is uniform and only needs one table.&quot;</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+        <span class="k">elif</span> <span class="s2">&quot;kernel_scaling_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">:</span>
+            <span class="c1"># Using custom scaling</span>
+            <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;computing table level from box size&quot;</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;(using multiple tables)&quot;</span><span class="p">)</span>
@@ -502,10 +537,14 @@
             <span class="s2">&quot;infer_scaling=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;infer_kernel_scaling&quot;</span><span class="p">]),</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># FIXME</span>
+    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="c1"># NOTE: this detects the number of logical cores, which</span>
+            <span class="c1"># may result in suboptimal performance.</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">()</span>
-        <span class="n">knl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;tbox&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">outer_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">)</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;tbox&quot;</span><span class="p">,</span> <span class="n">ncpus</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knl</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
