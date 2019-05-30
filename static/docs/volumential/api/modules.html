@@ -965,6 +965,20 @@ Useful for, for example, writing output files that
 are meant to overwrite existing ones.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="volumential.tools.import_code">
+<code class="descclassname">volumential.tools.</code><code class="descname">import_code</code><span class="sig-paren">(</span><em>code</em>, <em>name</em>, <em>add_to_sys_modules=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/tools.html#import_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.tools.import_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dynamically generates a module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>code</strong> – can be any object containing code – string, file object, or</p>
+</dd>
+</dl>
+<p>compiled code object. Returns a new module object initialized
+by dynamically importing the given code and optionally adds it
+to sys.modules under the given name.</p>
+</dd></dl>
+
 </div>
 </div>
 
