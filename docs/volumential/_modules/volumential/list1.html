@@ -216,6 +216,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span> <span class="o">=</span> <span class="n">table_data_shapes</span><span class="p">[</span><span class="s2">&quot;n_q_points&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_table_entries</span> <span class="o">=</span> <span class="n">table_data_shapes</span><span class="p">[</span><span class="s2">&quot;n_table_entries&quot;</span><span class="p">]</span>
 
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_table_entries</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">divice</span> <span class="o">=</span> <span class="n">device</span>

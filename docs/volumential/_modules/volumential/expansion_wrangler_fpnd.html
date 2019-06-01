@@ -243,6 +243,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># list of tables for a single out kernel</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span>
@@ -250,7 +251,7 @@
             <span class="p">]</span> <span class="o">=</span> <span class="n">near_field_table</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">)</span>
 
-        <span class="c1"># FIXME</span>
+        <span class="c1"># single table</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">,</span> <span class="n">NearFieldInteractionTable</span><span class="p">):</span>
             <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[</span>
@@ -258,33 +259,36 @@
             <span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="mi">1</span>
 
+        <span class="c1"># dictionary of lists of tables</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span> <span class="o">=</span> <span class="n">near_field_table</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
-                    <span class="n">near_field_table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">out_knl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">near_field_table</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                            <span class="s2">&quot;Missing nearfield table for </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)],</span>
+                        <span class="n">NearFieldInteractionTable</span><span class="p">):</span>
+                    <span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)]]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)],</span> <span class="nb">list</span><span class="p">)</span>
 
+                <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span> <span class="o">=</span> <span class="n">near_field_table</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Table type unrecognized.&quot;</span><span class="p">)</span>
 
-        <span class="c1"># table -- kernel consistency check</span>
-        <span class="k">for</span> <span class="n">kid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)):</span>
-            <span class="n">kname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="n">kid</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
-            <span class="k">assert</span> <span class="n">kname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span>
-            <span class="c1"># n_tables = minimum length</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">])</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">0</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">=</span> <span class="n">quad_order</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">root_table_source_box_extent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span>
-            <span class="mi">0</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">source_box_extent</span>
+        <span class="c1"># TODO: make all parameters table-specific (allow using inhomogeneous tables)</span>
+        <span class="n">kname</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_table_source_box_extent</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">)</span>
         <span class="n">table_starting_level</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_table_source_box_extent</span><span class="p">)</span>
             <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-        <span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">for</span> <span class="n">kid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)):</span>
             <span class="n">kname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="n">kid</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">lev</span><span class="p">,</span> <span class="n">table</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
@@ -308,7 +312,7 @@
                 <span class="c1"># If the kernel cannot be scaled,</span>
                 <span class="c1"># - tree_root_extent must be integral times of table_root_extent</span>
                 <span class="c1"># - n_tables must be sufficient</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="k">if</span> <span class="p">(</span>
                         <span class="ow">not</span> <span class="nb">abs</span><span class="p">(</span>
                             <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">/</span> <span class="n">table_root_extent</span><span class="p">)</span>
@@ -323,7 +327,7 @@
                             <span class="s2">&quot;divide the bounding box&#39;s extent by an integer.&quot;</span>
                         <span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c1"># this checks that the boxes at the highest level are covered</span>
                 <span class="k">if</span> <span class="p">(</span>
                     <span class="ow">not</span> <span class="n">tree</span><span class="o">.</span><span class="n">nlevels</span>
@@ -431,7 +435,14 @@
 
         <span class="n">kname</span> <span class="o">=</span> <span class="n">out_kernel</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">use_multilevel_tables</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">[</span><span class="n">kname</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">use_multilevel_tables</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">use_multilevel_tables</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">use_multilevel_tables</span><span class="p">:</span>
             <span class="c1"># this checks that the boxes at the coarsest level</span>
             <span class="c1"># and allows for some round-off error</span>
             <span class="n">min_lev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
@@ -485,7 +496,7 @@
 
         <span class="c1"># The loop domain needs to know some info about the tables being used</span>
         <span class="n">table_data_shapes</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;n_tables&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span>
+            <span class="s2">&quot;n_tables&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
             <span class="s2">&quot;n_q_points&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">,</span>
             <span class="s2">&quot;n_table_entries&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
         <span class="p">}</span>
