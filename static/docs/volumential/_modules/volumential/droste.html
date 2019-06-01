@@ -1081,7 +1081,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">result_array</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
-                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncases</span><span class="p">),</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
                         <span class="n">result_dtype</span>
                         <span class="p">)</span>
                     <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -1718,9 +1718,9 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">code</span></div>
 
-<div class="viewcode-block" id="InverseDrosteReduced.codegen_grad_basis_tgt_eval"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.InverseDrosteReduced.codegen_grad_basis_tgt_eval">[docs]</a>    <span class="k">def</span> <span class="nf">codegen_grad_basis_tgt_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iaxis</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate instructions to evaluate the gradient of Chebyshev</span>
-<span class="sd">        polynomial basis at the target point, given that the target point</span>
+<div class="viewcode-block" id="InverseDrosteReduced.codegen_der2_basis_tgt_eval"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.InverseDrosteReduced.codegen_der2_basis_tgt_eval">[docs]</a>    <span class="k">def</span> <span class="nf">codegen_der2_basis_tgt_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iaxis</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate instructions to evaluate the second order derivatives</span>
+<span class="sd">        of Chebyshev polynomial basis at the target point, given that the target</span>
 <span class="sd">        lies in the source box. (Chebyshev polynomials of the first kind T_n).</span>
 
 <span class="sd">        If the target point is not in the source box, the concerned instructions</span>
@@ -1731,7 +1731,7 @@
 
 <span class="sd">        .. math::</span>
 
-<span class="sd">           \frac{d T_n}{dx} = n * U_{n-1}</span>
+<span class="sd">           \frac{d^2 T_n}{dx^2} = n \frac{(n+1)T_n - U_n}{x^2 - 1}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># only valid for self-interactions</span>
@@ -1739,26 +1739,31 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">][</span><span class="n">d</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
 
         <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;  # noqa</span>
-<span class="s2">            &lt;&gt; U0_IAXIS = 1</span>
-<span class="s2">            &lt;&gt; U1_IAXIS = 2 * true_target[IAXIS] {dep=true_targets}</span>
-<span class="s2">            &lt;&gt; Uprev_IAXIS = U0_IAXIS {id=u0_IAXIS}</span>
-<span class="s2">            &lt;&gt; Ucur_IAXIS = U1_IAXIS {id=u1_IAXIS,dep=u0_IAXIS}</span>
+<span class="s2">            &lt;&gt; U0_tgt_IAXIS = 1</span>
+<span class="s2">            &lt;&gt; U1_tgt_IAXIS = 2 * true_target[IAXIS] {dep=true_targets}</span>
+<span class="s2">            &lt;&gt; Uprev_tgt_IAXIS = U0_tgt_IAXIS {id=u0_tgt_IAXIS}</span>
+<span class="s2">            &lt;&gt; Ucur_tgt_IAXIS = U1_tgt_IAXIS {id=u1_tgt_IAXIS,dep=u0_tgt_IAXIS}</span>
 
 <span class="s2">            for pIAXIS</span>
-<span class="s2">                &lt;&gt; Unext_IAXIS = (2 * true_target[IAXIS] * Ucur_IAXIS</span>
-<span class="s2">                                - Uprev_IAXIS) {id=unextIAXIS,dep=u1_IAXIS}</span>
-<span class="s2">                Uprev_IAXIS = Ucur_IAXIS {id=uprev_updateIAXIS,dep=unextIAXIS}</span>
-<span class="s2">                Ucur_IAXIS = Unext_IAXIS {id=ucur_updateIAXIS,dep=uprev_updateIAXIS}</span>
+<span class="s2">                &lt;&gt; Unext_tgt_IAXIS = (2 * true_target[IAXIS] * Ucur_tgt_IAXIS</span>
+<span class="s2">                                - Uprev_tgt_IAXIS) {id=unext_tgt_IAXIS,dep=u1_tgt_IAXIS}</span>
+<span class="s2">                Uprev_tgt_IAXIS = Ucur_tgt_IAXIS {id=uprev_tgt_updateIAXIS,dep=unext_tgt_IAXIS}</span>
+<span class="s2">                Ucur_tgt_IAXIS = Unext_tgt_IAXIS {id=ucur_tgt_updateIAXIS,dep=uprev_tgt_updateIAXIS}</span>
 <span class="s2">            end</span>
 
-<span class="s2">            # U_{n-1}</span>
-<span class="s2">            &lt;&gt; basis2_evalIAXIS = (</span>
-<span class="s2">                U0_IAXIS * if(fIAXIS == 1, 1, 0)</span>
-<span class="s2">                + sum(pIAXIS, if(fIAXIS == pIAXIS, Uprev_IAXIS, 0))</span>
-<span class="s2">                ) {id=basis2IAXIS,dep=uprev_updateIAXIS}</span>
+<span class="s2">            # U_n(target)</span>
+<span class="s2">            &lt;&gt; basis2_tgt_evalIAXIS = (</span>
+<span class="s2">                U0_tgt_IAXIS * if(fIAXIS == 0, 1, 0)</span>
+<span class="s2">                + U1_tgt_IAXIS * if(fIAXIS == 1, 1, 0)</span>
+<span class="s2">                + sum(pIAXIS, if(fIAXIS == pIAXIS, Ucur_tgt_IAXIS, 0))</span>
+<span class="s2">                ) {id=tgtbasis2IAXIS,dep=ucur_tgt_updateIAXIS}</span>
 
+<span class="s2">            # this temp var helps with type deduction</span>
 <span class="s2">            &lt;&gt; f_order_IAXIS = fIAXIS</span>
-<span class="s2">            &lt;&gt; grad_basis_tgt_evalIAXIS = basis2_evalIAXIS * f_order_IAXIS {id=tggradIAXIS}</span>
+<span class="s2">            &lt;&gt; der2_basis_tgt_evalIAXIS = f_order_IAXIS * (</span>
+<span class="s2">                    ((f_order_IAXIS + 1) * basis_tgt_evalIAXIS - basis2_tgt_evalIAXIS)</span>
+<span class="s2">                    / (true_target[IAXIS]**2 - 1)</span>
+<span class="s2">                ) {id=tgtd2basisIAXIS,dep=tgtbasisIAXIS:tgtbasis2IAXIS}</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                     <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
                     <span class="p">)</span>
@@ -1776,8 +1781,33 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;&gt; distsq = dist[0]*dist[0] + </span><span class="se">\</span>
 <span class="s2">                                     dist[1]*dist[1] + dist[2]*dist[2]&quot;</span><span class="p">)</span>
+        <span class="c1"># renormalized distance</span>
+        <span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;&gt; rndist = sqrt(distsq) / delta&quot;</span><span class="p">)</span>
 
-        <span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;&gt; windowing = exp(-(1/(1 - (distsq / (delta*delta)))))&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># polynomial windowing</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using polynomial windowing function.&quot;</span><span class="p">)</span>
+            <span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                &lt;&gt; windowing = if(rndist &gt;= 1,</span>
+<span class="s2">                                  0,</span>
+<span class="s2">                                  (1 - 35 * (rndist**4)</span>
+<span class="s2">                                  + 84 * (rndist**5)</span>
+<span class="s2">                                  - 70 * (rndist**6)</span>
+<span class="s2">                                  + 20 * (rndist**7)</span>
+<span class="s2">                                  )</span>
+<span class="s2">                                 )</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="c1"># classical bump function</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using bump windowing function.&quot;</span><span class="p">)</span>
+            <span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;&lt;&gt; windowing = exp(1) * exp(-(1/(1 - (distsq / (delta*delta)))))&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># smooth transitions of 0--&gt;1--&gt;0</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using smooth transition windowing function.&quot;</span><span class="p">)</span>
+            <span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;&gt; fv = if(rndist &gt; 0, exp(-1 / rndist), 0)&quot;</span><span class="p">)</span>
+            <span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;&gt; fc = if(1 - rndist &gt; 0, exp(-1 / (1 - rndist)), 0)&quot;</span><span class="p">)</span>
+            <span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;&gt; windowing = 1 - fv / (fv + fc)&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">code</span><span class="p">)</span></div>
 
@@ -1830,12 +1860,12 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">codegen_basis_tgt_eval</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># u(x) - u(y) + grad(u)(y - x)</span>
-            <span class="c1"># dist = x - y</span>
-
+            <span class="c1"># Given target x,</span>
+            <span class="c1"># u(x) - u(y) p.v. integrated around a small region symmetric to x,</span>
+            <span class="c1"># truncated to second order 0.5 * [(x - y)&#39; * diag(Hess(u)(x)) * (x - y)]</span>
             <span class="k">if</span> <span class="n">target_box_is_source</span><span class="p">:</span>
                 <span class="n">basis_eval_insns</span> <span class="o">+=</span> <span class="p">[</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">codegen_grad_basis_tgt_eval</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">codegen_der2_basis_tgt_eval</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
 
                 <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                         <span class="s2">&quot;PREPARE_BASIS_VALS&quot;</span><span class="p">,</span>
@@ -1844,7 +1874,7 @@
                             <span class="o">%</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                                 <span class="p">[</span><span class="s1">&#39;basis</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
                                 <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;tgtbasis</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
-                                <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;tggrad</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+                                <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;tgtd2basis</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
                                 <span class="p">),</span>
                             <span class="p">])</span>
                         <span class="p">)</span>
@@ -1864,9 +1894,7 @@
                     <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                             <span class="s2">&quot;DENSITY_VAL_ASSIGNMENT&quot;</span><span class="p">,</span>
                             <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                                <span class="s2">&quot;basis_tgt_eval0&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- basis_eval0&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- grad_basis_tgt_eval0 * dist[0]&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;0.5 * der2_basis_tgt_eval0 * (dist[0]**2)&quot;</span><span class="p">,</span>
                                 <span class="p">])</span>
                             <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1880,10 +1908,8 @@
                     <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                             <span class="s2">&quot;DENSITY_VAL_ASSIGNMENT&quot;</span><span class="p">,</span>
                             <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                                <span class="s2">&quot;basis_tgt_eval0 * basis_tgt_eval1&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- basis_eval0 * basis_eval1&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- grad_basis_tgt_eval0 * basis_tgt_eval1 * dist[0]&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- basis_tgt_eval0 * grad_basis_tgt_eval1 * dist[1]&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;  0.5 * der2_basis_tgt_eval0 * basis_tgt_eval1 * (dist[0]**2)&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                                <span class="s2">&quot;+ 0.5 * basis_tgt_eval0 * der2_basis_tgt_eval1 * (dist[1]**2)&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
                                 <span class="p">])</span>
                             <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1894,18 +1920,12 @@
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">target_box_is_source</span><span class="p">:</span>
-                    <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>  <span class="c1"># noqa: E501</span>
+                    <span class="n">resknl</span> <span class="o">=</span> <span class="n">resknl</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                             <span class="s2">&quot;DENSITY_VAL_ASSIGNMENT&quot;</span><span class="p">,</span>
                             <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                                <span class="s2">&quot;basis_tgt_eval0 * basis_tgt_eval1 </span><span class="se">\</span>
-<span class="s2">                                        * basis_tgt_eval2&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- basis_eval0 * basis_eval1 * basis_eval2&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- grad_basis_tgt_eval0 * basis_tgt_eval1 </span><span class="se">\</span>
-<span class="s2">                                        * basis_tgt_eval2 * dist[0]&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- basis_tgt_eval0 * grad_basis_tgt_eval1 </span><span class="se">\</span>
-<span class="s2">                                        * basis_tgt_eval2 * dist[1]&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;- basis_tgt_eval0 * basis_tgt_eval1 * </span><span class="se">\</span>
-<span class="s2">                                        grad_basis_tgt_eval2 * dist[2]&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;  0.5 * der2_basis_tgt_eval0 * basis_tgt_eval1 * basis_tgt_eval2 * (dist[0]**2)&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                                <span class="s2">&quot;+ 0.5 * basis_tgt_eval0 * der2_basis_tgt_eval1 * basis_tgt_eval2 * (dist[1]**2)&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                                <span class="s2">&quot;+ 0.5 * basis_tgt_eval0 * basis_tgt_eval1 * der2_basis_tgt_eval2 * (dist[2]**2)&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
                                 <span class="p">])</span>
                             <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>

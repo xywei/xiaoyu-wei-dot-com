@@ -390,7 +390,16 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">build_method</span> <span class="o">=</span> <span class="n">build_method</span>
 
-        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">build_method</span> <span class="o">==</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use DrosteSum for 1d&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_func</span> <span class="o">=</span> <span class="n">kernel_func</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">kernel_type</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span> <span class="o">=</span> <span class="n">sumpy_kernel</span>
+
+        <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
 
             <span class="c1"># Constant kernel can be used for fun/testing</span>
             <span class="k">if</span> <span class="n">kernel_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -414,7 +423,6 @@
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use DrosteSum for 3d&quot;</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_func</span> <span class="o">=</span> <span class="n">kernel_func</span>
-
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">kernel_type</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span> <span class="o">=</span> <span class="n">sumpy_kernel</span>
 
@@ -811,19 +819,22 @@
 
     <span class="k">def</span> <span class="nf">compute_nmlz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_id</span><span class="p">):</span>
         <span class="n">mode_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mode</span><span class="p">(</span><span class="n">mode_id</span><span class="p">)</span>
-        <span class="n">nmlz</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">squad</span><span class="o">.</span><span class="n">qquad</span><span class="p">(</span>
+        <span class="n">nmlz</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">squad</span><span class="o">.</span><span class="n">qquad</span><span class="p">(</span>
             <span class="n">func</span><span class="o">=</span><span class="n">mode_func</span><span class="p">,</span>
             <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
             <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">d</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
-            <span class="n">tol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
-            <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+            <span class="n">rtol</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
             <span class="n">minitero</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
             <span class="n">miniteri</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
             <span class="n">maxitero</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
             <span class="n">maxiteri</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">&gt;</span> <span class="mf">1e-15</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Normalizer </span><span class="si">%d</span><span class="s2"> quad error is </span><span class="si">%e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">mode_id</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">mode_id</span><span class="p">,</span> <span class="n">nmlz</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NearFieldInteractionTable.build_normalizer_table"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.build_normalizer_table">[docs]</a>    <span class="k">def</span> <span class="nf">build_normalizer_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -929,10 +940,16 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_droste</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">InverseDrosteReduced</span>
 
-            <span class="k">if</span> <span class="s2">&quot;knl_symietry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;knl_symmetry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                 <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knl_symmetry_tags&quot;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Maximum symmetry by default</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s2">&quot;use_symmetry is set to True, but knl_symmetry_tags is not &quot;</span>
+                        <span class="s2">&quot;set. Using the default maximum symmetry. (Using maximum &quot;</span>
+                        <span class="s2">&quot;symmetry for some kernels (e.g. derivatives of &quot;</span>
+                        <span class="s2">&quot;LaplaceKernel will yield incorrect results).&quot;</span>
+                        <span class="p">)</span>
                 <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="n">drf</span> <span class="o">=</span> <span class="n">InverseDrosteReduced</span><span class="p">(</span>
@@ -957,10 +974,16 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">DrosteReduced</span>
 
-                <span class="k">if</span> <span class="s2">&quot;knl_symietry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;knl_symmetry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                     <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knl_symmetry_tags&quot;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Maximum symmetry by default</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s2">&quot;use_symmetry is set to True, but knl_symmetry_tags is not &quot;</span>
+                        <span class="s2">&quot;set. Using the default maximum symmetry. (Using maximum &quot;</span>
+                        <span class="s2">&quot;symmetry for some kernels (e.g. derivatives of &quot;</span>
+                        <span class="s2">&quot;LaplaceKernel will yield incorrect results).&quot;</span>
+                        <span class="p">)</span>
                     <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="kc">None</span>
 
                 <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteReduced</span><span class="p">(</span>
@@ -1034,6 +1057,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">has_normalizers</span> <span class="o">=</span> <span class="kc">False</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_droste</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_kernel_exterior_normalizer_table</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">is_built</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1"># }}} End build table via adding up a Droste of bricks</span>
@@ -1052,6 +1080,109 @@
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="c1"># }}} End build table (driver)</span>
+
+    <span class="c1"># {{{ build kernel exterior normalizer table</span>
+
+<div class="viewcode-block" id="NearFieldInteractionTable.build_kernel_exterior_normalizer_table"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.build_kernel_exterior_normalizer_table">[docs]</a>    <span class="k">def</span> <span class="nf">build_kernel_exterior_normalizer_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl_ctx</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span>
+            <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">mesh_order</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">quad_order</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mesh_size</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span>
+            <span class="n">remove_tmp_files</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Build the kernel exterior normalizer table.</span>
+
+<span class="sd">        An exterior normalizer for kernel :math:`G(r)` and target</span>
+<span class="sd">        :math:`x` is defined as</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            \int_{B^c} G(\lVert x - y \rVert) dy</span>
+
+<span class="sd">        where :math:`B` is the source box.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">Pool</span><span class="p">,</span> <span class="n">cpu_count</span>
+            <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">cpu_count</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">meshmode.mesh.io</span> <span class="k">import</span> <span class="n">read_gmsh</span>
+        <span class="kn">from</span> <span class="nn">meshmode.discretization</span> <span class="k">import</span> <span class="n">Discretization</span>
+        <span class="kn">from</span> <span class="nn">meshmode.discretization.poly_element</span> <span class="k">import</span> \
+            <span class="n">PolynomialWarpAndBlendGroupFactory</span>
+
+        <span class="c1"># from pytential import bind, sym</span>
+        <span class="kn">import</span> <span class="nn">gmsh</span>
+
+        <span class="c1"># {{{ gmsh processing</span>
+
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">setNumber</span><span class="p">(</span><span class="s2">&quot;General.Terminal&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># meshmode does not support other versions</span>
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">setNumber</span><span class="p">(</span><span class="s2">&quot;Mesh.MshFileVersion&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">setNumber</span><span class="p">(</span><span class="s2">&quot;Mesh.CharacteristicLengthMax&quot;</span><span class="p">,</span> <span class="n">mesh_size</span><span class="p">)</span>
+
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">setNumber</span><span class="p">(</span><span class="s2">&quot;Mesh.ElementOrder&quot;</span><span class="p">,</span> <span class="n">mesh_order</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh_order</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">gmsh</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">setNumber</span><span class="p">(</span>
+                <span class="s2">&quot;Mesh.CharacteristicLengthFromCurvature&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># radius of source box</span>
+        <span class="n">hs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="c1"># radius of bouding sphere</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">hs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">tag_box</span> <span class="o">=</span> <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">occ</span><span class="o">.</span><span class="n">addRectangle</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">dx</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">hs</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">hs</span><span class="p">,</span> <span class="n">tag</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">tag_box</span> <span class="o">=</span> <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">occ</span><span class="o">.</span><span class="n">addBox</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">dx</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">hs</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">hs</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">hs</span><span class="p">,</span> <span class="n">tag</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">tag_ball</span> <span class="o">=</span> <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">occ</span><span class="o">.</span><span class="n">addDisk</span><span class="p">(</span><span class="n">xc</span><span class="o">=</span><span class="n">hs</span><span class="p">,</span> <span class="n">yc</span><span class="o">=</span><span class="n">hs</span><span class="p">,</span> <span class="n">zc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">rx</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">ry</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">tag</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">tag_sphere</span> <span class="o">=</span> <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">occ</span><span class="o">.</span><span class="n">addSphere</span><span class="p">(</span><span class="n">xc</span><span class="o">=</span><span class="n">hs</span><span class="p">,</span> <span class="n">yc</span><span class="o">=</span><span class="n">hs</span><span class="p">,</span> <span class="n">zc</span><span class="o">=</span><span class="n">hs</span><span class="p">,</span>
+                    <span class="n">radius</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">tag</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">tag_ball</span> <span class="o">=</span> <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">occ</span><span class="o">.</span><span class="n">addVolume</span><span class="p">([</span><span class="n">tag_sphere</span><span class="p">],</span> <span class="n">tag</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+        <span class="n">dimtags_ints</span><span class="p">,</span> <span class="n">dimtags_map_ints</span> <span class="o">=</span> <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">occ</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">objectDimTags</span><span class="o">=</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">tag_ball</span><span class="p">)],</span>
+                <span class="n">toolDimTags</span><span class="o">=</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">tag_box</span><span class="p">)],</span>
+                <span class="n">tag</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">removeObject</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">removeTool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">occ</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">tempfile</span> <span class="k">import</span> <span class="n">mkdtemp</span>
+        <span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">join</span>
+        <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;tmp_volumential_nft&quot;</span><span class="p">)</span>
+        <span class="n">msh_filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;chinese_lucky_coin.msh&#39;</span><span class="p">)</span>
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msh_filename</span><span class="p">)</span>
+        <span class="n">gmsh</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">read_gmsh</span><span class="p">(</span><span class="n">msh_filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remove_tmp_files</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">shutil</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+
+        <span class="c1"># }}} End gmsh processing</span>
+
+        <span class="n">discr</span> <span class="o">=</span> <span class="n">Discretization</span><span class="p">(</span><span class="n">cl_ctx</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span>  <span class="c1"># noqa</span>
+                <span class="n">PolynomialWarpAndBlendGroupFactory</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">quad_order</span><span class="p">))</span>
+
+        <span class="c1"># nodes = discr.nodes().with_queue(queue)[:self.dim]</span>
+        <span class="c1"># weights = discr.quad_weights(queue).with_queue(queue)</span>
+
+        <span class="c1"># TODO: evaluate kernel on nodes</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s2">&quot;Coming soon: this part of the code is under construction.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="c1"># }}} End kernel exterior normalizer table</span>
 
     <span class="c1"># {{{ query table and transform to actual box</span>
 

@@ -416,17 +416,17 @@ will return 0.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.droste.InverseDrosteReduced.codegen_grad_basis_tgt_eval">
-<code class="descname">codegen_grad_basis_tgt_eval</code><span class="sig-paren">(</span><em>iaxis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_grad_basis_tgt_eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_grad_basis_tgt_eval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate instructions to evaluate the gradient of Chebyshev
-polynomial basis at the target point, given that the target point
+<dt id="volumential.droste.InverseDrosteReduced.codegen_der2_basis_tgt_eval">
+<code class="descname">codegen_der2_basis_tgt_eval</code><span class="sig-paren">(</span><em>iaxis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/droste.html#InverseDrosteReduced.codegen_der2_basis_tgt_eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.droste.InverseDrosteReduced.codegen_der2_basis_tgt_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate instructions to evaluate the second order derivatives
+of Chebyshev polynomial basis at the target point, given that the target
 lies in the source box. (Chebyshev polynomials of the first kind T_n).</p>
 <p>If the target point is not in the source box, the concerned instructions
 will return 0.</p>
 <p>The evaluation is based on Chebyshev polynomials of the second kind
 <span class="math notranslate nohighlight">\(U_n\)</span>.</p>
 <div class="math notranslate nohighlight">
-\[\frac{d T_n}{dx} = n * U_{n-1}\]</div>
+\[\frac{d^2 T_n}{dx^2} = n \frac{(n+1)T_n - U_n}{x^2 - 1}\]</div>
 </dd></dl>
 
 <dl class="method">
@@ -549,6 +549,17 @@ The query process is done through scaling the entries based on actual
 box sized.</p>
 <p>Orientations are ordered counter-clockwise.</p>
 <p>A template box is one of [0,1]^dim</p>
+<dl class="method">
+<dt id="volumential.nearfield_potential_table.NearFieldInteractionTable.build_kernel_exterior_normalizer_table">
+<code class="descname">build_kernel_exterior_normalizer_table</code><span class="sig-paren">(</span><em>cl_ctx</em>, <em>queue</em>, <em>pool=None</em>, <em>mesh_order=5</em>, <em>quad_order=10</em>, <em>mesh_size=0.03</em>, <em>remove_tmp_files=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/nearfield_potential_table.html#NearFieldInteractionTable.build_kernel_exterior_normalizer_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.nearfield_potential_table.NearFieldInteractionTable.build_kernel_exterior_normalizer_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the kernel exterior normalizer table.</p>
+<p>An exterior normalizer for kernel <span class="math notranslate nohighlight">\(G(r)\)</span> and target
+<span class="math notranslate nohighlight">\(x\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[\int_{B^c} G(\lVert x - y \rVert) dy\]</div>
+<p>where <span class="math notranslate nohighlight">\(B\)</span> is the source box.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="volumential.nearfield_potential_table.NearFieldInteractionTable.build_normalizer_table">
 <code class="descname">build_normalizer_table</code><span class="sig-paren">(</span><em>pool=None</em>, <em>pb=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/nearfield_potential_table.html#NearFieldInteractionTable.build_normalizer_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.nearfield_potential_table.NearFieldInteractionTable.build_normalizer_table" title="Permalink to this definition">¶</a></dt>
