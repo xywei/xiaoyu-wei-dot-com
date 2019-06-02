@@ -297,6 +297,12 @@
                 <span class="k">return</span> <span class="s2">&quot;sbox_extent * sbox_extent / </span><span class="se">\</span>
 <span class="s2">                        (table_root_extent * table_root_extent)&quot;</span>
 
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="ow">in</span> <span class="p">(</span>
+                    <span class="s2">&quot;AxisTargetDerivative(0, LapKnl2D)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;AxisTargetDerivative(1, LapKnl2D)&quot;</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for Grad(LapKnl2D)&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s2">&quot;sbox_extent / table_root_extent&quot;</span>
+
             <span class="c1"># Constant 2D</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;CstKnl2D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for CstKnl2D&quot;</span><span class="p">)</span>
@@ -308,6 +314,13 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for Lapknl3D&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="s2">&quot;sbox_extent * sbox_extent / </span><span class="se">\</span>
 <span class="s2">                        (table_root_extent * table_root_extent)&quot;</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="ow">in</span> <span class="p">(</span>
+                    <span class="s2">&quot;AxisTargetDerivative(0, LapKnl3D)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;AxisTargetDerivative(1, LapKnl3D)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;AxisTargetDerivative(2, LapKnl3D)&quot;</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for Grad(LapKnl3D)&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s2">&quot;sbox_extent / table_root_extent&quot;</span>
 
             <span class="c1"># Constant 3D</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;CstKnl3D&quot;</span><span class="p">:</span>
@@ -363,7 +376,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                     <span class="s2">&quot;Kernel not scalable and not using multiple tables, &quot;</span>
-                    <span class="s2">&quot;to get correct results, please make sure that your &quot;</span>
+                    <span class="s2">&quot;to get correct results, please make sure that either &quot;</span>
+                    <span class="s2">&quot;no displacement is needed, or the box &quot;</span>
                     <span class="s2">&quot;tree is uniform and only needs one table.&quot;</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
