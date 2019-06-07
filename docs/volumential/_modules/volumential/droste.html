@@ -1767,7 +1767,7 @@
 <span class="s2">            &lt;&gt; der2_basis_tgt_evalIAXIS = f_order_IAXIS * (</span>
 <span class="s2">                    ((f_order_IAXIS + 1) * basis_tgt_evalIAXIS - basis2_tgt_evalIAXIS)</span>
 <span class="s2">                    / (template_true_target[IAXIS]**2 - 1)</span>
-<span class="s2">                ) {id=tgtd2basisIAXIS,dep=tgtbasisIAXIS:tgtbasis2IAXIS}</span>
+<span class="s2">                ) * (2**2) / (root_extent[IAXIS]**2) {id=tgtd2basisIAXIS,dep=tgtbasisIAXIS:tgtbasis2IAXIS}</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                     <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
                     <span class="p">)</span>
