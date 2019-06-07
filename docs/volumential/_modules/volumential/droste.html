@@ -377,7 +377,7 @@
 <span class="s2">            &lt;&gt; basis_evalIAXIS = (</span>
 <span class="s2">                T0_IAXIS * if(fIAXIS == 0, 1, 0)</span>
 <span class="s2">                + T1_IAXIS * if(fIAXIS == 1, 1, 0)</span>
-<span class="s2">                + sum(pIAXIS, if(fIAXIS == pIAXIS, Tcur_IAXIS, 0))</span>
+<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS == pIAXIS, Tcur_IAXIS, 0))</span>
 <span class="s2">                ) {id=basisIAXIS,dep=tcur_updateIAXIS}</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
@@ -549,6 +549,10 @@
 <span class="sd">                            * root_extent[iaxis]</span>
 <span class="sd">                         ) {id=true_targets,dup=iaxis,dep=tplt_tgt_pre}</span>
 
+<span class="sd">                # Re-map the mapped points to [-1,1]^dim for Chebyshev evals</span>
+<span class="sd">                &lt;&gt; template_true_target[iaxis] = 0.0 + (</span>
+<span class="sd">                        true_target[iaxis] - root_center[iaxis]</span>
+<span class="sd">                        ) / root_extent[iaxis] * 2 {id=template_true_targets,dup=iaxis,dep=true_targets}</span>
 <span class="sd">            end</span>
 
 <span class="sd">            # Projected targets are used for brick construction</span>
@@ -1697,12 +1701,12 @@
 
         <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;  # noqa</span>
 <span class="s2">            &lt;&gt; T0_tgt_IAXIS = 1</span>
-<span class="s2">            &lt;&gt; T1_tgt_IAXIS = true_target[IAXIS] {dep=true_targets}</span>
+<span class="s2">            &lt;&gt; T1_tgt_IAXIS = template_true_target[IAXIS] {dep=template_true_targets}</span>
 <span class="s2">            &lt;&gt; Tprev_tgt_IAXIS = T0_tgt_IAXIS {id=t0_tgt_IAXIS}</span>
 <span class="s2">            &lt;&gt; Tcur_tgt_IAXIS = T1_tgt_IAXIS {id=t1_tgt_IAXIS,dep=t0_tgt_IAXIS}</span>
 
 <span class="s2">            for pIAXIS</span>
-<span class="s2">                &lt;&gt; Tnext_tgt_IAXIS = (2 * true_target[IAXIS] * Tcur_tgt_IAXIS</span>
+<span class="s2">                &lt;&gt; Tnext_tgt_IAXIS = (2 * template_true_target[IAXIS] * Tcur_tgt_IAXIS</span>
 <span class="s2">                                - Tprev_tgt_IAXIS) {id=tnext_tgt_IAXIS,dep=t1_tgt_IAXIS}</span>
 <span class="s2">                Tprev_tgt_IAXIS = Tcur_tgt_IAXIS {id=tprev_tgt_updateIAXIS,dep=tnext_tgt_IAXIS}</span>
 <span class="s2">                Tcur_tgt_IAXIS = Tnext_tgt_IAXIS {id=tcur_tgt_updateIAXIS,dep=tprev_tgt_updateIAXIS}</span>
@@ -1711,7 +1715,7 @@
 <span class="s2">            &lt;&gt; basis_tgt_evalIAXIS = (</span>
 <span class="s2">                T0_tgt_IAXIS * if(fIAXIS == 0, 1, 0)</span>
 <span class="s2">                + T1_tgt_IAXIS * if(fIAXIS == 1, 1, 0)</span>
-<span class="s2">                + sum(pIAXIS, if(fIAXIS == pIAXIS, Tcur_tgt_IAXIS, 0))</span>
+<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS == pIAXIS, Tcur_tgt_IAXIS, 0))</span>
 <span class="s2">                ) {id=tgtbasisIAXIS,dep=tcur_tgt_updateIAXIS}</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
@@ -1740,12 +1744,12 @@
 
         <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;  # noqa</span>
 <span class="s2">            &lt;&gt; U0_tgt_IAXIS = 1</span>
-<span class="s2">            &lt;&gt; U1_tgt_IAXIS = 2 * true_target[IAXIS] {dep=true_targets}</span>
+<span class="s2">            &lt;&gt; U1_tgt_IAXIS = 2 * template_true_target[IAXIS] {dep=template_true_targets}</span>
 <span class="s2">            &lt;&gt; Uprev_tgt_IAXIS = U0_tgt_IAXIS {id=u0_tgt_IAXIS}</span>
 <span class="s2">            &lt;&gt; Ucur_tgt_IAXIS = U1_tgt_IAXIS {id=u1_tgt_IAXIS,dep=u0_tgt_IAXIS}</span>
 
 <span class="s2">            for pIAXIS</span>
-<span class="s2">                &lt;&gt; Unext_tgt_IAXIS = (2 * true_target[IAXIS] * Ucur_tgt_IAXIS</span>
+<span class="s2">                &lt;&gt; Unext_tgt_IAXIS = (2 * template_true_target[IAXIS] * Ucur_tgt_IAXIS</span>
 <span class="s2">                                - Uprev_tgt_IAXIS) {id=unext_tgt_IAXIS,dep=u1_tgt_IAXIS}</span>
 <span class="s2">                Uprev_tgt_IAXIS = Ucur_tgt_IAXIS {id=uprev_tgt_updateIAXIS,dep=unext_tgt_IAXIS}</span>
 <span class="s2">                Ucur_tgt_IAXIS = Unext_tgt_IAXIS {id=ucur_tgt_updateIAXIS,dep=uprev_tgt_updateIAXIS}</span>
@@ -1755,14 +1759,14 @@
 <span class="s2">            &lt;&gt; basis2_tgt_evalIAXIS = (</span>
 <span class="s2">                U0_tgt_IAXIS * if(fIAXIS == 0, 1, 0)</span>
 <span class="s2">                + U1_tgt_IAXIS * if(fIAXIS == 1, 1, 0)</span>
-<span class="s2">                + sum(pIAXIS, if(fIAXIS == pIAXIS, Ucur_tgt_IAXIS, 0))</span>
+<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS == pIAXIS, Ucur_tgt_IAXIS, 0))</span>
 <span class="s2">                ) {id=tgtbasis2IAXIS,dep=ucur_tgt_updateIAXIS}</span>
 
 <span class="s2">            # this temp var helps with type deduction</span>
 <span class="s2">            &lt;&gt; f_order_IAXIS = fIAXIS</span>
 <span class="s2">            &lt;&gt; der2_basis_tgt_evalIAXIS = f_order_IAXIS * (</span>
 <span class="s2">                    ((f_order_IAXIS + 1) * basis_tgt_evalIAXIS - basis2_tgt_evalIAXIS)</span>
-<span class="s2">                    / (true_target[IAXIS]**2 - 1)</span>
+<span class="s2">                    / (template_true_target[IAXIS]**2 - 1)</span>
 <span class="s2">                ) {id=tgtd2basisIAXIS,dep=tgtbasisIAXIS:tgtbasis2IAXIS}</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                     <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
@@ -2035,6 +2039,10 @@
         <span class="k">if</span> <span class="s2">&quot;extra_kernel_kwarg_types&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">extra_kernel_kwarg_types</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;extra_kernel_kwarg_types&quot;</span><span class="p">]</span>
 
+        <span class="n">extra_loopy_kernel_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;extra_loopy_kernel_kwargs&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">extra_loopy_kernel_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;extra_loopy_kernel_kwargs&quot;</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">make_kernel</span><span class="p">(</span>  <span class="c1"># NOQA</span>
                 <span class="p">[</span><span class="n">domain</span><span class="p">],</span>
@@ -2062,6 +2070,7 @@
                 <span class="p">],</span>
                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brick_map_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span><span class="p">,</span>
                 <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="o">**</span><span class="n">extra_loopy_kernel_kwargs</span>
             <span class="p">)</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -2084,6 +2093,7 @@
                 <span class="p">],</span>
                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;brick_map_expansion&quot;</span><span class="p">,</span>
                 <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="o">**</span><span class="n">extra_loopy_kernel_kwargs</span>
             <span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -2093,7 +2103,7 @@
         <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">write_cl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">make_reduction_inames_unique</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">)</span>
+        <span class="c1"># loopy_knl = lp.make_reduction_inames_unique(loopy_knl)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">loopy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">prepare_loopy_kernel</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">)</span>
@@ -2252,6 +2262,7 @@
             <span class="k">pass</span>
         <span class="n">knl2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
         <span class="n">result_array</span> <span class="o">=</span> <span class="n">res0</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">res1</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+
         <span class="n">evt2</span><span class="p">,</span> <span class="n">res2</span> <span class="o">=</span> <span class="n">knl2</span><span class="p">(</span>
             <span class="n">queue</span><span class="p">,</span>
             <span class="n">result</span><span class="o">=</span><span class="n">result_array</span><span class="p">,</span>
