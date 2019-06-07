@@ -958,7 +958,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
                     <span class="n">n_brick_quad_points</span><span class="p">,</span>
                     <span class="n">knl_symmetry_tags</span><span class="p">,</span>
-                    <span class="n">auto_windowing</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="n">auto_windowing</span><span class="o">=</span><span class="kc">False</span>
                     <span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -1058,7 +1058,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">has_normalizers</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_droste</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">build_kernel_exterior_normalizer_table</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_kernel_exterior_normalizer_table</span><span class="p">(</span><span class="n">cl_ctx</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -1084,7 +1084,7 @@
     <span class="c1"># {{{ build kernel exterior normalizer table</span>
 
 <div class="viewcode-block" id="NearFieldInteractionTable.build_kernel_exterior_normalizer_table"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.build_kernel_exterior_normalizer_table">[docs]</a>    <span class="k">def</span> <span class="nf">build_kernel_exterior_normalizer_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl_ctx</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span>
-            <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">mesh_order</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">quad_order</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mesh_size</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span>
             <span class="n">remove_tmp_files</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Build the kernel exterior normalizer table.</span>
@@ -1098,9 +1098,19 @@
 
 <span class="sd">        where :math:`B` is the source box.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">Pool</span><span class="p">,</span> <span class="n">cpu_count</span>
-            <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">cpu_count</span><span class="p">)</span>
+            <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">Pool</span>
+            <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">ncpus</span><span class="p">)</span>
+
+        <span class="c1"># Directly compute and return in 1D</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># TODO</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span>
 
         <span class="kn">from</span> <span class="nn">meshmode.mesh.io</span> <span class="k">import</span> <span class="n">read_gmsh</span>
         <span class="kn">from</span> <span class="nn">meshmode.discretization</span> <span class="k">import</span> <span class="n">Discretization</span>
