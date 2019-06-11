@@ -521,6 +521,7 @@
         <span class="n">table</span><span class="o">.</span><span class="n">q_points</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;q_points&quot;</span><span class="p">]</span>
         <span class="n">table</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
         <span class="n">table</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;mode_normalizers&quot;</span><span class="p">]</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;kernel_exterior_normalizers&quot;</span><span class="p">]</span>
 
         <span class="n">tmp_case_vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">)</span>
         <span class="n">tmp_case_vecs</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;interaction_case_vecs&quot;</span><span class="p">]</span>
@@ -713,6 +714,7 @@
         <span class="n">q_order</span><span class="p">,</span>
         <span class="n">source_box_level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">compute_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cl_ctx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">queue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
@@ -760,7 +762,14 @@
             <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">source_box_level</span><span class="p">)),</span>
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">table_extra_kwargs</span>
         <span class="p">)</span>
-        <span class="n">table</span><span class="o">.</span><span class="n">build_table</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># self-similarly shrink delta</span>
+            <span class="k">if</span> <span class="s1">&#39;delta&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;delta&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">source_box_level</span><span class="p">))</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta</span>
+
+        <span class="n">table</span><span class="o">.</span><span class="n">build_table</span><span class="p">(</span><span class="n">cl_ctx</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">table</span><span class="o">.</span><span class="n">is_built</span>
 
         <span class="c1"># update database</span>
@@ -785,6 +794,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_dataset</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s2">&quot;q_points&quot;</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">q_points</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_dataset</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_dataset</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s2">&quot;mode_normalizers&quot;</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_dataset</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s2">&quot;kernel_exterior_normalizers&quot;</span><span class="p">,</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_dataset</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s2">&quot;interaction_case_vecs&quot;</span><span class="p">,</span>
                 <span class="n">table</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_dataset</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s2">&quot;case_indices&quot;</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">case_indices</span><span class="p">)</span>
