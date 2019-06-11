@@ -2141,10 +2141,16 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="c1"># target points in 1D</span>
+        <span class="c1"># (template) target points in 1D over [0, 1]</span>
         <span class="n">q_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_target_points</span><span class="p">()</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_points</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">q_points</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">]])</span>
+
+        <span class="n">tt</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">source_box_extent</span>
+        <span class="n">delta_max</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">tt</span><span class="p">),</span> <span class="n">source_box_extent</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">tt</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">delta_max</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">delta_max</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Severe delta constraint (&lt; </span><span class="si">%f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">delta_max</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;delta&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_windowing</span><span class="p">):</span>
             <span class="n">delta</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">]</span>
@@ -2152,8 +2158,12 @@
             <span class="k">assert</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">source_box_extent</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_windowing</span>
-            <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.48</span> <span class="o">*</span> <span class="p">(</span><span class="n">source_box_extent</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">t</span><span class="p">)))</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">delta_max</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using auto-determined window radius </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">delta</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="n">delta_max</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">delta_max</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Shrinked delta to </span><span class="si">%f</span><span class="s2"> to fit inside the source box&quot;</span> <span class="o">%</span> <span class="n">delta</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;nlevels&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">nlevels</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;nlevels&quot;</span><span class="p">]</span>
