@@ -49,6 +49,16 @@
   </url>
   
   <url>
+    <loc>https://www.xiaoyu-wei.com/talk/cahn-hilliard/</loc>
+    <lastmod>2019-02-26T15:05:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.xiaoyu-wei.com/talk/</loc>
+    <lastmod>2019-02-26T15:05:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.xiaoyu-wei.com/publication/2016-iterative-thresholding/</loc>
     <lastmod>2017-01-01T00:00:00+00:00</lastmod>
   </url>
@@ -93,16 +103,6 @@
   </url>
   
   <url>
-    <loc>https://www.xiaoyu-wei.com/talk/cahn-hilliard/</loc>
-    <lastmod>2009-02-26T15:05:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.xiaoyu-wei.com/talk/</loc>
-    <lastmod>2009-02-26T15:05:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://www.xiaoyu-wei.com/author/admin/</loc>
     <xhtml:link
                 rel="alternate"
@@ -141,6 +141,11 @@
   </url>
   
   <url>
+    <loc>https://www.xiaoyu-wei.com/authors/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xiaoyu-wei.com/author/</loc>
     <priority>0</priority>
     <xhtml:link
@@ -153,11 +158,6 @@
                 hreflang="en"
                 href="https://www.xiaoyu-wei.com/author/"
                 />
-  </url>
-  
-  <url>
-    <loc>https://www.xiaoyu-wei.com/authors/</loc>
-    <priority>0</priority>
   </url>
   
   <url>

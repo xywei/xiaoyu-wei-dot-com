@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;&lt;img alt=&#34;Creative Commons License&#34; style=&#34;border-width:0&#34; src=&#34;https://i.creativecommons.org/l/by-sa/4.0/80x15.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-sa/4.0/&#34;&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.</copyright>
-    <lastBuildDate>Thu, 26 Feb 2009 15:05:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 26 Feb 2019 15:05:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.xiaoyu-wei.com/talk/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>An Integral Equation Method for the Cahn-Hilliard Equation in the Wetting Problem</title>
       <link>https://www.xiaoyu-wei.com/talk/cahn-hilliard/</link>
-      <pubDate>Thu, 26 Feb 2009 15:05:00 +0000</pubDate>
+      <pubDate>Tue, 26 Feb 2019 15:05:00 +0000</pubDate>
       
       <guid>https://www.xiaoyu-wei.com/talk/cahn-hilliard/</guid>
       <description>Small well-conditioned linear system, O(N) complexity.</description>
