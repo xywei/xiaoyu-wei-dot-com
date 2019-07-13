@@ -3,8 +3,8 @@ title = "An Integral Equation Method for the Cahn-Hilliard Equation in the Wetti
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
-date = 2009-02-26T15:05:00
-date_end = 2009-02-26T15:25:00
+date = 2019-02-26T15:05:00
+date_end = 2019-02-26T15:25:00
 all_day = false
 
 # Schedule page publish date (NOT talk date).
