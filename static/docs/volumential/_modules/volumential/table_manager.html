@@ -290,6 +290,12 @@
             <span class="s2">&quot;Cahn-Hilliard-Laplacian-Dy&quot;</span><span class="p">,</span>
         <span class="p">]</span>
 
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception_type</span><span class="p">,</span> <span class="n">exception_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exception_type</span><span class="p">,</span> <span class="n">exception_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">)</span>
+
 <div class="viewcode-block" id="NearFieldInteractionTableManager.get_table"><a class="viewcode-back" href="../../api/modules.html#volumential.table_manager.NearFieldInteractionTableManager.get_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_table</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">dim</span><span class="p">,</span>
@@ -520,8 +526,11 @@
         <span class="c1"># Load data</span>
         <span class="n">table</span><span class="o">.</span><span class="n">q_points</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;q_points&quot;</span><span class="p">]</span>
         <span class="n">table</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
-        <span class="n">table</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;mode_normalizers&quot;</span><span class="p">]</span>
-        <span class="n">table</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;kernel_exterior_normalizers&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;mode_normalizers&#39;</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;mode_normalizers&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;kernel_exterior_normalizers&#39;</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;kernel_exterior_normalizers&quot;</span><span class="p">]</span>
 
         <span class="n">tmp_case_vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">)</span>
         <span class="n">tmp_case_vecs</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;interaction_case_vecs&quot;</span><span class="p">]</span>
@@ -695,6 +704,9 @@
 <div class="viewcode-block" id="NearFieldInteractionTableManager.update_dataset"><a class="viewcode-back" href="../../api/modules.html#volumential.table_manager.NearFieldInteractionTableManager.update_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">update_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">,</span> <span class="n">data_array</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update stored data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">data_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No data to save for </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">dataset_name</span><span class="p">)</span>
+            <span class="k">return</span>
 
         <span class="n">data_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data_array</span><span class="p">)</span>
 

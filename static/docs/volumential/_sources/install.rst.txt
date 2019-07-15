@@ -43,6 +43,12 @@ Install ``dealii`` as well for additional features.
 
    conda install cmake tbb-devel dealii
 
+Also, to use ``gmsh`` via its Python API,
+
+.. code-block:: bash
+
+   conda install gmsh python-gmsh
+
 And here are some optional dependencies. Install these if you intend to develop the library or build this documentation.
 
 .. code-block:: bash
@@ -111,6 +117,23 @@ process is similar. It is in deprecated status. But if you have troubles
 compiling the ``pybind11`` one, it may worth a try.
 
 After installation, checkout ``examples/`` for example usage.
+
+Run Tests
+---------
+
+``volumential`` supports testing using ``pytest``. To test the installation,
+``cd`` into ``test/`` and run
+
+.. code-block:: bash
+
+   pytest
+
+By default, some slow tests are skipped for CI efficiency. To include those in
+the testing, use instead
+
+.. code-block:: bash
+
+   pytest --longrun
 
 Update the Installation
 -----------------------

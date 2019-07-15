@@ -93,6 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#install-dependencies">Install Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#install-volumential">Install Volumential</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compile-the-amr-module">Compile the AMR Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-tests">Run Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update-the-installation">Update the Installation</a></li>
 </ul>
 </li>
@@ -197,6 +198,10 @@ conda install matplotlib mayavi pyvtk
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install cmake tbb-devel dealii
 </pre></div>
 </div>
+<p>Also, to use <code class="docutils literal notranslate"><span class="pre">gmsh</span></code> via its Python API,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install gmsh python-gmsh
+</pre></div>
+</div>
 <p>And here are some optional dependencies. Install these if you intend to develop the library or build this documentation.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install flake8 pylint mypy pylama
 conda install pytest sphinx sphinx_rtd_theme
@@ -252,6 +257,19 @@ using <code class="docutils literal notranslate"><span class="pre">boost::python
 process is similar. It is in deprecated status. But if you have troubles
 compiling the <code class="docutils literal notranslate"><span class="pre">pybind11</span></code> one, it may worth a try.</p>
 <p>After installation, checkout <code class="docutils literal notranslate"><span class="pre">examples/</span></code> for example usage.</p>
+</div>
+<div class="section" id="run-tests">
+<h2>Run Tests<a class="headerlink" href="#run-tests" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">volumential</span></code> supports testing using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>. To test the installation,
+<code class="docutils literal notranslate"><span class="pre">cd</span></code> into <code class="docutils literal notranslate"><span class="pre">test/</span></code> and run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
+</pre></div>
+</div>
+<p>By default, some slow tests are skipped for CI efficiency. To include those in
+the testing, use instead</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest --longrun
+</pre></div>
+</div>
 </div>
 <div class="section" id="update-the-installation">
 <h2>Update the Installation<a class="headerlink" href="#update-the-installation" title="Permalink to this headline">¶</a></h2>

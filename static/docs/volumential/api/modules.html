@@ -552,7 +552,7 @@ box sized.</p>
 <dl class="method">
 <dt id="volumential.nearfield_potential_table.NearFieldInteractionTable.build_kernel_exterior_normalizer_table">
 <code class="sig-name descname">build_kernel_exterior_normalizer_table</code><span class="sig-paren">(</span><em class="sig-param">cl_ctx</em>, <em class="sig-param">queue</em>, <em class="sig-param">pool=None</em>, <em class="sig-param">ncpus=None</em>, <em class="sig-param">mesh_order=5</em>, <em class="sig-param">quad_order=10</em>, <em class="sig-param">mesh_size=0.03</em>, <em class="sig-param">remove_tmp_files=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/nearfield_potential_table.html#NearFieldInteractionTable.build_kernel_exterior_normalizer_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.nearfield_potential_table.NearFieldInteractionTable.build_kernel_exterior_normalizer_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the kernel exterior normalizer table.</p>
+<dd><p>Build the kernel exterior normalizer table for fractional Laplacians.</p>
 <p>An exterior normalizer for kernel <span class="math notranslate nohighlight">\(G(r)\)</span> and target
 <span class="math notranslate nohighlight">\(x\)</span> is defined as</p>
 <div class="math notranslate nohighlight">
@@ -871,7 +871,7 @@ Although the interpolation is <span class="math notranslate nohighlight">\(O(N l
 the total runtime.</p>
 <span class="target" id="module-volumential.volume_fmm"></span><dl class="function">
 <dt id="volumential.volume_fmm.drive_volume_fmm">
-<code class="sig-prename descclassname">volumential.volume_fmm.</code><code class="sig-name descname">drive_volume_fmm</code><span class="sig-paren">(</span><em class="sig-param">traversal</em>, <em class="sig-param">expansion_wrangler</em>, <em class="sig-param">src_weights</em>, <em class="sig-param">src_func</em>, <em class="sig-param">direct_evaluation=False</em>, <em class="sig-param">timing_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/volume_fmm.html#drive_volume_fmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.volume_fmm.drive_volume_fmm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">volumential.volume_fmm.</code><code class="sig-name descname">drive_volume_fmm</code><span class="sig-paren">(</span><em class="sig-param">traversal</em>, <em class="sig-param">expansion_wrangler</em>, <em class="sig-param">src_weights</em>, <em class="sig-param">src_func</em>, <em class="sig-param">direct_evaluation=False</em>, <em class="sig-param">timing_data=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/volume_fmm.html#drive_volume_fmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.volume_fmm.drive_volume_fmm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Top-level driver routine for volume potential calculation
 via fast multiple method.</p>
 <p>This function, and the interface it utilizes, is adapted from boxtree/fmm.py</p>
@@ -961,6 +961,38 @@ interior domains in 2D (i.e., extension is on the exterior).</p>
 <div class="section" id="module-volumential.tools">
 <span id="miscellaneous-tools"></span><h2>Miscellaneous Tools<a class="headerlink" href="#module-volumential.tools" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="volumential.tools.BoxSpecificMap">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.tools.</code><code class="sig-name descname">BoxSpecificMap</code><a class="reference internal" href="../_modules/volumential/tools.html#BoxSpecificMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.tools.BoxSpecificMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Box-specific transform that maps between datum defined on quadrature
+nodes. Being box-specific means that the transform for each box is
+independent from the rest of the boxes.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="volumential.tools.BoxSpecificReduction">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.tools.</code><code class="sig-name descname">BoxSpecificReduction</code><a class="reference internal" href="../_modules/volumential/tools.html#BoxSpecificReduction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.tools.BoxSpecificReduction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Box-specific reduction that maps for each box a data vector defined
+on the quadrature nodes to a scalar.
+Being box-specific means that the reductions for each box is
+independent from the rest of the boxes.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="volumential.tools.BoxSum">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.tools.</code><code class="sig-name descname">BoxSum</code><span class="sig-paren">(</span><em class="sig-param">dim</em>, <em class="sig-param">degree</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/tools.html#BoxSum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.tools.BoxSum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds up nodal values within each box.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="volumential.tools.DiscreteLegendreTransform">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.tools.</code><code class="sig-name descname">DiscreteLegendreTransform</code><span class="sig-paren">(</span><em class="sig-param">dim</em>, <em class="sig-param">degree</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/tools.html#DiscreteLegendreTransform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.tools.DiscreteLegendreTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform from nodal values to Legendre polynomial coefficients
+for all cells (leaf boxes of a boxtree Tree object).
+It is assumed that the traversal is built over a tree where the
+sources and targets coincide.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="volumential.tools.ScalarFieldExpressionEvaluation">
 <em class="property">class </em><code class="sig-prename descclassname">volumential.tools.</code><code class="sig-name descname">ScalarFieldExpressionEvaluation</code><span class="sig-paren">(</span><em class="sig-param">dim</em>, <em class="sig-param">expression</em>, <em class="sig-param">variables=None</em>, <em class="sig-param">function_manglers=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/tools.html#ScalarFieldExpressionEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.tools.ScalarFieldExpressionEvaluation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate a field funciton on a set of D-d points.
@@ -974,6 +1006,13 @@ Useful for imposing analytic conditions efficiently.</p>
 Fails silently when the file does not exist.
 Useful for, for example, writing output files that
 are meant to overwrite existing ones.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="volumential.tools.generate_leading_order_filtering">
+<code class="sig-prename descclassname">volumential.tools.</code><code class="sig-name descname">generate_leading_order_filtering</code><span class="sig-paren">(</span><em class="sig-param">dim</em>, <em class="sig-param">n_dofs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/tools.html#generate_leading_order_filtering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.tools.generate_leading_order_filtering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a filtering vector that is an indicator function of the node
+that corresponds to the leading order modal values in the Fourier space.</p>
 </dd></dl>
 
 <dl class="function">

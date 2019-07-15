@@ -177,10 +177,15 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">loopy</span> <span class="k">as</span> <span class="nn">lp</span>
+<span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 <span class="kn">import</span> <span class="nn">pymbolic</span> <span class="k">as</span> <span class="nn">pmbl</span>
 <span class="kn">from</span> <span class="nn">pymbolic.primitives</span> <span class="k">import</span> <span class="n">Variable</span> <span class="k">as</span> <span class="n">VariableType</span>
 <span class="kn">from</span> <span class="nn">pymbolic.primitives</span> <span class="k">import</span> <span class="n">Expression</span> <span class="k">as</span> <span class="n">ExpressionType</span>
 <span class="kn">from</span> <span class="nn">sumpy.tools</span> <span class="k">import</span> <span class="n">KernelCacheWrapper</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1"># {{{ clean files</span>
 
@@ -396,6 +401,370 @@
     <span class="k">return</span> <span class="n">module</span></div>
 
 <span class="c1"># }}} End import code</span>
+
+<span class="c1"># {{{ box-specific maps</span>
+
+
+<div class="viewcode-block" id="BoxSpecificMap"><a class="viewcode-back" href="../../api/modules.html#volumential.tools.BoxSpecificMap">[docs]</a><span class="k">class</span> <span class="nc">BoxSpecificMap</span><span class="p">(</span><span class="n">KernelCacheWrapper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Box-specific transform that maps between datum defined on quadrature</span>
+<span class="sd">    nodes. Being box-specific means that the transform for each box is</span>
+<span class="sd">    independent from the rest of the boxes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<span class="c1"># {{{ discrete Legendre transform</span>
+
+
+<div class="viewcode-block" id="DiscreteLegendreTransform"><a class="viewcode-back" href="../../api/modules.html#volumential.tools.DiscreteLegendreTransform">[docs]</a><span class="k">class</span> <span class="nc">DiscreteLegendreTransform</span><span class="p">(</span><span class="n">BoxSpecificMap</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform from nodal values to Legendre polynomial coefficients</span>
+<span class="sd">    for all cells (leaf boxes of a boxtree Tree object).</span>
+<span class="sd">    It is assumed that the traversal is built over a tree where the</span>
+<span class="sd">    sources and targets coincide.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :arg dim</span>
+<span class="sd">        :arg degree Number of nodes in each axis direction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">dim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+        <span class="k">assert</span> <span class="n">degree</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">=</span> <span class="n">degree</span>
+
+        <span class="c1"># Template interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">template_interval</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">template_interval_extent</span> <span class="o">=</span> <span class="mf">2.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">template_interval_center</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_w</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">legendre</span><span class="o">.</span><span class="n">leggauss</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">legendre</span><span class="o">.</span><span class="n">legvander</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_w</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">legendre</span><span class="o">.</span><span class="n">legvander2d</span><span class="p">(</span>
+                    <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_w</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_w</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">legendre</span><span class="o">.</span><span class="n">legvander3d</span><span class="p">(</span>
+                    <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">z</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_w</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_w</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg_tplt_w</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Dimension </span><span class="si">%d</span><span class="s2"> is not supported&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+
+        <span class="c1"># Vandermonde matrix: each column corresponds to one basis function</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
+
+        <span class="c1"># Normalizers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span>  <span class="c1"># noqa: E741</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
+
+        <span class="c1"># Fix strides for loopy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">)</span>
+
+        <span class="c1"># Check orthogonality</span>
+        <span class="n">ortho_resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">ortho_resid</span> <span class="o">&gt;</span> <span class="mf">1e-13</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Legendre polynomials&#39; orthogonality residual = </span><span class="si">%f</span><span class="s2">&quot;</span>
+                    <span class="o">%</span> <span class="n">ortho_resid</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;DiscreteLegendreTransform&quot;</span>
+
+    <span class="k">def</span> <span class="nf">get_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;degree=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">make_kernel</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+                <span class="p">[</span>
+                    <span class="s2">&quot;{ [ bid ] : 0 &lt;= bid &lt; n_boxes }&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;{ [ mid ] : 0 &lt;= mid &lt; n_box_nodes }&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;{ [ nid ] : 0 &lt;= nid &lt; n_box_nodes }&quot;</span>
+                    <span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                for bid</span>
+<span class="sd">                    &lt;&gt; box_id       = boxes[bid]</span>
+<span class="sd">                    &lt;&gt; box_node_beg = box_node_starts[box_id]</span>
+
+<span class="sd">                    # Rescale weights based on template interval sizes.</span>
+<span class="sd">                    # Not needed since the rscl in both the numerator and</span>
+<span class="sd">                    # the denominator and is canceled.</span>
+<span class="sd">                    #</span>
+<span class="sd">                    # &lt;&gt; box_level    = box_levels[box_id]</span>
+<span class="sd">                    # &lt;&gt; box_extent   = root_extent * (1.0 / (2**box_level))</span>
+<span class="sd">                    # &lt;&gt; weight_rscl  = (box_extent / 2.0)**dim</span>
+
+<span class="sd">                    for mid</span>
+
+<span class="sd">                        &lt;&gt; mode_id = box_node_beg + mid</span>
+
+<span class="sd">                        for nid</span>
+<span class="sd">                            &lt;&gt; user_node_id = user_node_ids[box_node_beg + nid]</span>
+<span class="sd">                        end</span>
+
+<span class="sd">                        result[mode_id] = sum(</span>
+<span class="sd">                                              nid,</span>
+<span class="sd">                                              (</span>
+<span class="sd">                                              func[user_node_id]</span>
+<span class="sd">                                              * weight[nid]</span>
+<span class="sd">                                              * vandermonde[nid, mid]</span>
+<span class="sd">                                              ) * filter_multiplier[nid]</span>
+<span class="sd">                                             ) / normalizer[mid]</span>
+<span class="sd">                    end</span>
+<span class="sd">                end</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;n_box_nodes, n_boxes&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+                    <span class="c1"># lp.ValueArg(&quot;root_extent&quot;, np.float64),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;weight, normalizer, filter_multiplier&quot;</span><span class="p">,</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;n_box_nodes&quot;</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;vandermonde&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+                        <span class="s2">&quot;n_box_nodes, n_box_nodes&quot;</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;n_box_nodes * n_boxes&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+                    <span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;discrete_legendre_transform&quot;</span><span class="p">,</span>
+                <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="p">)</span>
+
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">write_cl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">loopy_knl</span>
+
+    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span>
+            <span class="n">knl</span><span class="p">,</span>
+            <span class="n">split_iname</span><span class="o">=</span><span class="s2">&quot;bid&quot;</span><span class="p">,</span>
+            <span class="n">inner_length</span><span class="o">=</span><span class="n">ncpus</span><span class="p">,</span>
+            <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">knl</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">traversal</span><span class="p">,</span> <span class="n">nodal_vals</span><span class="p">,</span> <span class="n">filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :arg traversal</span>
+<span class="sd">        :arg nodal_vals CL array of nodal values.</span>
+<span class="sd">        :arg filtering Box-wide filter given by an CL array or None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">filtering</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filter_multiplier</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filtering</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">filtering</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
+            <span class="n">filter_multiplier</span> <span class="o">=</span> <span class="n">filtering</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid filtering argument: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                    <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">filtering</span><span class="p">))</span>
+
+        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
+
+        <span class="n">evt</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">knl</span><span class="p">(</span>
+            <span class="n">queue</span><span class="p">,</span>
+            <span class="n">boxes</span><span class="o">=</span><span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">,</span>
+            <span class="n">box_node_starts</span><span class="o">=</span><span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_target_starts</span><span class="p">,</span>
+            <span class="n">user_node_ids</span><span class="o">=</span><span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">user_source_ids</span><span class="p">,</span>
+            <span class="c1"># box_levels=traversal.tree.box_levels,</span>
+            <span class="c1"># root_extent=traversal.tree.root_extent,</span>
+            <span class="n">func</span><span class="o">=</span><span class="n">nodal_vals</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">),</span>
+            <span class="n">vandermonde</span><span class="o">=</span><span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">),</span>
+            <span class="n">normalizer</span><span class="o">=</span><span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">),</span>
+            <span class="n">n_box_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span>
+            <span class="n">n_boxes</span><span class="o">=</span><span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">filter_multiplier</span><span class="o">=</span><span class="n">filter_multiplier</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">nodal_vals</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span></div>
+
+<span class="c1"># }}} End discrete Legendre transform</span>
+
+<span class="c1"># }}} End box-specific maps</span>
+
+<span class="c1"># {{{ box-specific reductions</span>
+
+
+<div class="viewcode-block" id="BoxSpecificReduction"><a class="viewcode-back" href="../../api/modules.html#volumential.tools.BoxSpecificReduction">[docs]</a><span class="k">class</span> <span class="nc">BoxSpecificReduction</span><span class="p">(</span><span class="n">KernelCacheWrapper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Box-specific reduction that maps for each box a data vector defined</span>
+<span class="sd">    on the quadrature nodes to a scalar.</span>
+<span class="sd">    Being box-specific means that the reductions for each box is</span>
+<span class="sd">    independent from the rest of the boxes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<span class="c1"># {{{ sum</span>
+
+
+<div class="viewcode-block" id="BoxSum"><a class="viewcode-back" href="../../api/modules.html#volumential.tools.BoxSum">[docs]</a><span class="k">class</span> <span class="nc">BoxSum</span><span class="p">(</span><span class="n">BoxSpecificReduction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds up nodal values within each box.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :arg dim</span>
+<span class="sd">        :arg degree Number of nodes in each axis direction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">dim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+        <span class="k">assert</span> <span class="n">degree</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">=</span> <span class="n">degree</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;BoxSum&quot;</span>
+
+    <span class="k">def</span> <span class="nf">get_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;degree=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">make_kernel</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+                <span class="p">[</span>
+                    <span class="s2">&quot;{ [ bid ] : 0 &lt;= bid &lt; n_boxes }&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;{ [ nid ] : 0 &lt;= nid &lt; n_box_nodes }&quot;</span>
+                    <span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                for bid</span>
+<span class="sd">                    &lt;&gt; box_id       = boxes[bid]</span>
+<span class="sd">                    &lt;&gt; box_node_beg = box_node_starts[box_id]</span>
+
+<span class="sd">                    result[bid] = sum(nid,</span>
+<span class="sd">                                      func[box_node_beg + nid]</span>
+<span class="sd">                                      * filter_multiplier[nid])</span>
+<span class="sd">                end</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;n_box_nodes, n_boxes&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;filter_multiplier&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;n_box_nodes&quot;</span><span class="p">),</span>
+                    <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;n_box_nodes * n_boxes&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+                    <span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;box_filtered_sum&quot;</span><span class="p">,</span>
+                <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="p">)</span>
+
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">write_cl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">loopy_knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">loopy_knl</span>
+
+    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span>
+            <span class="n">knl</span><span class="p">,</span>
+            <span class="n">split_iname</span><span class="o">=</span><span class="s2">&quot;bid&quot;</span><span class="p">,</span>
+            <span class="n">inner_length</span><span class="o">=</span><span class="n">ncpus</span><span class="p">,</span>
+            <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">knl</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">traversal</span><span class="p">,</span> <span class="n">nodal_vals</span><span class="p">,</span> <span class="n">filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :arg traversal</span>
+<span class="sd">        :arg nodal_vals CL array of nodal values.</span>
+<span class="sd">        :arg filtering Box-wide filter given by an CL array or None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">filtering</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filter_multiplier</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filtering</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">filtering</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
+            <span class="n">filter_multiplier</span> <span class="o">=</span> <span class="n">filtering</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid filtering argument: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                    <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">filtering</span><span class="p">))</span>
+
+        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
+        <span class="n">n_boxes</span> <span class="o">=</span> <span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">evt</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">knl</span><span class="p">(</span>
+            <span class="n">queue</span><span class="p">,</span>
+            <span class="n">boxes</span><span class="o">=</span><span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">,</span>
+            <span class="n">box_node_starts</span><span class="o">=</span><span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_target_starts</span><span class="p">,</span>
+            <span class="n">func</span><span class="o">=</span><span class="n">nodal_vals</span><span class="p">,</span>
+            <span class="n">n_box_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span>
+            <span class="n">n_boxes</span><span class="o">=</span><span class="n">n_boxes</span><span class="p">,</span>
+            <span class="n">filter_multiplier</span><span class="o">=</span><span class="n">filter_multiplier</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">n_boxes</span><span class="p">,</span> <span class="n">nodal_vals</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span></div>
+
+<span class="c1"># }}} End sum</span>
+
+<span class="c1"># }}} End box-specific reductions</span>
+
+<span class="c1"># {{{ filters for box-specific operators</span>
+
+
+<div class="viewcode-block" id="generate_leading_order_filtering"><a class="viewcode-back" href="../../api/modules.html#volumential.tools.generate_leading_order_filtering">[docs]</a><span class="k">def</span> <span class="nf">generate_leading_order_filtering</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">n_dofs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a filtering vector that is an indicator function of the node</span>
+<span class="sd">    that corresponds to the leading order modal values in the Fourier space.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">mask1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_dofs</span><span class="p">)</span>
+    <span class="n">mask1d</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mask1d</span>
+
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">mask1d</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="o">-</span> <span class="n">mask1d</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">mask1d</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="o">-</span> <span class="n">mask1d</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+            <span class="o">-</span> <span class="n">mask1d</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="o">-</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="o">+</span> <span class="n">mask1d</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">mask1d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Dimension </span><span class="si">%d</span><span class="s2"> not supported&quot;</span> <span class="o">%</span> <span class="n">dim</span><span class="p">)</span></div>
+
+<span class="c1"># }}} End filters for box-specific operators</span>
 </pre></div>
 
            </div>
