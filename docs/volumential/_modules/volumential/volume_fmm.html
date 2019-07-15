@@ -199,6 +199,7 @@
     <span class="n">src_func</span><span class="p">,</span>
     <span class="n">direct_evaluation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">timing_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Top-level driver routine for volume potential calculation</span>
@@ -277,19 +278,24 @@
     <span class="n">recorder</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;eval_direct&quot;</span><span class="p">,</span> <span class="n">timing_future</span><span class="p">)</span>
 
     <span class="c1"># Return list 1 only, for debugging</span>
-    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;list1_only&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;list1_only&#39;</span><span class="p">]:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder potentials&quot;</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="n">potentials</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;finalize potentials&quot;</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">finalize_potentials</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;fmm complete with list 1 only&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;fmm complete&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;only list 1 results are returned&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="c1"># potentials = wrangler.output_zeros()</span>
+    <span class="c1"># Do not include list 1</span>
+    <span class="k">if</span> <span class="s1">&#39;exclude_list1&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;exclude_list1&#39;</span><span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using zeros for list 1&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;list 1 interactions are not included&quot;</span><span class="p">)</span>
+        <span class="n">potentials</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">output_zeros</span><span class="p">()</span>
 
     <span class="c1"># these potentials are called alpha in [1]</span>
 
