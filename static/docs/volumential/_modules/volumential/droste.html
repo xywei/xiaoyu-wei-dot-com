@@ -242,7 +242,7 @@
             <span class="p">]</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">quad_order</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span> <span class="o">=</span> <span class="n">quad_order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span> <span class="o">=</span> <span class="n">quad_order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span> <span class="o">=</span> <span class="n">n_brick_quad_points</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span> <span class="o">=</span> <span class="n">quad_order</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
@@ -1015,7 +1015,7 @@
         <span class="n">loop_domain_common_parts</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">quad_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">)</span>
-            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_eval_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="n">lbound</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_eval_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="n">lbound</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iside&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iaxis&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ibrick_side&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
@@ -1232,7 +1232,11 @@
 
         <span class="k">return</span> <span class="n">expansion_code</span></div>
 
-    <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DrosteReduced.get_kernel"><a class="viewcode-back" href="../../api/modules.html#volumential.droste.DrosteReduced.get_kernel">[docs]</a>    <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reduced Droste is a 2-staged algorithm. The first stage uses the</span>
+<span class="sd">        kernel from DrosteBase to build part of the table. In the second</span>
+<span class="sd">        stage, an expansion kernel is called to fill the empty entries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_loop_domain</span><span class="p">(</span><span class="n">base_case_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">)</span>
 
@@ -1305,7 +1309,7 @@
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="k">return</span> <span class="n">loopy_knl</span>
+        <span class="k">return</span> <span class="n">loopy_knl</span></div>
 
     <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># The returned kernel depends on the state variable</span>
