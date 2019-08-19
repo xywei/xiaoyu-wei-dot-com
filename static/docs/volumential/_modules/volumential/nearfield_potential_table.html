@@ -940,7 +940,7 @@
         <span class="c1">#     extra_kernel_kwargs = kwargs[&quot;extra_kernel_kwargs&quot;]</span>
 
         <span class="n">cheb_coefs</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_mode_cheb_coeffs</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_mode_cheb_coeffs</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">)</span>
         <span class="p">]</span>
 
@@ -985,7 +985,7 @@
                     <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knl_symmetry_tags&quot;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Maximum symmetry by default</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                         <span class="s2">&quot;use_symmetry is set to True, but knl_symmetry_tags is not &quot;</span>
                         <span class="s2">&quot;set. Using the default maximum symmetry. (Using maximum &quot;</span>
                         <span class="s2">&quot;symmetry for some kernels (e.g. derivatives of &quot;</span>
