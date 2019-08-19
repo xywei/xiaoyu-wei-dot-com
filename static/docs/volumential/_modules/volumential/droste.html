@@ -377,7 +377,8 @@
 <span class="s2">            &lt;&gt; basis_evalIAXIS = (</span>
 <span class="s2">                T0_IAXIS * if(fIAXIS == 0, 1, 0)</span>
 <span class="s2">                + T1_IAXIS * if(fIAXIS == 1, 1, 0)</span>
-<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS &gt; 2 and fIAXIS == pIAXIS, Tcur_IAXIS, 0))</span>
+<span class="s2">                + simul_reduce(sum, pIAXIS,</span>
+<span class="s2">                               if(fIAXIS &gt; 2 and fIAXIS == pIAXIS, Tcur_IAXIS, 0))</span>
 <span class="s2">                ) {id=basisIAXIS,dep=tcur_updateIAXIS}</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
