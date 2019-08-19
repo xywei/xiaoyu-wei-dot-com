@@ -377,7 +377,7 @@
 <span class="s2">            &lt;&gt; basis_evalIAXIS = (</span>
 <span class="s2">                T0_IAXIS * if(fIAXIS == 0, 1, 0)</span>
 <span class="s2">                + T1_IAXIS * if(fIAXIS == 1, 1, 0)</span>
-<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS == pIAXIS, Tcur_IAXIS, 0))</span>
+<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS &gt; 2 and fIAXIS == pIAXIS, Tcur_IAXIS, 0))</span>
 <span class="s2">                ) {id=basisIAXIS,dep=tcur_updateIAXIS}</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
@@ -778,7 +778,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">tgt_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntgt_points</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">quad_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">)</span>
-            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_eval_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="n">lbound</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_eval_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iside&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iaxis&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ibrick_side&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
@@ -1015,7 +1015,7 @@
         <span class="n">loop_domain_common_parts</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">quad_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">)</span>
-            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_eval_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">,</span> <span class="n">lbound</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">(</span><span class="n">basis_eval_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iside&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;iaxis&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_brick_domain</span><span class="p">([</span><span class="s2">&quot;ibrick_side&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
@@ -1719,7 +1719,7 @@
 <span class="s2">            &lt;&gt; basis_tgt_evalIAXIS = (</span>
 <span class="s2">                T0_tgt_IAXIS * if(fIAXIS == 0, 1, 0)</span>
 <span class="s2">                + T1_tgt_IAXIS * if(fIAXIS == 1, 1, 0)</span>
-<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS == pIAXIS, Tcur_tgt_IAXIS, 0))</span>
+<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS &gt; 2 and fIAXIS == pIAXIS, Tcur_tgt_IAXIS, 0))</span>
 <span class="s2">                ) {id=tgtbasisIAXIS,dep=tcur_tgt_updateIAXIS}</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="s2">&quot;IAXIS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">iaxis</span><span class="p">)</span>
@@ -1763,7 +1763,7 @@
 <span class="s2">            &lt;&gt; basis2_tgt_evalIAXIS = (</span>
 <span class="s2">                U0_tgt_IAXIS * if(fIAXIS == 0, 1, 0)</span>
 <span class="s2">                + U1_tgt_IAXIS * if(fIAXIS == 1, 1, 0)</span>
-<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS == pIAXIS, Ucur_tgt_IAXIS, 0))</span>
+<span class="s2">                + simul_reduce(sum, pIAXIS, if(fIAXIS &gt; 2 and fIAXIS == pIAXIS, Ucur_tgt_IAXIS, 0))</span>
 <span class="s2">                ) {id=tgtbasis2IAXIS,dep=ucur_tgt_updateIAXIS}</span>
 
 <span class="s2">            # this temp var helps with type deduction</span>
