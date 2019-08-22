@@ -745,24 +745,26 @@
         <span class="k">return</span> <span class="n">mapped_q_points</span><span class="p">[</span><span class="n">q_points_ordering</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">postprocess_cheb_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cheb_table</span><span class="p">,</span> <span class="n">cheb_coefs</span><span class="p">):</span>
-        <span class="c1"># Cheb table is indexed by f0, f1, t0, t1, icase</span>
         <span class="n">nfp_table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">,</span> <span class="o">*</span><span class="n">cheb_table</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">:]])</span>
+
         <span class="c1"># transform to interpolatory basis functions</span>
+        <span class="c1"># NOTE: the reversed order of indices, e.g.,</span>
+        <span class="c1">#       mccoefs[f0, f1, f2], and cheb_table[f2, f1, f0]</span>
         <span class="n">concat_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">iaxis</span> <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">):</span>
             <span class="n">mccoefs</span> <span class="o">=</span> <span class="n">cheb_coefs</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span>
             <span class="n">nfp_table</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span>
                 <span class="n">mccoefs</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">nfunctions</span> <span class="k">for</span> <span class="n">iaxis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]),</span>
                 <span class="n">cheb_table</span><span class="p">,</span>
-                <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="n">concat_axes</span><span class="p">,</span> <span class="n">concat_axes</span><span class="p">),</span>
+                <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="n">concat_axes</span><span class="p">,</span> <span class="n">concat_axes</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
             <span class="p">)</span>
 
-        <span class="c1"># transform to self.data format</span>
+        <span class="c1"># transform to self.data format (icase, source_id, target_id)</span>
+        <span class="c1"># NOTE: the directions of target_id are reversed since cheb_table</span>
+        <span class="c1">#       is indexed by, e.g. cheb_table[t2, t1, t0]</span>
         <span class="n">transpose_axes</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">transpose_axes</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">nfp_table</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">transpose_axes</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">)</span></div>
 
