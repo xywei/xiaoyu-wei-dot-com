@@ -367,7 +367,7 @@
         <span class="n">kernel_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">kernel_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">sumpy_kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">build_method</span><span class="o">=</span><span class="s2">&quot;Transform&quot;</span><span class="p">,</span>
+        <span class="n">build_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">source_box_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
         <span class="n">inverse_droste</span><span class="o">=</span><span class="kc">False</span>
@@ -395,7 +395,7 @@
         <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="n">build_method</span> <span class="o">==</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use DrosteSum for 1d&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use build_method=DrosteSum for 1d&quot;</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_func</span> <span class="o">=</span> <span class="n">kernel_func</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">kernel_type</span>
@@ -422,7 +422,7 @@
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="n">build_method</span> <span class="o">==</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use DrosteSum for 3d&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use build_method=DrosteSum for 3d&quot;</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_func</span> <span class="o">=</span> <span class="n">kernel_func</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">kernel_type</span>
@@ -455,7 +455,6 @@
             <span class="c1"># quad points in [-1,1]</span>
             <span class="kn">import</span> <span class="nn">volumential.meshgen</span> <span class="k">as</span> <span class="nn">mg</span>
 
-            <span class="c1"># FIXME: 3D support</span>
             <span class="n">q_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">make_uniform_cubic_grid</span><span class="p">(</span>
                 <span class="n">degree</span><span class="o">=</span><span class="n">quad_order</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
             <span class="p">)</span>
@@ -568,7 +567,7 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)):</span>
                 <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">coord</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">),</span> <span class="n">coords</span><span class="p">):</span>
                 <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">fvals</span><span class="p">,</span> <span class="n">axis_interp</span><span class="p">[</span><span class="n">d</span><span class="p">](</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord</span><span class="p">)))</span>
             <span class="k">return</span> <span class="n">fvals</span>
@@ -598,7 +597,7 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)):</span>
                 <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+                <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">coord</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">),</span> <span class="n">coords</span><span class="p">):</span>
                 <span class="n">fvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">fvals</span><span class="p">,</span> <span class="n">axis_interp</span><span class="p">[</span><span class="n">d</span><span class="p">](</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord</span><span class="p">)))</span>
             <span class="k">return</span> <span class="n">fvals</span>
@@ -620,7 +619,9 @@
         <span class="n">cheby_weights</span> <span class="o">=</span> <span class="n">cheby_weights</span> <span class="o">*</span> <span class="p">(</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
 
         <span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template_mode</span><span class="p">(</span><span class="n">mode_index</span><span class="p">)</span>
-        <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">cheby_nodes</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+                <span class="o">*</span><span class="p">[</span><span class="n">cheby_nodes</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)],</span>
+                <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)</span>
         <span class="n">mvals</span> <span class="o">=</span> <span class="n">mode</span><span class="p">(</span><span class="o">*</span><span class="n">grid</span><span class="p">)</span>
 
         <span class="kn">from</span> <span class="nn">numpy.polynomial.chebyshev</span> <span class="k">import</span> <span class="n">Chebyshev</span>
@@ -663,9 +664,10 @@
             <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mvals</span> <span class="o">*</span> <span class="n">basis</span><span class="p">)</span> <span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="n">basis_set</span><span class="p">]</span>
         <span class="p">)</span> <span class="o">*</span> <span class="n">_self_tp</span><span class="p">(</span><span class="n">coef_scale</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="c1"># purge small coeffs that are 15 digits away</span>
-        <span class="n">mm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mode_cheb_coeffs</span><span class="p">))</span>
-        <span class="n">mode_cheb_coeffs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mode_cheb_coeffs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">mm</span> <span class="o">*</span> <span class="mf">1e-15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># purge small coeffs whose magnitude are less than 8 times machine epsilon</span>
+        <span class="n">mode_cheb_coeffs</span><span class="p">[</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mode_cheb_coeffs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">mode_cheb_coeffs</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">return</span> <span class="n">mode_cheb_coeffs</span></div>
 
