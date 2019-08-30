@@ -1053,7 +1053,7 @@
                 <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data0</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span><span class="p">))</span>
                 <span class="n">data0</span> <span class="o">=</span> <span class="n">data1</span>
 
-                <span class="k">if</span> <span class="n">resid</span> <span class="o">&lt;</span> <span class="n">table_tol</span> <span class="ow">and</span> <span class="n">resid</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">table_tol</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                         <span class="s2">&quot;Adaptive level refinement &quot;</span>
                         <span class="s2">&quot;converged at level </span><span class="si">%d</span><span class="s2"> with residual </span><span class="si">%e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
@@ -1109,7 +1109,7 @@
                 <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data0</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span><span class="p">))</span>
                 <span class="n">data0</span> <span class="o">=</span> <span class="n">data1</span>
 
-                <span class="k">if</span> <span class="n">resid</span> <span class="o">&lt;</span> <span class="n">table_tol</span> <span class="ow">and</span> <span class="n">resid</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">table_tol</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                         <span class="s2">&quot;Adaptive quadrature &quot;</span>
                         <span class="s2">&quot;converged at order </span><span class="si">%d</span><span class="s2"> with residual </span><span class="si">%e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
