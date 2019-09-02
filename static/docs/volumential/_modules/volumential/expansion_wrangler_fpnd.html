@@ -178,13 +178,20 @@
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 
 <span class="c1"># from pytools import memoize_method</span>
 <span class="kn">from</span> <span class="nn">volumential.nearfield_potential_table</span> <span class="k">import</span> <span class="n">NearFieldInteractionTable</span>
-<span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_interface</span> <span class="k">import</span> <span class="n">ExpansionWranglerInterface</span>
+<span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_interface</span> <span class="k">import</span> <span class="p">(</span>
+        <span class="n">ExpansionWranglerInterface</span><span class="p">,</span> <span class="n">ExpansionWranglerCodeContainerInterface</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sumpy.fmm</span> <span class="k">import</span> <span class="n">SumpyExpansionWrangler</span><span class="p">,</span> \
+        <span class="n">SumpyTimingFuture</span><span class="p">,</span> <span class="n">SumpyExpansionWranglerCodeContainer</span>
+<span class="kn">from</span> <span class="nn">boxtree.pyfmmlib_integration</span> <span class="k">import</span> <span class="n">FMMLibExpansionWrangler</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">sumpy.kernel</span> <span class="k">import</span> <span class="p">(</span>
+        <span class="n">LaplaceKernel</span><span class="p">,</span> <span class="n">HelmholtzKernel</span><span class="p">,</span> <span class="n">AxisTargetDerivative</span><span class="p">,</span>
+        <span class="n">DirectionalSourceDerivative</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -193,12 +200,29 @@
     <span class="k">return</span> <span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="n">level</span><span class="p">)</span>
 
 
-<span class="kn">from</span> <span class="nn">sumpy.fmm</span> <span class="k">import</span> <span class="n">SumpyExpansionWrangler</span><span class="p">,</span> <span class="n">SumpyTimingFuture</span>
+<span class="c1"># {{{ sumpy backend</span>
 
 
-<div class="viewcode-block" id="FPNDExpansionWrangler"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler">[docs]</a><span class="k">class</span> <span class="nc">FPNDExpansionWrangler</span><span class="p">(</span><span class="n">ExpansionWranglerInterface</span><span class="p">,</span> <span class="n">SumpyExpansionWrangler</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWranglerCodeContainer"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWranglerCodeContainer">[docs]</a><span class="k">class</span> <span class="nc">FPNDSumpyExpansionWranglerCodeContainer</span><span class="p">(</span>
+        <span class="n">ExpansionWranglerCodeContainerInterface</span><span class="p">,</span>
+        <span class="n">SumpyExpansionWranglerCodeContainer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Objects of this type serve as a place to keep the code needed</span>
+<span class="sd">    for ExpansionWrangler if it is using sumpy to perform multipole</span>
+<span class="sd">    expansion and manipulations.</span>
+
+<span class="sd">    Since :class:`SumpyExpansionWrangler` necessarily must have a</span>
+<span class="sd">    :class:`pyopencl.CommandQueue`, but this queue is allowed to be</span>
+<span class="sd">    more ephemeral than the code, the code&#39;s lifetime</span>
+<span class="sd">    is decoupled by storing it in this object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">get_wrangler</span> <span class="o">=</span> <span class="n">SumpyExpansionWranglerCodeContainer</span><span class="o">.</span><span class="n">get_wrangler</span></div>
+
+
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler">[docs]</a><span class="k">class</span> <span class="nc">FPNDSumpyExpansionWrangler</span><span class="p">(</span>
+        <span class="n">ExpansionWranglerInterface</span><span class="p">,</span> <span class="n">SumpyExpansionWrangler</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This expansion wrangler uses &quot;fpnd&quot; strategy. That is, Far field is</span>
 <span class="sd">    computed via Particle approximation and Near field is computed Directly.</span>
+<span class="sd">    The FMM is performed using sumpy backend.</span>
 
 <span class="sd">    .. attribute:: source_extra_kwargs</span>
 
@@ -378,22 +402,22 @@
 
     <span class="c1"># {{{ data vector utilities</span>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.multipole_expansion_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.multipole_expansion_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">multipole_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.multipole_expansion_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.multipole_expansion_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">multipole_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">multipole_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.local_expansion_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.local_expansion_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">local_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.local_expansion_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.local_expansion_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">local_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">local_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.output_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">output_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.output_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">output_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">output_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.reorder_sources"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.reorder_sources">[docs]</a>    <span class="k">def</span> <span class="nf">reorder_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_array</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.reorder_sources"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.reorder_sources">[docs]</a>    <span class="k">def</span> <span class="nf">reorder_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_array</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">reorder_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_array</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.reorder_potentials"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.reorder_potentials">[docs]</a>    <span class="k">def</span> <span class="nf">reorder_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.reorder_potentials"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.reorder_potentials">[docs]</a>    <span class="k">def</span> <span class="nf">reorder_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.finalize_potentials"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.finalize_potentials">[docs]</a>    <span class="k">def</span> <span class="nf">finalize_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.finalize_potentials"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.finalize_potentials">[docs]</a>    <span class="k">def</span> <span class="nf">finalize_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">):</span>
         <span class="c1"># return potentials</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">finalize_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">)</span></div>
 
@@ -401,12 +425,12 @@
 
     <span class="c1"># {{{ formation &amp; coarsening of multipoles</span>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.form_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.form_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">form_multipoles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level_start_source_box_nrs</span><span class="p">,</span> <span class="n">source_boxes</span><span class="p">,</span> <span class="n">src_weights</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.form_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.form_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">form_multipoles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level_start_source_box_nrs</span><span class="p">,</span> <span class="n">source_boxes</span><span class="p">,</span> <span class="n">src_weights</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">form_multipoles</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">level_start_source_box_nrs</span><span class="p">,</span> <span class="n">source_boxes</span><span class="p">,</span> <span class="n">src_weights</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.coarsen_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.coarsen_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">coarsen_multipoles</span><span class="p">(</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.coarsen_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.coarsen_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">coarsen_multipoles</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">level_start_source_parent_box_nrs</span><span class="p">,</span> <span class="n">source_parent_boxes</span><span class="p">,</span> <span class="n">mpoles</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">coarsen_multipoles</span><span class="p">(</span>
@@ -543,7 +567,7 @@
 
         <span class="k">return</span> <span class="n">out_pot</span><span class="p">,</span> <span class="n">evt</span>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.eval_direct"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_direct">[docs]</a>    <span class="k">def</span> <span class="nf">eval_direct</span><span class="p">(</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.eval_direct"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_direct">[docs]</a>    <span class="k">def</span> <span class="nf">eval_direct</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">target_boxes</span><span class="p">,</span>
         <span class="n">neighbor_source_boxes_starts</span><span class="p">,</span>
@@ -573,7 +597,7 @@
 
     <span class="c1"># {{{ downward pass of fmm</span>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.multipole_to_local"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.multipole_to_local">[docs]</a>    <span class="k">def</span> <span class="nf">multipole_to_local</span><span class="p">(</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.multipole_to_local"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.multipole_to_local">[docs]</a>    <span class="k">def</span> <span class="nf">multipole_to_local</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">level_start_target_box_nrs</span><span class="p">,</span>
         <span class="n">target_boxes</span><span class="p">,</span>
@@ -590,14 +614,14 @@
             <span class="n">mpole_exps</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.eval_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">eval_multipoles</span><span class="p">(</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.eval_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">eval_multipoles</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">target_boxes_by_source_level</span><span class="p">,</span> <span class="n">source_boxes_by_level</span><span class="p">,</span> <span class="n">mpole_exps</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">eval_multipoles</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">target_boxes_by_source_level</span><span class="p">,</span> <span class="n">source_boxes_by_level</span><span class="p">,</span> <span class="n">mpole_exps</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.form_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.form_locals">[docs]</a>    <span class="k">def</span> <span class="nf">form_locals</span><span class="p">(</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.form_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.form_locals">[docs]</a>    <span class="k">def</span> <span class="nf">form_locals</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">level_start_target_or_target_parent_box_nrs</span><span class="p">,</span>
         <span class="n">target_or_target_parent_boxes</span><span class="p">,</span>
@@ -614,7 +638,7 @@
             <span class="n">src_weights</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.refine_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.refine_locals">[docs]</a>    <span class="k">def</span> <span class="nf">refine_locals</span><span class="p">(</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.refine_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.refine_locals">[docs]</a>    <span class="k">def</span> <span class="nf">refine_locals</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">level_start_target_or_target_parent_box_nrs</span><span class="p">,</span>
         <span class="n">target_or_target_parent_boxes</span><span class="p">,</span>
@@ -627,7 +651,7 @@
             <span class="n">local_exps</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FPNDExpansionWrangler.eval_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_locals">[docs]</a>    <span class="k">def</span> <span class="nf">eval_locals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level_start_target_box_nrs</span><span class="p">,</span> <span class="n">target_boxes</span><span class="p">,</span> <span class="n">local_exps</span><span class="p">):</span>
+<div class="viewcode-block" id="FPNDSumpyExpansionWrangler.eval_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_locals">[docs]</a>    <span class="k">def</span> <span class="nf">eval_locals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level_start_target_box_nrs</span><span class="p">,</span> <span class="n">target_boxes</span><span class="p">,</span> <span class="n">local_exps</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SumpyExpansionWrangler</span><span class="o">.</span><span class="n">eval_locals</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">level_start_target_box_nrs</span><span class="p">,</span> <span class="n">target_boxes</span><span class="p">,</span> <span class="n">local_exps</span>
         <span class="p">)</span></div>
@@ -643,8 +667,588 @@
             <span class="bp">self</span><span class="p">,</span> <span class="n">target_boxes</span><span class="p">,</span> <span class="n">source_box_starts</span><span class="p">,</span> <span class="n">source_box_lists</span><span class="p">,</span> <span class="n">src_weights</span>
         <span class="p">)</span></div>
 
+    <span class="c1"># }}} End direct evaluation of p2p interactions</span>
 
-<span class="c1"># }}} End direct evaluation of p2p interactions</span>
+<span class="c1"># }}} End sumpy backend</span>
+
+<span class="c1"># {{{ fmmlib backend (for laplace, helmholtz)</span>
+
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWranglerCodeContainer"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWranglerCodeContainer">[docs]</a><span class="k">class</span> <span class="nc">FPNDFMMLibExpansionWranglerCodeContainer</span><span class="p">(</span>
+        <span class="n">ExpansionWranglerCodeContainerInterface</span><span class="p">,</span>
+        <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Objects of this type serve as a place to keep the code needed</span>
+<span class="sd">    for ExpansionWrangler if it is using fmmlib to perform multipole</span>
+<span class="sd">    expansion and manipulations.</span>
+
+<span class="sd">    The interface is augmented with unecessary arguments acting as</span>
+<span class="sd">    placeholders, such that it can be a drop-in replacement of sumpy</span>
+<span class="sd">    backend.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl_context</span><span class="p">,</span>
+            <span class="n">multipole_expansion_factory</span><span class="p">,</span> <span class="n">local_expansion_factory</span><span class="p">,</span>
+            <span class="n">out_kernels</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cl_context</span> <span class="o">=</span> <span class="n">cl_context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multipole_expansion_factory</span> <span class="o">=</span> <span class="n">multipole_expansion_factory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_expansion_factory</span> <span class="o">=</span> <span class="n">local_expansion_factory</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_kernels</span> <span class="o">=</span> <span class="n">out_kernels</span>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWranglerCodeContainer.get_wrangler"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWranglerCodeContainer.get_wrangler">[docs]</a>    <span class="k">def</span> <span class="nf">get_wrangler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">fmm_level_to_order</span><span class="p">,</span>
+            <span class="n">source_extra_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">kernel_extra_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,):</span>
+        <span class="k">return</span> <span class="n">FPNDFMMLibExpansionWrangler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="p">,</span> <span class="n">fmm_level_to_order</span><span class="p">,</span>
+                <span class="n">source_extra_kwargs</span><span class="p">,</span> <span class="n">kernel_extra_kwargs</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler">[docs]</a><span class="k">class</span> <span class="nc">FPNDFMMLibExpansionWrangler</span><span class="p">(</span>
+        <span class="n">ExpansionWranglerInterface</span><span class="p">,</span> <span class="n">FMMLibExpansionWrangler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This expansion wrangler uses &quot;fpnd&quot; strategy. That is, Far field is</span>
+<span class="sd">    computed via Particle approximation and Near field is computed Directly.</span>
+<span class="sd">    The FMM is performed using FMMLib backend.</span>
+
+<span class="sd">    .. attribute:: source_extra_kwargs</span>
+
+<span class="sd">        Keyword arguments to be passed to interactions that involve</span>
+<span class="sd">        the source field.</span>
+
+<span class="sd">    .. attribute:: kernel_extra_kwargs</span>
+
+<span class="sd">        Keyword arguments to be passed to interactions that involve</span>
+<span class="sd">        expansions, but not the source field.</span>
+
+<span class="sd">    Much of this class is borrowed from pytential.qbx.fmmlib.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># {{{ constructor</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code_container</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span>
+            <span class="n">near_field_table</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span>
+            <span class="n">fmm_level_to_order</span><span class="p">,</span>
+            <span class="n">quad_order</span><span class="p">,</span>
+            <span class="n">source_extra_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">kernel_extra_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">self_extra_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">code_container</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span>
+
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">=</span> <span class="n">quad_order</span>
+
+        <span class="c1"># {{{ digest out_kernels</span>
+
+        <span class="n">ifgrad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">source_deriv_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">k_names</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">out_knl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_supported_helmknl</span><span class="p">(</span><span class="n">out_knl</span><span class="p">):</span>
+                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(())</span>
+                <span class="n">no_target_deriv_knl</span> <span class="o">=</span> <span class="n">out_knl</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">out_knl</span><span class="p">,</span> <span class="n">AxisTargetDerivative</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_supported_helmknl</span><span class="p">(</span><span class="n">out_knl</span><span class="o">.</span><span class="n">inner_kernel</span><span class="p">)):</span>
+                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">out_knl</span><span class="o">.</span><span class="n">axis</span><span class="p">,))</span>
+                <span class="n">ifgrad</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">no_target_deriv_knl</span> <span class="o">=</span> <span class="n">out_knl</span><span class="o">.</span><span class="n">inner_kernel</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;only the 2/3D Laplace and Helmholtz kernel &quot;</span>
+                        <span class="s2">&quot;and their derivatives are supported&quot;</span><span class="p">)</span>
+
+            <span class="n">source_deriv_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_target_deriv_knl</span><span class="o">.</span><span class="n">dir_vec_name</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">no_target_deriv_knl</span><span class="p">,</span> <span class="n">DirectionalSourceDerivative</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="n">base_knl</span> <span class="o">=</span> <span class="n">out_knl</span><span class="o">.</span><span class="n">get_base_kernel</span><span class="p">()</span>
+            <span class="n">k_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">base_knl</span><span class="o">.</span><span class="n">helmholtz_k_name</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_knl</span><span class="p">,</span> <span class="n">HelmholtzKernel</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span>
+
+        <span class="kn">from</span> <span class="nn">pytools</span> <span class="k">import</span> <span class="n">is_single_valued</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_single_valued</span><span class="p">(</span><span class="n">source_deriv_names</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;not all kernels passed are the same in &quot;</span>
+                    <span class="s2">&quot;whether they represent a source derivative&quot;</span><span class="p">)</span>
+
+        <span class="n">source_deriv_name</span> <span class="o">=</span> <span class="n">source_deriv_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_single_valued</span><span class="p">(</span><span class="n">k_names</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;not all kernels passed have the same &quot;</span>
+                    <span class="s2">&quot;Helmholtz parameter&quot;</span><span class="p">)</span>
+
+        <span class="n">k_name</span> <span class="o">=</span> <span class="n">k_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">k_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">helmholtz_k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">helmholtz_k</span> <span class="o">=</span> <span class="n">kernel_extra_kwargs</span><span class="p">[</span><span class="n">k_name</span><span class="p">]</span>
+
+        <span class="c1"># }}}</span>
+
+        <span class="c1"># {{{ table setup</span>
+        <span class="c1"># TODO put this part into the inteferce class</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># list of tables for a single out kernel</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="n">near_field_table</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">)</span>
+
+        <span class="c1"># single table</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">,</span> <span class="n">NearFieldInteractionTable</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">near_field_table</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># dictionary of lists of tables</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">out_knl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">near_field_table</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                            <span class="s2">&quot;Missing nearfield table for </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)],</span>
+                        <span class="n">NearFieldInteractionTable</span><span class="p">):</span>
+                    <span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)]]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)],</span> <span class="nb">list</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">near_field_table</span><span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">out_knl</span><span class="p">)])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span> <span class="o">=</span> <span class="n">near_field_table</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Table type unrecognized.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># TODO: make all parameters table-specific (allow using inhomogeneous tables)</span>
+        <span class="n">kname</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_table_source_box_extent</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">)</span>
+        <span class="n">table_starting_level</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_table_source_box_extent</span><span class="p">)</span>
+            <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">for</span> <span class="n">kid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)):</span>
+            <span class="n">kname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="n">kid</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">lev</span><span class="p">,</span> <span class="n">table</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                    <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">])),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]</span>
+                    <span class="p">):</span>
+                <span class="k">assert</span> <span class="n">table</span><span class="o">.</span><span class="n">quad_order</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="o">.</span><span class="n">is_built</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="s2">&quot;Near field interaction table needs to be built &quot;</span>
+                        <span class="s2">&quot;prior to being used&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="n">table_root_extent</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">lev</span>
+                <span class="k">assert</span> <span class="p">(</span>
+                    <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_table_source_box_extent</span> <span class="o">-</span> <span class="n">table_root_extent</span><span class="p">)</span>
+                    <span class="o">&lt;</span> <span class="mf">1e-15</span>
+                <span class="p">)</span>
+
+                <span class="c1"># If the kernel cannot be scaled,</span>
+                <span class="c1"># - tree_root_extent must be integral times of table_root_extent</span>
+                <span class="c1"># - n_tables must be sufficient</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="ow">not</span> <span class="nb">abs</span><span class="p">(</span>
+                            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">/</span> <span class="n">table_root_extent</span><span class="p">)</span>
+                            <span class="o">*</span> <span class="n">table_root_extent</span>
+                            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span>
+                        <span class="p">)</span>
+                        <span class="o">&lt;</span> <span class="mf">1e-15</span>
+                    <span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                            <span class="s2">&quot;Incompatible list of tables: the &quot;</span>
+                            <span class="s2">&quot;source_box_extent of the root table must &quot;</span>
+                            <span class="s2">&quot;divide the bounding box&#39;s extent by an integer.&quot;</span>
+                        <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># this checks that the boxes at the highest level are covered</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="ow">not</span> <span class="n">tree</span><span class="o">.</span><span class="n">nlevels</span>
+                    <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">])</span> <span class="o">+</span> <span class="n">table_starting_level</span>
+                <span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="s2">&quot;Insufficient list of tables: the &quot;</span>
+                        <span class="s2">&quot;finest level mesh cells at level &quot;</span>
+                        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">nlevels</span><span class="p">)</span>
+                        <span class="o">+</span> <span class="s2">&quot; are not covered.&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># the check that the boxes at the coarsest level are covered is</span>
+                <span class="c1"># deferred until trav.target_boxes is passed when invoking</span>
+                <span class="c1"># eval_direct</span>
+
+        <span class="k">if</span> <span class="n">source_extra_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">source_extra_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">kernel_extra_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kernel_extra_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">self_extra_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">self_extra_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># }}} End table setup</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">fmm_level_to_order</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;fmm_level_to_order not passed&quot;</span><span class="p">)</span>
+
+        <span class="n">dipole_vec</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">source_deriv_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dipole_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                    <span class="n">d_i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">d_i</span> <span class="ow">in</span> <span class="n">source_extra_kwargs</span><span class="p">[</span><span class="n">source_deriv_name</span><span class="p">]],</span>
+                    <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inner_fmm_level_to_nterms</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">helmholtz_k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">fmm_level_to_order</span><span class="p">(</span>
+                        <span class="n">LaplaceKernel</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">dimensions</span><span class="p">),</span>
+                        <span class="nb">frozenset</span><span class="p">(),</span> <span class="n">tree</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">fmm_level_to_order</span><span class="p">(</span>
+                        <span class="n">HelmholtzKernel</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">dimensions</span><span class="p">),</span>
+                        <span class="nb">frozenset</span><span class="p">([(</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">helmholtz_k</span><span class="p">)]),</span> <span class="n">tree</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+
+        <span class="n">rotation_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s1">&#39;traversal&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="c1"># add rotation data if traversal is passed as a keyword argument</span>
+            <span class="kn">from</span> <span class="nn">boxtree.pyfmmlib_integration</span> <span class="k">import</span> <span class="n">FMMLibRotationData</span>
+            <span class="n">rotation_data</span> <span class="o">=</span> <span class="n">FMMLibRotationData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;traversal&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Rotation data is not utilized since traversal is &quot;</span>
+                           <span class="s2">&quot;not known to FPNDFMMLibExpansionWrangler.&quot;</span><span class="p">)</span>
+
+        <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span>
+
+                <span class="n">helmholtz_k</span><span class="o">=</span><span class="n">helmholtz_k</span><span class="p">,</span>
+                <span class="n">dipole_vec</span><span class="o">=</span><span class="n">dipole_vec</span><span class="p">,</span>
+                <span class="n">dipoles_already_reordered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+
+                <span class="n">fmm_level_to_nterms</span><span class="o">=</span><span class="n">inner_fmm_level_to_nterms</span><span class="p">,</span>
+                <span class="n">rotation_data</span><span class="o">=</span><span class="n">rotation_data</span><span class="p">,</span>
+
+                <span class="n">ifgrad</span><span class="o">=</span><span class="n">ifgrad</span><span class="p">)</span>
+
+    <span class="c1"># }}} End constructor</span>
+
+    <span class="c1"># {{{ data vector utilities</span>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.multipole_expansion_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.multipole_expansion_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">multipole_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">multipole_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.local_expansion_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.local_expansion_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">local_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">local_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.output_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">output_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">output_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.reorder_sources"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.reorder_sources">[docs]</a>    <span class="k">def</span> <span class="nf">reorder_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_array</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">reorder_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_array</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.reorder_potentials"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.reorder_potentials">[docs]</a>    <span class="k">def</span> <span class="nf">reorder_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.finalize_potentials"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.finalize_potentials">[docs]</a>    <span class="k">def</span> <span class="nf">finalize_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">):</span>
+        <span class="c1"># return potentials</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">finalize_potentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">)</span></div>
+
+    <span class="c1"># }}} End data vector utilities</span>
+
+    <span class="c1"># {{{ formation &amp; coarsening of multipoles</span>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.form_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.form_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">form_multipoles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level_start_source_box_nrs</span><span class="p">,</span> <span class="n">source_boxes</span><span class="p">,</span> <span class="n">src_weights</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">form_multipoles</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">level_start_source_box_nrs</span><span class="p">,</span> <span class="n">source_boxes</span><span class="p">,</span> <span class="n">src_weights</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.coarsen_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.coarsen_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">coarsen_multipoles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">level_start_source_parent_box_nrs</span><span class="p">,</span> <span class="n">source_parent_boxes</span><span class="p">,</span> <span class="n">mpoles</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">coarsen_multipoles</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">level_start_source_parent_box_nrs</span><span class="p">,</span> <span class="n">source_parent_boxes</span><span class="p">,</span> <span class="n">mpoles</span>
+        <span class="p">)</span></div>
+
+    <span class="c1"># }}} End formation &amp; coarsening of multipoles</span>
+
+    <span class="c1"># {{{ direct evaluation of near field interactions</span>
+
+    <span class="k">def</span> <span class="nf">eval_direct_single_out_kernel</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">out_pot</span><span class="p">,</span>
+        <span class="n">out_kernel</span><span class="p">,</span>
+        <span class="n">target_boxes</span><span class="p">,</span>
+        <span class="n">neighbor_source_boxes_starts</span><span class="p">,</span>
+        <span class="n">neighbor_source_boxes_lists</span><span class="p">,</span>
+        <span class="n">mode_coefs</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="c1"># NOTE: mode_coefs are similar to source_weights BUT</span>
+        <span class="c1"># do not include quadrature weights (purely function</span>
+        <span class="c1"># expansiona coefficients)</span>
+
+        <span class="c1"># NOTE: inputs should be all on the device main memory (cl.Arrays)</span>
+
+        <span class="n">kname</span> <span class="o">=</span> <span class="n">out_kernel</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">use_multilevel_tables</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">[</span><span class="n">kname</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">use_multilevel_tables</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">use_multilevel_tables</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">use_multilevel_tables</span><span class="p">:</span>
+            <span class="c1"># this checks that the boxes at the coarsest level</span>
+            <span class="c1"># and allows for some round-off error</span>
+            <span class="n">min_lev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_levels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">)[</span><span class="n">target_boxes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">)]</span>
+            <span class="p">)</span>
+            <span class="n">largest_cell_extent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="n">min_lev</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">&gt;=</span> <span class="p">(</span>
+                <span class="n">largest_cell_extent</span> <span class="o">-</span> <span class="mf">1e-15</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Insufficient list of tables: the &quot;</span>
+                    <span class="s2">&quot;coarsest level mesh cells at level &quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">min_lev</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="s2">&quot; are not covered.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># table.case_encode</span>
+        <span class="n">distinct_numbers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">vec</span><span class="p">:</span>
+                <span class="n">distinct_numbers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">distinct_numbers</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">distinct_numbers</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="o">-</span><span class="nb">min</span><span class="p">(</span><span class="n">distinct_numbers</span><span class="p">)</span>
+
+        <span class="n">case_indices_dev</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">case_indices</span>
+        <span class="p">)</span>
+
+        <span class="c1"># table.data</span>
+        <span class="n">table_data_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">mode_nmlz_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">lev</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">])):</span>
+            <span class="n">table_data_combined</span><span class="p">[</span><span class="n">lev</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="n">lev</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">mode_nmlz_combined</span><span class="p">[</span><span class="n">lev</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span>
+                <span class="n">lev</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">mode_normalizers</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Table data for kernel &quot;</span>
+                <span class="o">+</span> <span class="n">out_kernel</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; congregated&quot;</span><span class="p">)</span>
+
+        <span class="c1"># The loop domain needs to know some info about the tables being used</span>
+        <span class="n">table_data_shapes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;n_tables&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
+            <span class="s2">&quot;n_q_points&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">,</span>
+            <span class="s2">&quot;n_table_entries&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">assert</span> <span class="n">table_data_shapes</span><span class="p">[</span><span class="s2">&quot;n_q_points&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mode_normalizers</span>
+        <span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">volumential.list1</span> <span class="k">import</span> <span class="n">NearFieldFromCSR</span>
+
+        <span class="n">near_field</span> <span class="o">=</span> <span class="n">NearFieldFromCSR</span><span class="p">(</span><span class="n">out_kernel</span><span class="p">,</span> <span class="n">table_data_shapes</span><span class="p">)</span>
+
+        <span class="n">res</span><span class="p">,</span> <span class="n">evt</span> <span class="o">=</span> <span class="n">near_field</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">out_pot</span><span class="p">,</span>
+            <span class="n">box_centers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_centers</span><span class="p">,</span>
+            <span class="n">box_levels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_levels</span><span class="p">,</span>
+            <span class="n">box_source_counts_cumul</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_source_counts_cumul</span><span class="p">,</span>
+            <span class="n">box_source_starts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_source_starts</span><span class="p">,</span>
+            <span class="n">box_target_counts_cumul</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_target_counts_cumul</span><span class="p">,</span>
+            <span class="n">box_target_starts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">box_target_starts</span><span class="p">,</span>
+            <span class="n">case_indices</span><span class="o">=</span><span class="n">case_indices_dev</span><span class="p">,</span>
+            <span class="n">encoding_base</span><span class="o">=</span><span class="n">base</span><span class="p">,</span>
+            <span class="n">encoding_shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span>
+            <span class="n">mode_nmlz_combined</span><span class="o">=</span><span class="n">mode_nmlz_combined</span><span class="p">,</span>
+            <span class="n">neighbor_source_boxes_starts</span><span class="o">=</span><span class="n">neighbor_source_boxes_starts</span><span class="p">,</span>
+            <span class="n">root_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span><span class="p">,</span>
+            <span class="n">neighbor_source_boxes_lists</span><span class="o">=</span><span class="n">neighbor_source_boxes_lists</span><span class="p">,</span>
+            <span class="n">mode_coefs</span><span class="o">=</span><span class="n">mode_coefs</span><span class="p">,</span>
+            <span class="n">table_data_combined</span><span class="o">=</span><span class="n">table_data_combined</span><span class="p">,</span>
+            <span class="n">target_boxes</span><span class="o">=</span><span class="n">target_boxes</span><span class="p">,</span>
+            <span class="n">table_root_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_table_source_box_extent</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out_pot</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">res</span> <span class="ow">is</span> <span class="n">out_pot</span>
+            <span class="c1"># FIXME: lazy evaluation sometimes returns incorrect results</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out_pot</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+            <span class="n">out_pot</span> <span class="o">=</span> <span class="n">res</span>
+
+        <span class="c1"># sorted_target_ids=self.tree.user_source_ids,</span>
+        <span class="c1"># user_source_ids=self.tree.user_source_ids)</span>
+
+        <span class="k">return</span> <span class="n">out_pot</span><span class="p">,</span> <span class="n">evt</span>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.eval_direct"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_direct">[docs]</a>    <span class="k">def</span> <span class="nf">eval_direct</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">target_boxes</span><span class="p">,</span>
+        <span class="n">neighbor_source_boxes_starts</span><span class="p">,</span>
+        <span class="n">neighbor_source_boxes_lists</span><span class="p">,</span>
+        <span class="n">mode_coefs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">pot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_zeros</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pot</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">pot</span> <span class="o">=</span> <span class="p">[</span><span class="n">pot</span><span class="p">,</span> <span class="p">]</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)):</span>
+            <span class="c1"># print(&quot;processing near-field of out_kernel&quot;, i)</span>
+            <span class="n">pot</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">evt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_direct_single_out_kernel</span><span class="p">(</span>
+                <span class="n">pot</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">target_boxes</span><span class="p">,</span>
+                <span class="n">neighbor_source_boxes_starts</span><span class="p">,</span>
+                <span class="n">neighbor_source_boxes_lists</span><span class="p">,</span>
+                <span class="n">mode_coefs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">out_pot</span> <span class="ow">in</span> <span class="n">pot</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out_pot</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+                <span class="n">out_pot</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+        <span class="c1"># single out_kernel</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pot</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">pot</span> <span class="o">=</span> <span class="n">pot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">pot</span><span class="p">,</span> <span class="n">SumpyTimingFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span> <span class="n">events</span><span class="p">))</span></div>
+
+    <span class="c1"># }}} End direct evaluation of near field interactions</span>
+
+    <span class="c1"># {{{ downward pass of fmm</span>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.multipole_to_local"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.multipole_to_local">[docs]</a>    <span class="k">def</span> <span class="nf">multipole_to_local</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">level_start_target_box_nrs</span><span class="p">,</span>
+        <span class="n">target_boxes</span><span class="p">,</span>
+        <span class="n">src_box_starts</span><span class="p">,</span>
+        <span class="n">src_box_lists</span><span class="p">,</span>
+        <span class="n">mpole_exps</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">multipole_to_local</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">level_start_target_box_nrs</span><span class="p">,</span>
+            <span class="n">target_boxes</span><span class="p">,</span>
+            <span class="n">src_box_starts</span><span class="p">,</span>
+            <span class="n">src_box_lists</span><span class="p">,</span>
+            <span class="n">mpole_exps</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.eval_multipoles"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_multipoles">[docs]</a>    <span class="k">def</span> <span class="nf">eval_multipoles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">target_boxes_by_source_level</span><span class="p">,</span> <span class="n">source_boxes_by_level</span><span class="p">,</span> <span class="n">mpole_exps</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">eval_multipoles</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">target_boxes_by_source_level</span><span class="p">,</span> <span class="n">source_boxes_by_level</span><span class="p">,</span> <span class="n">mpole_exps</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.form_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.form_locals">[docs]</a>    <span class="k">def</span> <span class="nf">form_locals</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">level_start_target_or_target_parent_box_nrs</span><span class="p">,</span>
+        <span class="n">target_or_target_parent_boxes</span><span class="p">,</span>
+        <span class="n">starts</span><span class="p">,</span>
+        <span class="n">lists</span><span class="p">,</span>
+        <span class="n">src_weights</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">form_locals</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">level_start_target_or_target_parent_box_nrs</span><span class="p">,</span>
+            <span class="n">target_or_target_parent_boxes</span><span class="p">,</span>
+            <span class="n">starts</span><span class="p">,</span>
+            <span class="n">lists</span><span class="p">,</span>
+            <span class="n">src_weights</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.refine_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.refine_locals">[docs]</a>    <span class="k">def</span> <span class="nf">refine_locals</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">level_start_target_or_target_parent_box_nrs</span><span class="p">,</span>
+        <span class="n">target_or_target_parent_boxes</span><span class="p">,</span>
+        <span class="n">local_exps</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">refine_locals</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">level_start_target_or_target_parent_box_nrs</span><span class="p">,</span>
+            <span class="n">target_or_target_parent_boxes</span><span class="p">,</span>
+            <span class="n">local_exps</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.eval_locals"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_locals">[docs]</a>    <span class="k">def</span> <span class="nf">eval_locals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level_start_target_box_nrs</span><span class="p">,</span> <span class="n">target_boxes</span><span class="p">,</span> <span class="n">local_exps</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">eval_locals</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">level_start_target_box_nrs</span><span class="p">,</span> <span class="n">target_boxes</span><span class="p">,</span> <span class="n">local_exps</span>
+        <span class="p">)</span></div>
+
+    <span class="c1"># }}} End downward pass of fmm</span>
+
+    <span class="c1"># {{{ direct evaluation of p2p (discrete) interactions</span>
+
+    <span class="k">def</span> <span class="nf">eval_direct_p2p</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">target_boxes</span><span class="p">,</span> <span class="n">source_box_starts</span><span class="p">,</span> <span class="n">source_box_lists</span><span class="p">,</span> <span class="n">src_weights</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">FMMLibExpansionWrangler</span><span class="o">.</span><span class="n">eval_direct</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">target_boxes</span><span class="p">,</span> <span class="n">source_box_starts</span><span class="p">,</span> <span class="n">source_box_lists</span><span class="p">,</span> <span class="n">src_weights</span>
+        <span class="p">)</span>
+
+    <span class="c1"># }}} End direct evaluation of p2p interactions</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_supported_helmknl</span><span class="p">(</span><span class="n">knl</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="n">DirectionalSourceDerivative</span><span class="p">):</span>
+            <span class="n">knl</span> <span class="o">=</span> <span class="n">knl</span><span class="o">.</span><span class="n">inner_kernel</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="p">(</span><span class="n">LaplaceKernel</span><span class="p">,</span> <span class="n">HelmholtzKernel</span><span class="p">))</span>
+                <span class="ow">and</span> <span class="n">knl</span><span class="o">.</span><span class="n">dim</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span></div>
+
+
+<span class="c1"># }}} End fmmlib backend (for laplace, helmholtz)</span>
+
+
+<div class="viewcode-block" id="FPNDExpansionWranglerCodeContainer"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWranglerCodeContainer">[docs]</a><span class="k">class</span> <span class="nc">FPNDExpansionWranglerCodeContainer</span><span class="p">(</span><span class="n">FPNDSumpyExpansionWranglerCodeContainer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The default code container.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="FPNDExpansionWrangler"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler">[docs]</a><span class="k">class</span> <span class="nc">FPNDExpansionWrangler</span><span class="p">(</span><span class="n">FPNDSumpyExpansionWrangler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The default wrangler class.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 <span class="c1"># vim: filetype=pyopencl:foldmethod=marker</span>
 </pre></div>

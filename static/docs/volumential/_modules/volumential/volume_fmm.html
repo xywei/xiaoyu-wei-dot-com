@@ -186,8 +186,11 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
+<span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 <span class="kn">from</span> <span class="nn">boxtree.fmm</span> <span class="k">import</span> <span class="n">TimingRecorder</span>
 <span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_interface</span> <span class="k">import</span> <span class="n">ExpansionWranglerInterface</span>
+<span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_fpnd</span> <span class="k">import</span> <span class="p">(</span>
+        <span class="n">FPNDSumpyExpansionWrangler</span><span class="p">,</span> <span class="n">FPNDFMMLibExpansionWrangler</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -230,6 +233,15 @@
 
     <span class="n">recorder</span> <span class="o">=</span> <span class="n">TimingRecorder</span><span class="p">()</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;start fmm&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expansion_wrangler</span><span class="p">,</span> <span class="n">FPNDSumpyExpansionWrangler</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_weights</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_func</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expansion_wrangler</span><span class="p">,</span> <span class="n">FPNDFMMLibExpansionWrangler</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_weights</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+            <span class="n">src_weights</span> <span class="o">=</span> <span class="n">src_weights</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_func</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+            <span class="n">src_func</span> <span class="o">=</span> <span class="n">src_func</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder source weights&quot;</span><span class="p">)</span>
 
@@ -514,6 +526,11 @@
     <span class="n">dtype</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">dtype</span>
     <span class="n">coord_dtype</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">coord_dtype</span>
     <span class="n">n_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_fpnd</span> <span class="k">import</span> <span class="n">FPNDFMMLibExpansionWrangler</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrangler</span><span class="p">,</span> <span class="n">FPNDFMMLibExpansionWrangler</span><span class="p">):</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+        <span class="n">traversal</span> <span class="o">=</span> <span class="n">traversal</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">dim</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_points</span><span class="p">)</span>
 

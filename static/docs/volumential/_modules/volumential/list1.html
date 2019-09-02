@@ -184,6 +184,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">loopy</span>
+<span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 
 <span class="kn">from</span> <span class="nn">sumpy.tools</span> <span class="k">import</span> <span class="n">KernelCacheWrapper</span>
 
@@ -562,7 +563,7 @@
             <span class="c1"># may result in suboptimal performance.</span>
             <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">()</span>
-        <span class="n">knl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;tbox&quot;</span><span class="p">,</span> <span class="n">ncpus</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
+        <span class="n">knl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;tbox&quot;</span><span class="p">,</span> <span class="n">ncpus</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knl</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -621,8 +622,12 @@
             <span class="n">table_root_extent</span><span class="o">=</span><span class="n">table_root_extent</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
+        <span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
 
         <span class="c1"># check for data integrity</span>
         <span class="c1"># if not (np.max(np.abs(out_pot.get()))) &lt; 100:</span>
