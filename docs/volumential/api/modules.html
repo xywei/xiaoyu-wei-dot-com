@@ -706,32 +706,39 @@ specified in the compute_method will be used.</p>
 <span class="target" id="module-volumential.expansion_wrangler_fpnd"></span><dl class="class">
 <dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler">
 <em class="property">class </em><code class="sig-prename descclassname">volumential.expansion_wrangler_fpnd.</code><code class="sig-name descname">FPNDExpansionWrangler</code><span class="sig-paren">(</span><em class="sig-param">code_container</em>, <em class="sig-param">queue</em>, <em class="sig-param">tree</em>, <em class="sig-param">near_field_table</em>, <em class="sig-param">dtype</em>, <em class="sig-param">fmm_level_to_order</em>, <em class="sig-param">quad_order</em>, <em class="sig-param">source_extra_kwargs=None</em>, <em class="sig-param">kernel_extra_kwargs=None</em>, <em class="sig-param">self_extra_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default wrangler class.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWranglerCodeContainer">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.expansion_wrangler_fpnd.</code><code class="sig-name descname">FPNDExpansionWranglerCodeContainer</code><span class="sig-paren">(</span><em class="sig-param">cl_context</em>, <em class="sig-param">multipole_expansion_factory</em>, <em class="sig-param">local_expansion_factory</em>, <em class="sig-param">out_kernels</em>, <em class="sig-param">exclude_self=False</em>, <em class="sig-param">use_rscale=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWranglerCodeContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWranglerCodeContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default code container.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.expansion_wrangler_fpnd.</code><code class="sig-name descname">FPNDFMMLibExpansionWrangler</code><span class="sig-paren">(</span><em class="sig-param">code_container</em>, <em class="sig-param">queue</em>, <em class="sig-param">tree</em>, <em class="sig-param">near_field_table</em>, <em class="sig-param">dtype</em>, <em class="sig-param">fmm_level_to_order</em>, <em class="sig-param">quad_order</em>, <em class="sig-param">source_extra_kwargs=None</em>, <em class="sig-param">kernel_extra_kwargs=None</em>, <em class="sig-param">self_extra_kwargs=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler" title="Permalink to this definition">¶</a></dt>
 <dd><p>This expansion wrangler uses “fpnd” strategy. That is, Far field is
-computed via Particle approximation and Near field is computed Directly.</p>
+computed via Particle approximation and Near field is computed Directly.
+The FMM is performed using FMMLib backend.</p>
 <dl class="attribute">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.source_extra_kwargs">
-<code class="sig-name descname">source_extra_kwargs</code><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.source_extra_kwargs" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.source_extra_kwargs">
+<code class="sig-name descname">source_extra_kwargs</code><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.source_extra_kwargs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Keyword arguments to be passed to interactions that involve
 the source field.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.kernel_extra_kwargs">
-<code class="sig-name descname">kernel_extra_kwargs</code><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.kernel_extra_kwargs" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.kernel_extra_kwargs">
+<code class="sig-name descname">kernel_extra_kwargs</code><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.kernel_extra_kwargs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Keyword arguments to be passed to interactions that involve
 expansions, but not the source field.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.self_extra_kwargs">
-<code class="sig-name descname">self_extra_kwargs</code><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.self_extra_kwargs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Keyword arguments to be passed for handling
-self interactions (singular integrals)</p>
-</dd></dl>
-
+<p>Much of this class is borrowed from pytential.qbx.fmmlib.</p>
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.coarsen_multipoles">
-<code class="sig-name descname">coarsen_multipoles</code><span class="sig-paren">(</span><em class="sig-param">level_start_source_parent_box_nrs</em>, <em class="sig-param">source_parent_boxes</em>, <em class="sig-param">mpoles</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.coarsen_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.coarsen_multipoles" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.coarsen_multipoles">
+<code class="sig-name descname">coarsen_multipoles</code><span class="sig-paren">(</span><em class="sig-param">level_start_source_parent_box_nrs</em>, <em class="sig-param">source_parent_boxes</em>, <em class="sig-param">mpoles</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.coarsen_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.coarsen_multipoles" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each box in <em>source_parent_boxes</em>, gather (and translate)
 the box’s children’s multipole expansions in <em>mpoles</em> and add
 the resulting expansion into the box’s multipole expansion
@@ -744,54 +751,54 @@ in <em>mpoles</em>.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_direct">
-<code class="sig-name descname">eval_direct</code><span class="sig-paren">(</span><em class="sig-param">target_boxes</em>, <em class="sig-param">neighbor_source_boxes_starts</em>, <em class="sig-param">neighbor_source_boxes_lists</em>, <em class="sig-param">mode_coefs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.eval_direct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_direct" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_direct">
+<code class="sig-name descname">eval_direct</code><span class="sig-paren">(</span><em class="sig-param">target_boxes</em>, <em class="sig-param">neighbor_source_boxes_starts</em>, <em class="sig-param">neighbor_source_boxes_lists</em>, <em class="sig-param">mode_coefs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.eval_direct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_direct" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each box in <em>target_boxes</em>, evaluate the influence of the
 neighbor sources due to <em>src_weights</em></p>
 <p>This step amounts to looking up the corresponding entries in a
 pre-built table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
+<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_locals">
-<code class="sig-name descname">eval_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_box_nrs</em>, <em class="sig-param">target_boxes</em>, <em class="sig-param">local_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.eval_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_locals" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_locals">
+<code class="sig-name descname">eval_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_box_nrs</em>, <em class="sig-param">target_boxes</em>, <em class="sig-param">local_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.eval_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_locals" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each box in <em>target_boxes</em>, evaluate the local expansion in
 <em>local_exps</em> and return a new potential array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
+<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_multipoles">
-<code class="sig-name descname">eval_multipoles</code><span class="sig-paren">(</span><em class="sig-param">target_boxes_by_source_level</em>, <em class="sig-param">source_boxes_by_level</em>, <em class="sig-param">mpole_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.eval_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.eval_multipoles" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_multipoles">
+<code class="sig-name descname">eval_multipoles</code><span class="sig-paren">(</span><em class="sig-param">target_boxes_by_source_level</em>, <em class="sig-param">source_boxes_by_level</em>, <em class="sig-param">mpole_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.eval_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_multipoles" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each box in <em>target_boxes</em>, evaluate the multipole expansion in
 <em>mpole_exps</em> in the nearby boxes given in <em>starts</em> and <em>lists</em>, and
 return a new potential array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
+<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.finalize_potentials">
-<code class="sig-name descname">finalize_potentials</code><span class="sig-paren">(</span><em class="sig-param">potentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.finalize_potentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.finalize_potentials" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.finalize_potentials">
+<code class="sig-name descname">finalize_potentials</code><span class="sig-paren">(</span><em class="sig-param">potentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.finalize_potentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.finalize_potentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Postprocess the reordered potentials. This is where global scaling
 factors could be applied.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.form_locals">
-<code class="sig-name descname">form_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_or_target_parent_box_nrs</em>, <em class="sig-param">target_or_target_parent_boxes</em>, <em class="sig-param">starts</em>, <em class="sig-param">lists</em>, <em class="sig-param">src_weights</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.form_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.form_locals" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.form_locals">
+<code class="sig-name descname">form_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_or_target_parent_box_nrs</em>, <em class="sig-param">target_or_target_parent_boxes</em>, <em class="sig-param">starts</em>, <em class="sig-param">lists</em>, <em class="sig-param">src_weights</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.form_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.form_locals" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each box in <em>target_or_target_parent_boxes</em>, form local
 expansions due to the sources in the nearby boxes given in <em>starts</em> and
 <em>lists</em>, and return a new local expansion array.</p>
@@ -803,27 +810,27 @@ expansions due to the sources in the nearby boxes given in <em>starts</em> and
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.form_multipoles">
-<code class="sig-name descname">form_multipoles</code><span class="sig-paren">(</span><em class="sig-param">level_start_source_box_nrs</em>, <em class="sig-param">source_boxes</em>, <em class="sig-param">src_weights</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.form_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.form_multipoles" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.form_multipoles">
+<code class="sig-name descname">form_multipoles</code><span class="sig-paren">(</span><em class="sig-param">level_start_source_box_nrs</em>, <em class="sig-param">source_boxes</em>, <em class="sig-param">src_weights</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.form_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.form_multipoles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an expansions array containing multipole expansions
 in <em>source_boxes</em> due to sources with <em>src_weights</em>.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.local_expansion_zeros">
-<code class="sig-name descname">local_expansion_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.local_expansion_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.local_expansion_zeros" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.local_expansion_zeros">
+<code class="sig-name descname">local_expansion_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.local_expansion_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.local_expansion_zeros" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct arrays to store multipole expansions for all boxes</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.multipole_expansion_zeros">
-<code class="sig-name descname">multipole_expansion_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.multipole_expansion_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.multipole_expansion_zeros" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.multipole_expansion_zeros">
+<code class="sig-name descname">multipole_expansion_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.multipole_expansion_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.multipole_expansion_zeros" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct arrays to store multipole expansions for all boxes</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.multipole_to_local">
-<code class="sig-name descname">multipole_to_local</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_box_nrs</em>, <em class="sig-param">target_boxes</em>, <em class="sig-param">src_box_starts</em>, <em class="sig-param">src_box_lists</em>, <em class="sig-param">mpole_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.multipole_to_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.multipole_to_local" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.multipole_to_local">
+<code class="sig-name descname">multipole_to_local</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_box_nrs</em>, <em class="sig-param">target_boxes</em>, <em class="sig-param">src_box_starts</em>, <em class="sig-param">src_box_lists</em>, <em class="sig-param">mpole_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.multipole_to_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.multipole_to_local" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each box in <em>target_or_target_parent_boxes</em>, translate and add
 the influence of the multipole expansion in <em>mpole_exps</em> into a new
 array of local expansions.</p>
@@ -835,14 +842,14 @@ array of local expansions.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros">
-<code class="sig-name descname">output_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.output_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.output_zeros" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros">
+<code class="sig-name descname">output_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.output_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.output_zeros" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct arrays to store potential values for all target points</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.refine_locals">
-<code class="sig-name descname">refine_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_or_target_parent_box_nrs</em>, <em class="sig-param">target_or_target_parent_boxes</em>, <em class="sig-param">local_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.refine_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.refine_locals" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.refine_locals">
+<code class="sig-name descname">refine_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_or_target_parent_box_nrs</em>, <em class="sig-param">target_or_target_parent_boxes</em>, <em class="sig-param">local_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.refine_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.refine_locals" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each box in <em>child_boxes</em>,
 translate the box’s parent’s local expansion in <em>local_exps</em> and add
 the resulting expansion into the box’s local expansion in <em>local_exps</em>.</p>
@@ -854,19 +861,215 @@ the resulting expansion into the box’s local expansion in <em>local_exps</em>.
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.reorder_potentials">
-<code class="sig-name descname">reorder_potentials</code><span class="sig-paren">(</span><em class="sig-param">potentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.reorder_potentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.reorder_potentials" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.reorder_potentials">
+<code class="sig-name descname">reorder_potentials</code><span class="sig-paren">(</span><em class="sig-param">potentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.reorder_potentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.reorder_potentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of <em>potentials</em> in user target order.
 <em>source_weights</em> is in tree target order.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.reorder_sources">
-<code class="sig-name descname">reorder_sources</code><span class="sig-paren">(</span><em class="sig-param">source_array</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDExpansionWrangler.reorder_sources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDExpansionWrangler.reorder_sources" title="Permalink to this definition">¶</a></dt>
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.reorder_sources">
+<code class="sig-name descname">reorder_sources</code><span class="sig-paren">(</span><em class="sig-param">source_array</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.reorder_sources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.reorder_sources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of <em>source_array</em> in tree source order.
 <em>source_array</em> is in user source order.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWranglerCodeContainer">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.expansion_wrangler_fpnd.</code><code class="sig-name descname">FPNDFMMLibExpansionWranglerCodeContainer</code><span class="sig-paren">(</span><em class="sig-param">cl_context</em>, <em class="sig-param">multipole_expansion_factory</em>, <em class="sig-param">local_expansion_factory</em>, <em class="sig-param">out_kernels</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWranglerCodeContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWranglerCodeContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Objects of this type serve as a place to keep the code needed
+for ExpansionWrangler if it is using fmmlib to perform multipole
+expansion and manipulations.</p>
+<p>The interface is augmented with unecessary arguments acting as
+placeholders, such that it can be a drop-in replacement of sumpy
+backend.</p>
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWranglerCodeContainer.get_wrangler">
+<code class="sig-name descname">get_wrangler</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">tree</em>, <em class="sig-param">dtype</em>, <em class="sig-param">fmm_level_to_order</em>, <em class="sig-param">source_extra_kwargs={}</em>, <em class="sig-param">kernel_extra_kwargs=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWranglerCodeContainer.get_wrangler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWranglerCodeContainer.get_wrangler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a wrangler object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.expansion_wrangler_fpnd.</code><code class="sig-name descname">FPNDSumpyExpansionWrangler</code><span class="sig-paren">(</span><em class="sig-param">code_container</em>, <em class="sig-param">queue</em>, <em class="sig-param">tree</em>, <em class="sig-param">near_field_table</em>, <em class="sig-param">dtype</em>, <em class="sig-param">fmm_level_to_order</em>, <em class="sig-param">quad_order</em>, <em class="sig-param">source_extra_kwargs=None</em>, <em class="sig-param">kernel_extra_kwargs=None</em>, <em class="sig-param">self_extra_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This expansion wrangler uses “fpnd” strategy. That is, Far field is
+computed via Particle approximation and Near field is computed Directly.
+The FMM is performed using sumpy backend.</p>
+<dl class="attribute">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.source_extra_kwargs">
+<code class="sig-name descname">source_extra_kwargs</code><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.source_extra_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keyword arguments to be passed to interactions that involve
+the source field.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.kernel_extra_kwargs">
+<code class="sig-name descname">kernel_extra_kwargs</code><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.kernel_extra_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keyword arguments to be passed to interactions that involve
+expansions, but not the source field.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.self_extra_kwargs">
+<code class="sig-name descname">self_extra_kwargs</code><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.self_extra_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keyword arguments to be passed for handling
+self interactions (singular integrals)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.coarsen_multipoles">
+<code class="sig-name descname">coarsen_multipoles</code><span class="sig-paren">(</span><em class="sig-param">level_start_source_parent_box_nrs</em>, <em class="sig-param">source_parent_boxes</em>, <em class="sig-param">mpoles</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.coarsen_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.coarsen_multipoles" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each box in <em>source_parent_boxes</em>, gather (and translate)
+the box’s children’s multipole expansions in <em>mpoles</em> and add
+the resulting expansion into the box’s multipole expansion
+in <em>mpoles</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>mpoles</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_direct">
+<code class="sig-name descname">eval_direct</code><span class="sig-paren">(</span><em class="sig-param">target_boxes</em>, <em class="sig-param">neighbor_source_boxes_starts</em>, <em class="sig-param">neighbor_source_boxes_lists</em>, <em class="sig-param">mode_coefs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.eval_direct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_direct" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each box in <em>target_boxes</em>, evaluate the influence of the
+neighbor sources due to <em>src_weights</em></p>
+<p>This step amounts to looking up the corresponding entries in a
+pre-built table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_locals">
+<code class="sig-name descname">eval_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_box_nrs</em>, <em class="sig-param">target_boxes</em>, <em class="sig-param">local_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.eval_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_locals" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each box in <em>target_boxes</em>, evaluate the local expansion in
+<em>local_exps</em> and return a new potential array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_multipoles">
+<code class="sig-name descname">eval_multipoles</code><span class="sig-paren">(</span><em class="sig-param">target_boxes_by_source_level</em>, <em class="sig-param">source_boxes_by_level</em>, <em class="sig-param">mpole_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.eval_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.eval_multipoles" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each box in <em>target_boxes</em>, evaluate the multipole expansion in
+<em>mpole_exps</em> in the nearby boxes given in <em>starts</em> and <em>lists</em>, and
+return a new potential array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a new potential array, see <a class="reference internal" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros" title="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output_zeros()</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.finalize_potentials">
+<code class="sig-name descname">finalize_potentials</code><span class="sig-paren">(</span><em class="sig-param">potentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.finalize_potentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.finalize_potentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Postprocess the reordered potentials. This is where global scaling
+factors could be applied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.form_locals">
+<code class="sig-name descname">form_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_or_target_parent_box_nrs</em>, <em class="sig-param">target_or_target_parent_boxes</em>, <em class="sig-param">starts</em>, <em class="sig-param">lists</em>, <em class="sig-param">src_weights</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.form_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.form_locals" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each box in <em>target_or_target_parent_boxes</em>, form local
+expansions due to the sources in the nearby boxes given in <em>starts</em> and
+<em>lists</em>, and return a new local expansion array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a new local expansion array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.form_multipoles">
+<code class="sig-name descname">form_multipoles</code><span class="sig-paren">(</span><em class="sig-param">level_start_source_box_nrs</em>, <em class="sig-param">source_boxes</em>, <em class="sig-param">src_weights</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.form_multipoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.form_multipoles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an expansions array containing multipole expansions
+in <em>source_boxes</em> due to sources with <em>src_weights</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.local_expansion_zeros">
+<code class="sig-name descname">local_expansion_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.local_expansion_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.local_expansion_zeros" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct arrays to store multipole expansions for all boxes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.multipole_expansion_zeros">
+<code class="sig-name descname">multipole_expansion_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.multipole_expansion_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.multipole_expansion_zeros" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct arrays to store multipole expansions for all boxes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.multipole_to_local">
+<code class="sig-name descname">multipole_to_local</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_box_nrs</em>, <em class="sig-param">target_boxes</em>, <em class="sig-param">src_box_starts</em>, <em class="sig-param">src_box_lists</em>, <em class="sig-param">mpole_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.multipole_to_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.multipole_to_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each box in <em>target_or_target_parent_boxes</em>, translate and add
+the influence of the multipole expansion in <em>mpole_exps</em> into a new
+array of local expansions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a new (local) expansion array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros">
+<code class="sig-name descname">output_zeros</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.output_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.output_zeros" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct arrays to store potential values for all target points</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.refine_locals">
+<code class="sig-name descname">refine_locals</code><span class="sig-paren">(</span><em class="sig-param">level_start_target_or_target_parent_box_nrs</em>, <em class="sig-param">target_or_target_parent_boxes</em>, <em class="sig-param">local_exps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.refine_locals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.refine_locals" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each box in <em>child_boxes</em>,
+translate the box’s parent’s local expansion in <em>local_exps</em> and add
+the resulting expansion into the box’s local expansion in <em>local_exps</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>local_exps</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.reorder_potentials">
+<code class="sig-name descname">reorder_potentials</code><span class="sig-paren">(</span><em class="sig-param">potentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.reorder_potentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.reorder_potentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of <em>potentials</em> in user target order.
+<em>source_weights</em> is in tree target order.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.reorder_sources">
+<code class="sig-name descname">reorder_sources</code><span class="sig-paren">(</span><em class="sig-param">source_array</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.reorder_sources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.reorder_sources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of <em>source_array</em> in tree source order.
+<em>source_array</em> is in user source order.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWranglerCodeContainer">
+<em class="property">class </em><code class="sig-prename descclassname">volumential.expansion_wrangler_fpnd.</code><code class="sig-name descname">FPNDSumpyExpansionWranglerCodeContainer</code><span class="sig-paren">(</span><em class="sig-param">cl_context</em>, <em class="sig-param">multipole_expansion_factory</em>, <em class="sig-param">local_expansion_factory</em>, <em class="sig-param">out_kernels</em>, <em class="sig-param">exclude_self=False</em>, <em class="sig-param">use_rscale=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWranglerCodeContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWranglerCodeContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Objects of this type serve as a place to keep the code needed
+for ExpansionWrangler if it is using sumpy to perform multipole
+expansion and manipulations.</p>
+<p>Since <code class="xref py py-class docutils literal notranslate"><span class="pre">SumpyExpansionWrangler</span></code> necessarily must have a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">pyopencl.CommandQueue</span></code>, but this queue is allowed to be
+more ephemeral than the code, the code’s lifetime
+is decoupled by storing it in this object.</p>
 </dd></dl>
 
 </div>
