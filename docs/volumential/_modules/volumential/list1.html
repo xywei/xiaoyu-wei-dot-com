@@ -629,6 +629,8 @@
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
 
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;list1 evaluation finished&quot;</span><span class="p">)</span>
+
         <span class="c1"># check for data integrity</span>
         <span class="c1"># if not (np.max(np.abs(out_pot.get()))) &lt; 100:</span>
         <span class="c1">#    import pudb; pu.db</span>
