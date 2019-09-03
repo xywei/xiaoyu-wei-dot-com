@@ -180,6 +180,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
+<span class="kn">from</span> <span class="nn">pytools.obj_array</span> <span class="k">import</span> <span class="n">make_obj_array</span>
 
 <span class="c1"># from pytools import memoize_method</span>
 <span class="kn">from</span> <span class="nn">volumential.nearfield_potential_table</span> <span class="k">import</span> <span class="n">NearFieldInteractionTable</span>
@@ -455,7 +456,10 @@
         <span class="c1"># do not include quadrature weights (purely function</span>
         <span class="c1"># expansiona coefficients)</span>
 
-        <span class="c1"># NOTE: inputs should be all on the device main memory (cl.Arrays)</span>
+        <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Returns range for list1&quot;</span><span class="p">)</span>
+            <span class="n">out_pot</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_pot</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">out_pot</span><span class="p">,</span> <span class="kc">None</span>
 
         <span class="n">kname</span> <span class="o">=</span> <span class="n">out_kernel</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
@@ -953,6 +957,25 @@
 
     <span class="c1"># }}} End constructor</span>
 
+<span class="c1"># {{{ scale factor for fmmlib</span>
+
+    <span class="k">def</span> <span class="nf">get_scale_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eqn_letter</span> <span class="o">==</span> <span class="s2">&quot;l&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">scale_factor</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">eqn_letter</span> <span class="o">==</span> <span class="s2">&quot;h&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">scale_factor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">eqn_letter</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">scale_factor</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                    <span class="s2">&quot;scale factor for pyfmmlib </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%d</span><span class="s2"> dimensions&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">eqn_letter</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">scale_factor</span>
+
+<span class="c1"># }}} End scale factor for fmmlib</span>
+
     <span class="c1"># {{{ data vector utilities</span>
 
 <div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.multipole_expansion_zeros"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.multipole_expansion_zeros">[docs]</a>    <span class="k">def</span> <span class="nf">multipole_expansion_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1008,7 +1031,10 @@
         <span class="c1"># do not include quadrature weights (purely function</span>
         <span class="c1"># expansiona coefficients)</span>
 
-        <span class="c1"># NOTE: inputs should be all on the device main memory (cl.Arrays)</span>
+        <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Returns range for list1&quot;</span><span class="p">)</span>
+            <span class="n">out_pot</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_pot</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">out_pot</span><span class="p">,</span> <span class="kc">None</span>
 
         <span class="n">kname</span> <span class="o">=</span> <span class="n">out_kernel</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
@@ -1118,7 +1144,8 @@
         <span class="c1"># sorted_target_ids=self.tree.user_source_ids,</span>
         <span class="c1"># user_source_ids=self.tree.user_source_ids)</span>
 
-        <span class="k">return</span> <span class="n">out_pot</span><span class="p">,</span> <span class="n">evt</span>
+        <span class="n">scale_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_scale_factor</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">out_pot</span> <span class="o">/</span> <span class="n">scale_factor</span><span class="p">,</span> <span class="n">evt</span>
 
 <div class="viewcode-block" id="FPNDFMMLibExpansionWrangler.eval_direct"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.eval_direct">[docs]</a>    <span class="k">def</span> <span class="nf">eval_direct</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1129,7 +1156,7 @@
     <span class="p">):</span>
         <span class="n">pot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_zeros</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pot</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">pot</span> <span class="o">=</span> <span class="p">[</span><span class="n">pot</span><span class="p">,</span> <span class="p">]</span>
+            <span class="n">pot</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="n">pot</span><span class="p">,</span> <span class="p">])</span>
         <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">)):</span>
             <span class="c1"># print(&quot;processing near-field of out_kernel&quot;, i)</span>
@@ -1147,7 +1174,8 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out_pot</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
                 <span class="n">out_pot</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
 
-        <span class="c1"># single out_kernel</span>
+        <span class="c1"># boxtree.pyfmmlib_integration handles things diffferently</span>
+        <span class="c1"># when out_kernels has only one element</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pot</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">pot</span> <span class="o">=</span> <span class="n">pot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 

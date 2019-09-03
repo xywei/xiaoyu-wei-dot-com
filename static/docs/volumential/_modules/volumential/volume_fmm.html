@@ -237,9 +237,13 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expansion_wrangler</span><span class="p">,</span> <span class="n">FPNDSumpyExpansionWrangler</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_weights</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_func</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span>
+
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expansion_wrangler</span><span class="p">,</span> <span class="n">FPNDFMMLibExpansionWrangler</span><span class="p">):</span>
+
+        <span class="n">traversal</span> <span class="o">=</span> <span class="n">traversal</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_weights</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
-            <span class="n">src_weights</span> <span class="o">=</span> <span class="n">src_weights</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">src_weights</span> <span class="o">=</span> <span class="n">src_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_func</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
             <span class="n">src_func</span> <span class="o">=</span> <span class="n">src_func</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
@@ -290,7 +294,9 @@
     <span class="n">recorder</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;eval_direct&quot;</span><span class="p">,</span> <span class="n">timing_future</span><span class="p">)</span>
 
     <span class="c1"># Return list 1 only, for debugging</span>
+    <span class="c1"># &#39;list1_only&#39; takes precedence over &#39;exclude_list1&#39;</span>
     <span class="k">if</span> <span class="s1">&#39;list1_only&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;list1_only&#39;</span><span class="p">]:</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder potentials&quot;</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="n">potentials</span><span class="p">)</span>
 
