@@ -187,6 +187,9 @@
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
+<span class="kn">from</span> <span class="nn">pytools.obj_array</span> <span class="k">import</span> <span class="n">make_obj_array</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -343,8 +346,6 @@
         <span class="c1"># {{{ Meshgen via BoxTree</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using Meshgen via BoxTree interface.&quot;</span><span class="p">)</span>
         <span class="kn">from</span> <span class="nn">boxtree.tree_interactive_build</span> <span class="k">import</span> <span class="n">BoxTree</span><span class="p">,</span> <span class="n">QuadratureOnBoxTree</span>
-        <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
-        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
         <span class="k">def</span> <span class="nf">greet</span><span class="p">():</span>
             <span class="k">return</span> <span class="s2">&quot;Hello from Meshgen via BoxTree!&quot;</span>
@@ -419,6 +420,70 @@
         <span class="n">MeshGen3D</span><span class="p">,</span>
         <span class="n">make_uniform_cubic_grid</span><span class="p">,</span>
     <span class="p">)</span>
+
+
+<span class="c1"># {{{ mesh utils</span>
+
+<span class="k">def</span> <span class="nf">build_geometry_info</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">q_order</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span>
+                             <span class="n">bbox</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build tree, traversal and other geo info for FMM computation,</span>
+<span class="sd">    given the box mesh over/encompassing the domain.</span>
+
+<span class="sd">    The bouding box can be specified in one of two ways:</span>
+<span class="sd">    1. via scalars a, b, dim-homogeneous ([a, b]^dim)</span>
+<span class="sd">    2. via bbox (e.g. np.array([[a1, b1], [a2, b2], [a3, b3]]))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">MeshGen1D</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">MeshGen2D</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">MeshGen3D</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;only supports 1 &lt;= dim &lt;= 3&quot;</span><span class="p">)</span>
+
+    <span class="n">q_points</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_q_points</span><span class="p">()</span>
+    <span class="n">q_weights</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_q_weights</span><span class="p">()</span>
+    <span class="n">q_points_org</span> <span class="o">=</span> <span class="n">q_points</span>  <span class="c1"># noqa: F841</span>
+    <span class="n">q_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">q_points</span><span class="p">))</span>
+
+    <span class="n">q_points</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">q_points</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)])</span>
+    <span class="n">q_weights</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">q_weights</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">bbox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">boxtree</span> <span class="k">import</span> <span class="n">TreeBuilder</span>
+    <span class="n">tb</span> <span class="o">=</span> <span class="n">TreeBuilder</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+    <span class="n">tree</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tb</span><span class="p">(</span>
+        <span class="n">queue</span><span class="p">,</span>
+        <span class="n">particles</span><span class="o">=</span><span class="n">q_points</span><span class="p">,</span>
+        <span class="n">targets</span><span class="o">=</span><span class="n">q_points</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span>
+        <span class="n">max_particles_in_box</span><span class="o">=</span><span class="n">q_order</span><span class="o">**</span><span class="n">dim</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">dim</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;adaptive-level-restricted&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">boxtree.traversal</span> <span class="k">import</span> <span class="n">FMMTraversalBuilder</span>
+    <span class="n">tg</span> <span class="o">=</span> <span class="n">FMMTraversalBuilder</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">trav</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tg</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">q_points</span><span class="p">,</span> <span class="n">q_weights</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">trav</span>
+
+<span class="c1"># }}} End mesh utils</span>
+
+<span class="c1"># vim: ft=pyopencl</span>
 </pre></div>
 
            </div>
