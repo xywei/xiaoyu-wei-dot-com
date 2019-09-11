@@ -691,12 +691,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl_context</span><span class="p">,</span>
             <span class="n">multipole_expansion_factory</span><span class="p">,</span> <span class="n">local_expansion_factory</span><span class="p">,</span>
-            <span class="n">out_kernels</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">out_kernels</span><span class="p">,</span> <span class="n">exclude_self</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cl_context</span> <span class="o">=</span> <span class="n">cl_context</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multipole_expansion_factory</span> <span class="o">=</span> <span class="n">multipole_expansion_factory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">local_expansion_factory</span> <span class="o">=</span> <span class="n">local_expansion_factory</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">out_kernels</span> <span class="o">=</span> <span class="n">out_kernels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude_self</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="FPNDFMMLibExpansionWranglerCodeContainer.get_wrangler"><a class="viewcode-back" href="../../api/modules.html#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWranglerCodeContainer.get_wrangler">[docs]</a>    <span class="k">def</span> <span class="nf">get_wrangler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">fmm_level_to_order</span><span class="p">,</span>
             <span class="n">source_extra_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">kernel_extra_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
