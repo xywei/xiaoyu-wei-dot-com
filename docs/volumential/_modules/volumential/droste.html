@@ -1609,6 +1609,15 @@
         <span class="k">return</span> <span class="n">cheb_table</span>
 
     <span class="k">def</span> <span class="nf">get_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">symmetry_tags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Bn: the full n-dimensional hyperoctahedral group</span>
+            <span class="n">symmetry_info</span> <span class="o">=</span> <span class="s1">&#39;B</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">symmetry_info</span> <span class="o">=</span> <span class="s2">&quot;Span{</span><span class="si">%s</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span>
+                <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reduce_by_symmetry</span><span class="o">.</span><span class="n">symmetry_tags</span><span class="p">)</span>
+                <span class="p">])</span>
+
         <span class="k">return</span> <span class="p">(</span>
             <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
@@ -1617,6 +1626,7 @@
             <span class="s2">&quot;brick_order-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nquad_points</span><span class="p">),</span>
             <span class="s2">&quot;case-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_base_case</span><span class="p">),</span>
             <span class="s2">&quot;kernel_id-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span><span class="p">),</span>
+            <span class="s2">&quot;symmetry-&quot;</span> <span class="o">+</span> <span class="n">symmetry_info</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

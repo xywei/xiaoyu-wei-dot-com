@@ -341,11 +341,22 @@
 
     <span class="n">qbx_stick_out</span> <span class="o">=</span> <span class="n">qbx</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">target_stick_out_factor</span><span class="o">=</span><span class="n">target_association_tolerance</span><span class="p">)</span>
 
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;qbx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qbx_stick_out</span>
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;representation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">representation_sym</span>
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;density&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigma</span>
+
     <span class="n">ext_f</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span>
             <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
             <span class="n">representation_sym</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
 
     <span class="c1"># }}}</span>
+
+    <span class="k">def</span> <span class="nf">eval_ext_f</span><span class="p">(</span><span class="n">target_discr</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">bind</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">qbx_stick_out</span><span class="p">,</span> <span class="n">target_discr</span><span class="p">),</span>
+            <span class="n">representation_sym</span><span class="p">)(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+
+    <span class="n">debugging_info</span><span class="p">[</span><span class="s1">&#39;eval_ext_f&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eval_ext_f</span>
 
     <span class="k">return</span> <span class="n">ext_f</span><span class="p">,</span> <span class="n">debugging_info</span></div>
 
