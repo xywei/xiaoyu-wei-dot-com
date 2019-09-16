@@ -519,7 +519,7 @@
             <span class="p">]</span><span class="o">.</span><span class="n">mode_normalizers</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;Table data for kernel &quot;</span>
+                <span class="s2">&quot;table data for kernel &quot;</span>
                 <span class="o">+</span> <span class="n">out_kernel</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; congregated&quot;</span><span class="p">)</span>
 
         <span class="c1"># The loop domain needs to know some info about the tables being used</span>
@@ -535,6 +535,13 @@
         <span class="kn">from</span> <span class="nn">volumential.list1</span> <span class="k">import</span> <span class="n">NearFieldFromCSR</span>
 
         <span class="n">near_field</span> <span class="o">=</span> <span class="n">NearFieldFromCSR</span><span class="p">(</span><span class="n">out_kernel</span><span class="p">,</span> <span class="n">table_data_shapes</span><span class="p">)</span>
+
+        <span class="n">table_data_combined</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
+                <span class="n">table_data_combined</span><span class="p">)</span>
+        <span class="n">mode_nmlz_combined</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
+                <span class="n">mode_nmlz_combined</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;sent table data to device&quot;</span><span class="p">)</span>
 
         <span class="n">res</span><span class="p">,</span> <span class="n">evt</span> <span class="o">=</span> <span class="n">near_field</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
