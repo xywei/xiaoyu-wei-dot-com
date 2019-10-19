@@ -205,17 +205,29 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">integral_kernel</span><span class="p">,</span>
         <span class="n">table_data_shapes</span><span class="p">,</span>
+        <span class="n">potential_kind</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">options</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;potential_kind:</span>
+
+<span class="sd">        1 - The (weakly singular) volume potentials.</span>
+<span class="sd">        2 - The (hypersingular) inverse potentials, like the fractional Laplacian.</span>
+<span class="sd">            Here, the fractional Laplacian is the inverse of the (weakly singular)</span>
+<span class="sd">            Riesz potential operator.</span>
+
+<span class="sd">        The two kinds share the same far-field code, but the second kind requires</span>
+<span class="sd">        exterior_mode_nmlz when computing the list1 interactions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">integral_kernel</span> <span class="o">=</span> <span class="n">integral_kernel</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span> <span class="o">=</span> <span class="n">table_data_shapes</span><span class="p">[</span><span class="s2">&quot;n_tables&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span> <span class="o">=</span> <span class="n">table_data_shapes</span><span class="p">[</span><span class="s2">&quot;n_q_points&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_table_entries</span> <span class="o">=</span> <span class="n">table_data_shapes</span><span class="p">[</span><span class="s2">&quot;n_table_entries&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">potential_kind</span> <span class="o">=</span> <span class="n">potential_kind</span>
 
         <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">)</span>
@@ -288,32 +300,34 @@
             <span class="n">code</span> <span class="o">=</span> <span class="n">code</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_vec_component</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">code</span>
 
-    <span class="k">def</span> <span class="nf">codegen_compute_scaling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NearFieldFromCSR.codegen_compute_scaling"><a class="viewcode-back" href="../../api/modules.html#volumential.list1.NearFieldFromCSR.codegen_compute_scaling">[docs]</a>    <span class="k">def</span> <span class="nf">codegen_compute_scaling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box_name</span><span class="o">=</span><span class="s1">&#39;sbox&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;box_name: the name of the box whose extent is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;infer_kernel_scaling&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;infer_kernel_scaling&quot;</span><span class="p">]</span>
         <span class="p">):</span>
             <span class="c1"># Laplace 2D</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;LapKnl2D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for LapKnl2D&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;sbox_extent * sbox_extent / </span><span class="se">\</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;BOX_extent * BOX_extent / </span><span class="se">\</span>
 <span class="s2">                        (table_root_extent * table_root_extent)&quot;</span>
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="ow">in</span> <span class="p">(</span>
                     <span class="s2">&quot;AxisTargetDerivative(0, LapKnl2D)&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;AxisTargetDerivative(1, LapKnl2D)&quot;</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for Grad(LapKnl2D)&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;sbox_extent / table_root_extent&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;BOX_extent / table_root_extent&quot;</span>
 
             <span class="c1"># Constant 2D</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;CstKnl2D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for CstKnl2D&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;sbox_extent * sbox_extent / </span><span class="se">\</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;BOX_extent * BOX_extent / </span><span class="se">\</span>
 <span class="s2">                        (table_root_extent * table_root_extent)&quot;</span>
 
             <span class="c1"># Laplace 3D</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;LapKnl3D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for Lapknl3D&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;sbox_extent * sbox_extent / </span><span class="se">\</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;BOX_extent * BOX_extent / </span><span class="se">\</span>
 <span class="s2">                        (table_root_extent * table_root_extent)&quot;</span>
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="ow">in</span> <span class="p">(</span>
@@ -321,12 +335,12 @@
                     <span class="s2">&quot;AxisTargetDerivative(1, LapKnl3D)&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;AxisTargetDerivative(2, LapKnl3D)&quot;</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for Grad(LapKnl3D)&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;sbox_extent / table_root_extent&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;BOX_extent / table_root_extent&quot;</span>
 
             <span class="c1"># Constant 3D</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;CstKnl3D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling for CstKnl3D&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;sbox_extent * sbox_extent * sbox_extent / </span><span class="se">\</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;BOX_extent * BOX_extent * BOX_extent / </span><span class="se">\</span>
 <span class="s2">                        (table_root_extent * table_root_extent * table_root_extent)&quot;</span>
 
             <span class="k">else</span><span class="p">:</span>
@@ -335,7 +349,10 @@
                     <span class="s2">&quot;to get correct results, please make sure that your &quot;</span>
                     <span class="s2">&quot;tree is uniform and only needs one table.&quot;</span>
                 <span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;1.0&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;1.0&quot;</span>
+
+            <span class="k">return</span> <span class="n">code</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;BOX&quot;</span><span class="p">,</span> <span class="n">box_name</span><span class="p">)</span>
+
         <span class="k">elif</span> <span class="s2">&quot;kernel_scaling_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">:</span>
             <span class="c1"># user-defined scaling rule</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_scaling_code&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
@@ -346,9 +363,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;not scaling for &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;(using multiple tables)&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="s2">&quot;1.0&quot;</span>
+            <span class="k">return</span> <span class="s2">&quot;1.0&quot;</span></div>
 
-    <span class="k">def</span> <span class="nf">codegen_compute_displacement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">codegen_compute_displacement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box_name</span><span class="o">=</span><span class="s1">&#39;sbox&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;infer_kernel_scaling&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;infer_kernel_scaling&quot;</span><span class="p">]</span>
         <span class="p">):</span>
@@ -356,24 +373,23 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;LapKnl2D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;displacement for laplace 2D&quot;</span><span class="p">)</span>
                 <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;-0.5 / PI * scaling * </span><span class="se">\</span>
-<span class="s2">                        log(sbox_extent / table_root_extent) * </span><span class="se">\</span>
+<span class="s2">                        log(BOX_extent / table_root_extent) * </span><span class="se">\</span>
 <span class="s2">                        mode_nmlz[table_lev, sid]&quot;</span>
-
                 <span class="kn">import</span> <span class="nn">math</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;PI&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
 
-                <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;PI&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
             <span class="c1"># Constant 2D</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;CstKnl2D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no displacement for CstKnl2D&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;0.0&quot;</span>
             <span class="c1"># Laplace 3D</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;LapKnl3D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no displacement for LapKnl3D&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;0.0&quot;</span>
             <span class="c1"># Constant 3D</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;CstKnl3D&quot;</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no displacement for CstKnl3D&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;0.0&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                     <span class="s2">&quot;Kernel not scalable and not using multiple tables, &quot;</span>
@@ -381,7 +397,7 @@
                     <span class="s2">&quot;no displacement is needed, or the box &quot;</span>
                     <span class="s2">&quot;tree is uniform and only needs one table.&quot;</span>
                 <span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;0.0&quot;</span>
         <span class="k">elif</span> <span class="s2">&quot;kernel_displacement_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">:</span>
             <span class="c1"># user-defined displacement rule</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -390,13 +406,15 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_displacement_code&#39;</span><span class="p">],</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">kname</span>
                         <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_displacement_code&#39;</span><span class="p">]</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_displacement_code&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no displacement for &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;(using multiple tables)&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;0.0&quot;</span>
 
-    <span class="k">def</span> <span class="nf">codegen_get_table_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">code</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;BOX&quot;</span><span class="p">,</span> <span class="n">box_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">codegen_get_table_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box_name</span><span class="o">=</span><span class="s1">&#39;sbox&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;infer_kernel_scaling&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;infer_kernel_scaling&quot;</span><span class="p">]</span>
         <span class="p">):</span>
@@ -407,22 +425,35 @@
                 <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span> <span class="o">==</span> <span class="s2">&quot;CstKnl3D&quot;</span>
             <span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scaling from table[0] for &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kname</span><span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;0.0&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                     <span class="s2">&quot;Kernel not scalable and not using multiple tables, &quot;</span>
                     <span class="s2">&quot;to get correct results, please make sure that your &quot;</span>
                     <span class="s2">&quot;tree is uniform and only needs one table.&quot;</span>
                 <span class="p">)</span>
-                <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;0.0&quot;</span>
         <span class="k">elif</span> <span class="s2">&quot;kernel_scaling_code&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">:</span>
             <span class="c1"># Using custom scaling</span>
-            <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;0.0&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;computing table level from box size&quot;</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;(using multiple tables)&quot;</span><span class="p">)</span>
-            <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;log(table_root_extent / sbox_extent) / log(2.0)&quot;</span>
-            <span class="k">return</span> <span class="n">code</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;log(table_root_extent / BOX_extent) / log(2.0)&quot;</span>
+
+        <span class="k">return</span> <span class="n">code</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;BOX&quot;</span><span class="p">,</span> <span class="n">box_name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NearFieldFromCSR.codegen_exterior_part"><a class="viewcode-back" href="../../api/modules.html#volumential.list1.NearFieldFromCSR.codegen_exterior_part">[docs]</a>    <span class="k">def</span> <span class="nf">codegen_exterior_part</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the exterior contribution. This is nonzero for</span>
+<span class="sd">        inverse-type potentials like the fractional Laplacian.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_kind</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># NOTE: will the unused ext_nmlz be auto eliminated by the compiler?</span>
+            <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_kind</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;source_coefs[target_id] * ext_nmlz&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported potential kind </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_kind</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
@@ -466,6 +497,15 @@
 
 <span class="sd">                    &lt;&gt; scaling = COMPUTE_SCALING</span>
 
+<span class="sd">                    &lt;&gt; tgt_scaling = COMPUTE_TGT_SCALING</span>
+<span class="sd">                    &lt;&gt; tgt_displacement = COMPUTE_TGT_DISPLACEMENT</span>
+<span class="sd">                    tgt_table_lev_tmp = GET_TGT_TABLE_LEVEL {id=tgttab_lev_tmp}</span>
+<span class="sd">                    tgt_table_lev = round(tgt_table_lev_tmp) \</span>
+<span class="sd">                            {id=tgttab_lev,dep=tgttab_lev_tmp}</span>
+<span class="sd">                    &lt;&gt; ext_nmlz = exterior_mode_nmlz[tgt_table_lev, tid] \</span>
+<span class="sd">                            * tgt_scaling + tgt_displacement \</span>
+<span class="sd">                            {id=extnmlz,dep=tgttab_lev}</span>
+
 <span class="sd">                    for sid</span>
 <span class="sd">                        &lt;&gt; source_id = box_source_beg + sid</span>
 <span class="sd">                        &lt;&gt; pair_id = sid * n_box_targets + tid</span>
@@ -495,7 +535,7 @@
 <span class="sd">                for tid</span>
 
 <span class="sd">                    result[target_id] = sum((sbox, sid),</span>
-<span class="sd">                        coef * integ) {dep=integ:coef}</span>
+<span class="sd">                        coef * integ) + EXTERIOR_PART {dep=integ:coef:extnmlz}</span>
 
 <span class="sd">                # Try inspecting case_id if something goes wrong</span>
 <span class="sd">                # (like segmentation fault) and look for -1&#39;s</span>
@@ -504,30 +544,29 @@
 
 <span class="sd">                end</span>
 <span class="sd">            end</span>
-<span class="sd">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                <span class="s2">&quot;COMPUTE_VEC_ID&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_vec_id</span><span class="p">()</span>
-            <span class="p">)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;COMPUTE_VEC_ID&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_vec_id</span><span class="p">())</span>
             <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;COMPUTE_SCALING&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_compute_scaling</span><span class="p">())</span>
             <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;COMPUTE_DISPLACEMENT&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_compute_displacement</span><span class="p">())</span>
-            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;GET_TABLE_LEVEL&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_get_table_level</span><span class="p">()),</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;COMPUTE_TGT_SCALING&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_compute_scaling</span><span class="p">(</span><span class="s1">&#39;tbox&#39;</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;COMPUTE_TGT_DISPLACEMENT&quot;</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">codegen_compute_displacement</span><span class="p">(</span><span class="s1">&#39;tbox&#39;</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;GET_TABLE_LEVEL&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_get_table_level</span><span class="p">())</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;GET_TGT_TABLE_LEVEL&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_get_table_level</span><span class="p">(</span><span class="s1">&#39;tbox&#39;</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;EXTERIOR_PART&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_exterior_part</span><span class="p">()),</span>
             <span class="p">[</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">TemporaryVariable</span><span class="p">(</span><span class="s2">&quot;vec_id&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">TemporaryVariable</span><span class="p">(</span><span class="s2">&quot;vec_id_tmp&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">TemporaryVariable</span><span class="p">(</span><span class="s2">&quot;table_lev&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">TemporaryVariable</span><span class="p">(</span><span class="s2">&quot;table_lev_tmp&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+                <span class="n">loopy</span><span class="o">.</span><span class="n">TemporaryVariable</span><span class="p">(</span><span class="s2">&quot;tgt_table_lev&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+                <span class="n">loopy</span><span class="o">.</span><span class="n">TemporaryVariable</span><span class="p">(</span><span class="s2">&quot;tgt_table_lev_tmp&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;encoding_base&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
-                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span>
-                    <span class="s2">&quot;mode_nmlz&quot;</span><span class="p">,</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-                    <span class="c1"># shape=(self.n_tables, self.n_q_points)</span>
-                    <span class="s2">&quot;n_tables, n_q_points&quot;</span><span class="p">,</span>
-                <span class="p">),</span>
-                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span>
-                    <span class="s2">&quot;table_data&quot;</span><span class="p">,</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-                    <span class="c1"># shape=(self.n_tables, self.n_table_entries)</span>
-                    <span class="s2">&quot;n_tables, n_table_entries&quot;</span><span class="p">,</span>
-                <span class="p">),</span>
+                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;mode_nmlz&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;n_tables, n_q_points&quot;</span><span class="p">),</span>
+                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;exterior_mode_nmlz&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+                    <span class="s2">&quot;n_tables, n_q_points&quot;</span><span class="p">),</span>
+                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;table_data&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+                    <span class="s2">&quot;n_tables, n_table_entries&quot;</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;source_boxes&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="s2">&quot;n_source_boxes&quot;</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;box_centers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;dim, aligned_nboxes&quot;</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;aligned_nboxes&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
@@ -553,14 +592,17 @@
             <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">kname</span><span class="p">,</span>
+            <span class="s2">&quot;potential_kind=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_kind</span><span class="p">,</span>
             <span class="s2">&quot;infer_scaling=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;infer_kernel_scaling&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;scaling_policy=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_compute_scaling</span><span class="p">(),</span>
+            <span class="s2">&quot;displacement_policy=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_compute_displacement</span><span class="p">(),</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">os</span>
-            <span class="c1"># NOTE: this detects the number of logical cores, which</span>
-            <span class="c1"># may result in suboptimal performance.</span>
+            <span class="c1"># NOTE: this detects the number of logical cores, disable hyperthreading</span>
+            <span class="c1"># for the optimal performance.</span>
             <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;tbox&quot;</span><span class="p">,</span> <span class="n">ncpus</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">)</span>
@@ -580,6 +622,7 @@
         <span class="n">encoding_base</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;encoding_base&quot;</span><span class="p">)</span>
         <span class="n">encoding_shift</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;encoding_shift&quot;</span><span class="p">)</span>
         <span class="n">mode_nmlz_combined</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;mode_nmlz_combined&quot;</span><span class="p">)</span>
+        <span class="n">exterior_mode_nmlz_combined</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;exterior_mode_nmlz_combined&quot;</span><span class="p">)</span>
         <span class="n">root_extent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;root_extent&quot;</span><span class="p">)</span>
         <span class="n">table_root_extent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;table_root_extent&quot;</span><span class="p">)</span>
         <span class="n">neighbor_source_boxes_starts</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;neighbor_source_boxes_starts&quot;</span><span class="p">)</span>
@@ -587,6 +630,20 @@
         <span class="n">mode_coefs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;mode_coefs&quot;</span><span class="p">)</span>
         <span class="n">table_data_combined</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;table_data_combined&quot;</span><span class="p">)</span>
         <span class="n">target_boxes</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;target_boxes&quot;</span><span class="p">)</span>
+
+        <span class="n">integral_kernel_init_kargs</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">name</span><span class="p">:</span> <span class="n">val</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_kernel</span><span class="o">.</span><span class="n">init_arg_names</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_kernel</span><span class="o">.</span><span class="n">__getinitargs__</span><span class="p">())</span>
+                <span class="p">}</span>
+
+        <span class="c1"># help loopy&#39;s type inference</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">integral_kernel_init_kargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">integral_kernel_init_kargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+                <span class="n">integral_kernel_init_kargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
         <span class="n">evt</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">knl</span><span class="p">(</span>
             <span class="n">queue</span><span class="p">,</span>
@@ -604,13 +661,13 @@
             <span class="n">box_target_counts_cumul</span><span class="o">=</span><span class="n">box_target_counts_cumul</span><span class="p">,</span>
             <span class="n">box_target_starts</span><span class="o">=</span><span class="n">box_target_starts</span><span class="p">,</span>
             <span class="n">case_indices</span><span class="o">=</span><span class="n">case_indices</span><span class="p">,</span>
-            <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span>
             <span class="n">n_tables</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_tables</span><span class="p">,</span>
             <span class="n">n_table_entries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_table_entries</span><span class="p">,</span>
             <span class="n">n_q_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">,</span>
             <span class="n">encoding_base</span><span class="o">=</span><span class="n">encoding_base</span><span class="p">,</span>
             <span class="n">encoding_shift</span><span class="o">=</span><span class="n">encoding_shift</span><span class="p">,</span>
             <span class="n">mode_nmlz</span><span class="o">=</span><span class="n">mode_nmlz_combined</span><span class="p">,</span>
+            <span class="n">exterior_mode_nmlz</span><span class="o">=</span><span class="n">exterior_mode_nmlz_combined</span><span class="p">,</span>
             <span class="n">n_tgt_boxes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">target_boxes</span><span class="p">),</span>
             <span class="n">neighbor_source_boxes_starts</span><span class="o">=</span><span class="n">neighbor_source_boxes_starts</span><span class="p">,</span>
             <span class="n">root_extent</span><span class="o">=</span><span class="n">root_extent</span><span class="p">,</span>
@@ -620,6 +677,7 @@
             <span class="n">table_data</span><span class="o">=</span><span class="n">table_data_combined</span><span class="p">,</span>
             <span class="n">target_boxes</span><span class="o">=</span><span class="n">target_boxes</span><span class="p">,</span>
             <span class="n">table_root_extent</span><span class="o">=</span><span class="n">table_root_extent</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">integral_kernel_init_kargs</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
