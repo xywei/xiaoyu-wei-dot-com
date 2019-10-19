@@ -565,13 +565,14 @@ box sized.</p>
 <span class="math notranslate nohighlight">\(x\)</span> is defined as</p>
 <div class="math notranslate nohighlight">
 \[\int_{B^c} G(\lVert x - y \rVert) dy\]</div>
-<p>where <span class="math notranslate nohighlight">\(B\)</span> is the source box.</p>
+<p>where <span class="math notranslate nohighlight">\(B\)</span> is the source box <span class="math notranslate nohighlight">\([0, source_box_extent]^dim\)</span>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="volumential.nearfield_potential_table.NearFieldInteractionTable.build_normalizer_table">
 <code class="sig-name descname">build_normalizer_table</code><span class="sig-paren">(</span><em class="sig-param">pool=None</em>, <em class="sig-param">pb=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/nearfield_potential_table.html#NearFieldInteractionTable.build_normalizer_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.nearfield_potential_table.NearFieldInteractionTable.build_normalizer_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build normalizers only</p>
+<dd><p>Build normalizers, used for log-scaled kernels,
+currently only supported in 2D.</p>
 </dd></dl>
 
 <dl class="method">

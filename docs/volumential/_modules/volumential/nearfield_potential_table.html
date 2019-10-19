@@ -179,6 +179,7 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">loopy</span> <span class="k">as</span> <span class="nn">lp</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">BarycentricInterpolator</span> <span class="k">as</span> <span class="n">Interpolator</span>
 
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
@@ -847,7 +848,8 @@
 
 <div class="viewcode-block" id="NearFieldInteractionTable.build_normalizer_table"><a class="viewcode-back" href="../../api/modules.html#volumential.nearfield_potential_table.NearFieldInteractionTable.build_normalizer_table">[docs]</a>    <span class="k">def</span> <span class="nf">build_normalizer_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Build normalizers only</span>
+<span class="sd">        Build normalizers, used for log-scaled kernels,</span>
+<span class="sd">        currently only supported in 2D.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span>
         <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1187,8 +1189,13 @@
 
 <span class="sd">            \int_{B^c} G(\lVert x - y \rVert) dy</span>
 
-<span class="sd">        where :math:`B` is the source box.</span>
+<span class="sd">        where :math:`B` is the source box :math:`[0, source_box_extent]^dim`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;this method is currently under construction.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_droste</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">os</span>
             <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
@@ -1243,7 +1250,7 @@
         <span class="n">hs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="c1"># radius of bouding sphere</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">hs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;r_inner = </span><span class="si">%f</span><span class="s2">, r_outer = </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hs</span><span class="p">,</span> <span class="n">r</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;r_inner = </span><span class="si">%f</span><span class="s2">, r_outer = </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hs</span><span class="p">,</span> <span class="n">r</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">tag_box</span> <span class="o">=</span> <span class="n">gmsh</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">occ</span><span class="o">.</span><span class="n">addRectangle</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -1299,7 +1306,11 @@
                         <span class="o">-</span> <span class="n">bind</span><span class="p">(</span><span class="n">discr</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">))(</span><span class="n">queue</span><span class="p">)</span>
                         <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">hs</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">arerr</span> <span class="o">&gt;</span> <span class="mf">1e-12</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Error when computing the area is </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">arerr</span><span class="p">)</span>
+                    <span class="n">log_to</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">warn</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">log_to</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">debug</span>
+                <span class="n">log_to</span><span class="p">(</span><span class="s2">&quot;the numerical error when computing the measure of a &quot;</span>
+                    <span class="s2">&quot;unit ball is </span><span class="si">%e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">arerr</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="n">arerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
@@ -1307,43 +1318,102 @@
                         <span class="o">-</span> <span class="n">bind</span><span class="p">(</span><span class="n">discr</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">))(</span><span class="n">queue</span><span class="p">)</span>
                         <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">hs</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">arerr</span> <span class="o">&gt;</span> <span class="mf">1e-12</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Error when computing the area is </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">arerr</span><span class="p">)</span>
+                    <span class="n">log_to</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">warn</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">log_to</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">debug</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The numerical error when computing the measure of a &quot;</span>
+                    <span class="s2">&quot;unit ball is </span><span class="si">%e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">arerr</span><span class="p">)</span>
 
         <span class="c1"># }}} End optional checks</span>
 
         <span class="c1"># {{{ kernel evaluation</span>
 
-        <span class="c1"># FIXME: the evaluation should be done on the device</span>
-        <span class="c1"># FIXME: the scaling constant should be evaluated with knl.scl</span>
+        <span class="c1"># TODO: take advantage of symmetry if this is too slow</span>
 
-        <span class="kn">from</span> <span class="nn">pymbolic.compiler</span> <span class="k">import</span> <span class="n">CompiledExpression</span>
+        <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="k">import</span> <span class="n">InverseDrosteReduced</span>
 
-        <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span>
-        <span class="n">scl</span> <span class="o">=</span> <span class="n">knl</span><span class="o">.</span><span class="n">get_global_scaling_const</span><span class="p">()</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="n">CompiledExpression</span><span class="p">(</span><span class="n">knl</span><span class="o">.</span><span class="n">expression</span><span class="p">)</span>
+        <span class="c1"># only for getting kernel evaluation related stuff</span>
+        <span class="n">drf</span> <span class="o">=</span> <span class="n">InverseDrosteReduced</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
+                <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">knl_symmetry_tags</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">auto_windowing</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">eval_knl</span><span class="p">(</span><span class="n">dist</span><span class="p">):</span>
-            <span class="c1"># dist = [dx, dy, dz]</span>
-            <span class="k">return</span> <span class="n">scl</span> <span class="o">*</span> <span class="n">val</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">)</span>
+        <span class="c1"># uses &quot;dist[dim]&quot;, assigned to &quot;knl_val&quot;</span>
+        <span class="n">knl_insns</span> <span class="o">=</span> <span class="n">drf</span><span class="o">.</span><span class="n">get_sumpy_kernel_insns</span><span class="p">()</span>
+
+        <span class="n">eval_kernel_insns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">insn</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">within_inames</span><span class="o">=</span><span class="n">insn</span><span class="o">.</span><span class="n">within_inames</span> <span class="o">|</span> <span class="nb">frozenset</span><span class="p">([</span><span class="s2">&quot;iqpt&quot;</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">insn</span> <span class="ow">in</span> <span class="n">knl_insns</span>
+        <span class="p">]</span>
+
+        <span class="kn">from</span> <span class="nn">sumpy.symbolic</span> <span class="k">import</span> <span class="n">SympyToPymbolicMapper</span>
+        <span class="n">sympy_conv</span> <span class="o">=</span> <span class="n">SympyToPymbolicMapper</span><span class="p">()</span>
+
+        <span class="n">scaling_assignment</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">Assignment</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">assignee</span><span class="o">=</span><span class="s2">&quot;knl_scaling&quot;</span><span class="p">,</span>
+            <span class="n">expression</span><span class="o">=</span><span class="n">sympy_conv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">get_global_scaling_const</span><span class="p">()),</span>
+            <span class="n">temp_var_type</span><span class="o">=</span><span class="n">lp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+        <span class="n">extra_kernel_kwarg_types</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;extra_kernel_kwarg_types&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">extra_kernel_kwarg_types</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;extra_kernel_kwarg_types&quot;</span><span class="p">]</span>
+
+        <span class="n">lpknl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">make_kernel</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+            <span class="s2">&quot;{ [iqpt, iaxis]: 0&lt;=iqpt&lt;n_q_points and 0&lt;=iaxis&lt;dim }&quot;</span><span class="p">,</span>
+            <span class="p">[</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                for iqpt</span>
+<span class="sd">                    for iaxis</span>
+<span class="sd">                        &lt;&gt; dist[iaxis] = (quad_points[iaxis, iqpt]</span>
+<span class="sd">                            - target_point[iaxis])</span>
+<span class="sd">                    end</span>
+<span class="sd">                end</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+            <span class="p">]</span>
+            <span class="o">+</span> <span class="n">eval_kernel_insns</span>
+            <span class="o">+</span> <span class="p">[</span><span class="n">scaling_assignment</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                for iqpt</span>
+<span class="sd">                    result[iqpt] = knl_val * knl_scaling</span>
+<span class="sd">                end</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;dim, n_q_points&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;quad_points&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;dim, n_q_points&quot;</span><span class="p">),</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;target_point&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;dim&quot;</span><span class="p">),</span>
+                <span class="o">*</span><span class="n">extra_kernel_kwarg_types</span><span class="p">,</span>
+                <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;eval_kernel_lucky_coin&quot;</span><span class="p">,</span>
+            <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">lpknl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">fix_parameters</span><span class="p">(</span><span class="n">lpknl</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="n">lpknl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">lpknl</span><span class="p">,</span> <span class="n">write_cl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">lpknl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">lpknl</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># }}} End kernel evaluation</span>
 
         <span class="n">nodes</span> <span class="o">=</span> <span class="n">discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span><span class="o">.</span><span class="n">with_queue</span><span class="p">(</span><span class="n">queue</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">]</span>
-        <span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
         <span class="n">int_vals</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_points</span><span class="p">:</span>
-            <span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="n">target</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
-            <span class="n">knl_vals</span> <span class="o">=</span> <span class="n">eval_knl</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+            <span class="n">evt</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">lpknl</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">quad_points</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">target_point</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+            <span class="n">knl_vals</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
 
-            <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
             <span class="n">integ</span> <span class="o">=</span> <span class="n">bind</span><span class="p">(</span><span class="n">discr</span><span class="p">,</span>
                     <span class="n">sym</span><span class="o">.</span><span class="n">integral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;integrand&quot;</span><span class="p">)))(</span>
                             <span class="n">queue</span><span class="p">,</span>
-                            <span class="n">integrand</span><span class="o">=</span><span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span>
-                                <span class="n">queue</span><span class="p">,</span> <span class="n">knl_vals</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
-                            <span class="p">)</span>
+                            <span class="n">integrand</span><span class="o">=</span><span class="n">knl_vals</span><span class="p">)</span>
             <span class="n">queue</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
             <span class="n">int_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">integ</span><span class="p">)</span>
 
