@@ -448,7 +448,6 @@
 <span class="sd">        inverse-type potentials like the fractional Laplacian.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_kind</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># NOTE: will the unused ext_nmlz be auto eliminated by the compiler?</span>
             <span class="k">return</span> <span class="s2">&quot;0.0&quot;</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_kind</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;source_coefs[target_id] * ext_nmlz&quot;</span>
@@ -497,16 +496,17 @@
 
 <span class="sd">                    &lt;&gt; scaling = COMPUTE_SCALING</span>
 
-<span class="sd">                    &lt;&gt; tgt_scaling = COMPUTE_TGT_SCALING</span>
-<span class="sd">                    &lt;&gt; tgt_displacement = COMPUTE_TGT_DISPLACEMENT</span>
-<span class="sd">                    tgt_table_lev_tmp = GET_TGT_TABLE_LEVEL {id=tgttab_lev_tmp}</span>
-<span class="sd">                    tgt_table_lev = round(tgt_table_lev_tmp) \</span>
-<span class="sd">                            {id=tgttab_lev,dep=tgttab_lev_tmp}</span>
-<span class="sd">                    &lt;&gt; ext_nmlz = exterior_mode_nmlz[tgt_table_lev, tid] \</span>
-<span class="sd">                            * tgt_scaling + tgt_displacement \</span>
-<span class="sd">                            {id=extnmlz,dep=tgttab_lev}</span>
-
 <span class="sd">                    for sid</span>
+
+<span class="sd">                        &lt;&gt; tgt_scaling = COMPUTE_TGT_SCALING</span>
+<span class="sd">                        &lt;&gt; tgt_displacement = COMPUTE_TGT_DISPLACEMENT</span>
+<span class="sd">                        tgt_table_lev_tmp = GET_TGT_TABLE_LEVEL {id=tgttab_lev_tmp}</span>
+<span class="sd">                        tgt_table_lev = round(tgt_table_lev_tmp) \</span>
+<span class="sd">                                {id=tgttab_lev,dep=tgttab_lev_tmp}</span>
+<span class="sd">                        &lt;&gt; ext_nmlz = exterior_mode_nmlz[tgt_table_lev, tid] \</span>
+<span class="sd">                                * tgt_scaling + tgt_displacement \</span>
+<span class="sd">                                {id=extnmlz,dep=tgttab_lev}</span>
+
 <span class="sd">                        &lt;&gt; source_id = box_source_beg + sid</span>
 <span class="sd">                        &lt;&gt; pair_id = sid * n_box_targets + tid</span>
 <span class="sd">                        &lt;&gt; entry_id = case_id * \</span>
@@ -537,10 +537,10 @@
 <span class="sd">                    result[target_id] = sum((sbox, sid),</span>
 <span class="sd">                        coef * integ) + EXTERIOR_PART {dep=integ:coef:extnmlz}</span>
 
-<span class="sd">                # Try inspecting case_id if something goes wrong</span>
-<span class="sd">                # (like segmentation fault) and look for -1&#39;s</span>
-<span class="sd">                # result[target_id] = min((sbox, sid), case_id)</span>
-<span class="sd">                # result[target_id] = vec_id_tmp</span>
+<span class="sd">                    # Try inspecting case_id if something goes wrong</span>
+<span class="sd">                    # (like segmentation fault) and look for -1&#39;s</span>
+<span class="sd">                    # result[target_id] = min((sbox, sid), case_id)</span>
+<span class="sd">                    # result[target_id] = vec_id_tmp</span>
 
 <span class="sd">                end</span>
 <span class="sd">            end</span>
