@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>volumential.volume_fmm &mdash; Volumential 2017.1 documentation</title>
+  <title>volumential.volume_fmm &mdash; Volumential 2017.1alpha documentation</title>
   
 
   
@@ -153,7 +153,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for volumential.volume_fmm</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2017 - 2018 Xiaoyu Wei&quot;</span>
 
@@ -337,13 +337,16 @@
             <span class="n">exclude_self</span><span class="o">=</span><span class="n">wrangler</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">exclude_self</span><span class="p">,</span>
             <span class="n">value_dtypes</span><span class="o">=</span><span class="p">[</span><span class="n">wrangler</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>
         <span class="p">)</span>
+
+        <span class="n">p2p_extra_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">self_extra_kwargs</span><span class="p">)</span>
+        <span class="n">p2p_extra_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">kernel_extra_kwargs</span><span class="p">)</span>
+
         <span class="n">evt</span><span class="p">,</span> <span class="p">(</span><span class="n">ref_pot</span><span class="p">,)</span> <span class="o">=</span> <span class="n">p2p</span><span class="p">(</span>
             <span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
             <span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">targets</span><span class="p">,</span>
             <span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">sources</span><span class="p">,</span>
             <span class="p">(</span><span class="n">src_weights</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">),),</span>
-            <span class="o">**</span><span class="n">wrangler</span><span class="o">.</span><span class="n">self_extra_kwargs</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">wrangler</span><span class="o">.</span><span class="n">kernel_extra_kwargs</span>
+            <span class="o">**</span><span class="n">p2p_extra_kwargs</span>
         <span class="p">)</span>
         <span class="n">potentials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ref_pot</span>
 
@@ -753,11 +756,10 @@
         <span class="n">box_target_counts_cumul</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">box_target_counts_cumul</span><span class="p">,</span>
         <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span>
         <span class="n">user_mode_ids</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">user_source_ids</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">target_coords_knl_kwargs</span><span class="p">,</span>
         <span class="n">target_boxes</span><span class="o">=</span><span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">,</span>
         <span class="n">root_extent</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span><span class="p">,</span>
-        <span class="n">n_tgt_boxes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">)</span>
-    <span class="p">)</span>
+        <span class="n">n_tgt_boxes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">),</span>
+        <span class="o">**</span><span class="n">target_coords_knl_kwargs</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">pout</span> <span class="ow">is</span> <span class="n">res_dict</span><span class="p">[</span><span class="s2">&quot;p_out&quot;</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">multiplicity</span> <span class="ow">is</span> <span class="n">res_dict</span><span class="p">[</span><span class="s2">&quot;multiplicity&quot;</span><span class="p">]</span>

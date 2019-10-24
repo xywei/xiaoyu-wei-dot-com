@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>volumential.tools &mdash; Volumential 2017.1 documentation</title>
+  <title>volumential.tools &mdash; Volumential 2017.1alpha documentation</title>
   
 
   
@@ -153,7 +153,10 @@
            <div itemprop="articleBody">
             
   <h1>Source code for volumential.tools</h1><div class="highlight"><pre>
-<span></span><span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2018 Xiaoyu Wei&quot;</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2018 Xiaoyu Wei&quot;</span>
 
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
@@ -179,9 +182,9 @@
 <span class="kn">import</span> <span class="nn">loopy</span> <span class="k">as</span> <span class="nn">lp</span>
 <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 <span class="kn">import</span> <span class="nn">pymbolic</span> <span class="k">as</span> <span class="nn">pmbl</span>
+<span class="kn">from</span> <span class="nn">pytools</span> <span class="k">import</span> <span class="n">memoize_method</span>
 <span class="kn">from</span> <span class="nn">pymbolic.primitives</span> <span class="k">import</span> <span class="n">Variable</span> <span class="k">as</span> <span class="n">VariableType</span>
 <span class="kn">from</span> <span class="nn">pymbolic.primitives</span> <span class="k">import</span> <span class="n">Expression</span> <span class="k">as</span> <span class="n">ExpressionType</span>
-<span class="kn">from</span> <span class="nn">sumpy.tools</span> <span class="k">import</span> <span class="n">KernelCacheWrapper</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -210,6 +213,70 @@
             <span class="k">pass</span></div>
 
 <span class="c1"># }}} End clean files</span>
+
+<span class="c1"># {{{ loopy kernel cache wrapper</span>
+
+
+<span class="k">class</span> <span class="nc">KernelCacheWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c1"># FIXME: largely code duplication with sumpy.</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;KernelCacheWrapper&quot;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;KernelCacheWrapper objects should not be constructed&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unimplemented cache key&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="nd">@memoize_method</span>
+    <span class="k">def</span> <span class="nf">get_cached_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sumpy</span> <span class="k">import</span> <span class="n">code_cache</span><span class="p">,</span> <span class="n">CACHING_ENABLED</span><span class="p">,</span> <span class="n">OPT_ENABLED</span>
+
+        <span class="k">if</span> <span class="n">CACHING_ENABLED</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">loopy.version</span>
+            <span class="kn">from</span> <span class="nn">sumpy.version</span> <span class="k">import</span> <span class="n">KERNEL_VERSION</span> <span class="k">as</span> <span class="n">SUMPY_KERNEL_VERSION</span>
+            <span class="kn">from</span> <span class="nn">volumential.version</span> <span class="k">import</span> <span class="n">KERNEL_VERSION</span>
+            <span class="n">cache_key</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get_cache_key</span><span class="p">()</span>
+                    <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)))</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="n">loopy</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">DATA_MODEL_VERSION</span><span class="p">,)</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="n">SUMPY_KERNEL_VERSION</span><span class="p">,)</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="n">KERNEL_VERSION</span><span class="p">,)</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="n">OPT_ENABLED</span><span class="p">,))</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">code_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: kernel cache hit [key=</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">result</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: kernel cache miss&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">CACHING_ENABLED</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: kernel cache miss [key=</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">))</span>
+
+        <span class="kn">from</span> <span class="nn">pytools</span> <span class="k">import</span> <span class="n">MinRecursionLimit</span>
+        <span class="k">with</span> <span class="n">MinRecursionLimit</span><span class="p">(</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">OPT_ENABLED</span><span class="p">:</span>
+                <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_optimized_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">CACHING_ENABLED</span><span class="p">:</span>
+            <span class="n">code_cache</span><span class="o">.</span><span class="n">store_if_not_present</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">knl</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">knl</span>
+
+
+<span class="c1"># }}} End loopy kernel cache wrapper</span>
 
 <span class="c1"># {{{ scalar field expression eval</span>
 
@@ -312,9 +379,9 @@
             <span class="p">[</span>
                 <span class="n">lp</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;dim, n_targets&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
                 <span class="n">lp</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;target_points&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;dim, n_targets&quot;</span><span class="p">),</span>
-                <span class="o">*</span><span class="n">extra_kernel_kwarg_types</span><span class="p">,</span>
-                <span class="s2">&quot;...&quot;</span><span class="p">,</span>
-            <span class="p">],</span>
+                <span class="p">]</span>
+                <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">extra_kernel_kwarg_types</span><span class="p">)</span>
+                <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="p">],</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;eval_expr&quot;</span><span class="p">,</span>
             <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
         <span class="p">)</span>
@@ -334,10 +401,10 @@
     <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="kn">import</span> <span class="nn">multiprocessing</span>
             <span class="c1"># NOTE: this detects the number of logical cores, which</span>
             <span class="c1"># may result in suboptimal performance.</span>
-            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span>
             <span class="n">knl</span><span class="p">,</span>
             <span class="n">split_iname</span><span class="o">=</span><span class="s2">&quot;itgt&quot;</span><span class="p">,</span>
@@ -480,7 +547,7 @@
 
         <span class="c1"># Normalizers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span>  <span class="c1"># noqa: E741</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">))</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">)))</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
 
         <span class="c1"># Fix strides for loopy</span>
@@ -488,7 +555,7 @@
 
         <span class="c1"># Check orthogonality</span>
         <span class="n">ortho_resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">ortho_resid</span> <span class="o">&gt;</span> <span class="mf">1e-13</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Legendre polynomials&#39; orthogonality residual = </span><span class="si">%f</span><span class="s2">&quot;</span>
                     <span class="o">%</span> <span class="n">ortho_resid</span><span class="p">)</span>
@@ -566,8 +633,8 @@
     <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">os</span>
-            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+            <span class="kn">import</span> <span class="nn">multiprocessing</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span>
             <span class="n">knl</span><span class="p">,</span>
             <span class="n">split_iname</span><span class="o">=</span><span class="s2">&quot;bid&quot;</span><span class="p">,</span>
@@ -693,8 +760,8 @@
     <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">os</span>
-            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+            <span class="kn">import</span> <span class="nn">multiprocessing</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span>
             <span class="n">knl</span><span class="p">,</span>
             <span class="n">split_iname</span><span class="o">=</span><span class="s2">&quot;bid&quot;</span><span class="p">,</span>

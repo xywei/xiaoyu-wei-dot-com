@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>volumential.table_manager &mdash; Volumential 2017.1 documentation</title>
+  <title>volumential.table_manager &mdash; Volumential 2017.1alpha documentation</title>
   
 
   
@@ -240,10 +240,16 @@
 
 <span class="sd">    Tables are stored under &#39;Dimension/KernelName/QuadOrder/BoxLevel/dataset_name&#39;</span>
 <span class="sd">    e.g., &#39;2D/Laplace/Order_1/Level_0/data&#39;</span>
+
+<span class="sd">    Only one table manager can exist for a dataset file with write access.</span>
+<span class="sd">    The access can be controlled with the read_only argument. By default,</span>
+<span class="sd">    the constructor tries to open the dataset with write access, and falls</span>
+<span class="sd">    back to read-only if that fails.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_filename</span><span class="o">=</span><span class="s2">&quot;nft.hdf5&quot;</span><span class="p">,</span>
-            <span class="n">root_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">root_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+            <span class="n">read_only</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
@@ -251,16 +257,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">dataset_filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root_extent</span> <span class="o">=</span> <span class="n">root_extent</span>
 
-        <span class="c1"># Read/write if exists, create otherwise</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">read_only</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">IOError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Trying to open in read/write mode failed: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Opening table dataset </span><span class="si">%s</span><span class="s2"> in read-only mode.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">read_only</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Read/write if exists, create otherwise</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span> <span class="o">=</span> <span class="n">hdf</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">table_extra_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="c1"># If the file exists, it must be for the same root_extent</span>
-        <span class="k">if</span> <span class="s2">&quot;root_extent&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;root_extent&quot;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="bp">self</span><span class="o">.</span><span class="n">root_extent</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;root_extent&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">abs</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;root_extent&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_extent</span>
                     <span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
@@ -351,7 +365,7 @@
                 <span class="n">q_order</span><span class="p">,</span>
                 <span class="n">source_box_level</span><span class="p">,</span>
                 <span class="n">compute_method</span><span class="p">,</span>
-                <span class="n">queue</span><span class="p">,</span>
+                <span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">kwargs</span>
             <span class="p">)</span>
 
@@ -364,7 +378,7 @@
                 <span class="n">q_order</span><span class="p">,</span>
                 <span class="n">source_box_level</span><span class="p">,</span>
                 <span class="n">compute_method</span><span class="p">,</span>
-                <span class="n">queue</span><span class="p">,</span>
+                <span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">kwargs</span>
             <span class="p">)</span>
 
@@ -394,7 +408,7 @@
                     <span class="n">q_order</span><span class="p">,</span>
                     <span class="n">source_box_level</span><span class="p">,</span>
                     <span class="n">compute_method</span><span class="p">,</span>
-                    <span class="n">queue</span><span class="p">,</span>
+                    <span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span>
                     <span class="o">**</span><span class="n">kwargs</span>
                 <span class="p">)</span>
 
@@ -567,11 +581,7 @@
 <span class="sd">        provides support for some kernels such that the user can build and</span>
 <span class="sd">        use the table without explicitly providing such information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">kernel_type</span> <span class="o">==</span> <span class="s2">&quot;Laplace&quot;</span><span class="p">:</span>
-            <span class="c1"># knl = LaplaceKernel(dim)</span>
-            <span class="c1"># For unknown reasons this does not work with multiprocess</span>
-            <span class="c1"># knl_func = vm.nearfield_potential_table.sumpy_kernel_to_lambda(knl)</span>
             <span class="n">knl_func</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">nearfield_potential_table</span><span class="o">.</span><span class="n">get_laplace</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kernel_type</span> <span class="o">==</span> <span class="s2">&quot;Constant&quot;</span><span class="p">:</span>
             <span class="n">knl_func</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">nearfield_potential_table</span><span class="o">.</span><span class="n">constant_one</span>
@@ -580,7 +590,8 @@
                 <span class="n">dim</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="n">kernel_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">supported_kernels</span><span class="p">:</span>
-            <span class="n">knl_func</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sumpy_kernel</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">kernel_type</span><span class="p">)</span>
+            <span class="n">knl_func</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">nearfield_potential_table</span><span class="o">.</span><span class="n">sumpy_kernel_to_lambda</span><span class="p">(</span><span class="n">knl</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Kernel type not supported.&quot;</span><span class="p">)</span>
 
@@ -737,6 +748,8 @@
         <span class="k">if</span> <span class="n">compute_method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using default compute_method (Transform)&quot;</span><span class="p">)</span>
             <span class="n">compute_method</span> <span class="o">=</span> <span class="s2">&quot;Transform&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datafile</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;root_extent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_extent</span>
 
         <span class="n">q_order</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">q_order</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">q_order</span> <span class="o">&gt;=</span> <span class="mi">1</span>

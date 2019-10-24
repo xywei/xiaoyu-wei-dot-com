@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>volumential.singular_integral_2d &mdash; Volumential 2017.1 documentation</title>
+  <title>volumential.singular_integral_2d &mdash; Volumential 2017.1alpha documentation</title>
   
 
   
@@ -153,7 +153,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for volumential.singular_integral_2d</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2017 - 2018 Xiaoyu Wei&quot;</span>
 
@@ -180,7 +180,8 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.integrate.quadrature</span> <span class="k">as</span> <span class="nn">quad</span>
+<span class="kn">import</span> <span class="nn">scipy.integrate</span> <span class="k">as</span> <span class="nn">sint</span>
+<span class="kn">import</span> <span class="nn">scipy.integrate.quadrature</span> <span class="k">as</span> <span class="nn">quad</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sp</span>
 
 <span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;The 2D singular integrals are computed using the transform</span>
@@ -257,7 +258,7 @@
 <span class="sd">    :type maxitero: int, optional.</span>
 <span class="sd">    :param maxiteri: Maximum order of inner Gaussian quadrature.</span>
 <span class="sd">    :type maxiteri: int, optional.</span>
-<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a “vector”</span>
+<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a &quot;vector&quot;</span>
 <span class="sd">                function). Default is True.</span>
 <span class="sd">    :type vec_func: bool, optional.</span>
 <span class="sd">    :param minitero: Minimum order of outer Gaussian quadrature.</span>
@@ -282,7 +283,7 @@
 
         <span class="c1"># Using lambda for readability</span>
         <span class="k">def</span> <span class="nf">outer_integrand</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">quad</span><span class="p">(</span>  <span class="c1"># NOQA</span>
+            <span class="k">return</span> <span class="n">sint</span><span class="o">.</span><span class="n">quadrature</span><span class="p">(</span>  <span class="c1"># NOQA</span>
                 <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
                 <span class="n">a</span><span class="p">,</span>
                 <span class="n">b</span><span class="p">,</span>
@@ -298,7 +299,7 @@
 
         <span class="c1"># Is there a simple way to retrieve err info from the inner quad calls?</span>
 
-        <span class="n">val</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span>
+        <span class="n">val</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">quadrature</span><span class="p">(</span>
             <span class="n">outer_integrand</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="p">(),</span> <span class="n">tol</span><span class="p">,</span> <span class="n">rtol</span><span class="p">,</span> <span class="n">maxitero</span><span class="p">,</span> <span class="n">vec_func</span><span class="p">,</span> <span class="n">minitero</span>
         <span class="p">)</span>
 
@@ -544,7 +545,7 @@
 <span class="sd">    :param maxiter: Maximum order of Gaussian quadrature.</span>
 <span class="sd">    :type maxiter: int, optional.</span>
 <span class="sd">    :param vec_func: True if func handles arrays as arguments</span>
-<span class="sd">        (is a “vector” function). Default is True.</span>
+<span class="sd">        (is a &quot;vector&quot; function). Default is True.</span>
 <span class="sd">    :type vec_func: bool, optional.</span>
 <span class="sd">    :param miniter: Minimum order of Gaussian quadrature.</span>
 <span class="sd">    :type miniter: int, optional.</span>
@@ -565,8 +566,8 @@
         <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
     <span class="c1"># The function must be regular at the last two vertices</span>
-    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">tria</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">tria</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">tria</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">tria</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">tria</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">tria</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
 
     <span class="c1"># Solve for transforms</span>
     <span class="n">template_tria</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
@@ -590,7 +591,7 @@
     <span class="c1"># Transformed function is defined on [0,1]X[0,pi/2]</span>
     <span class="k">def</span> <span class="nf">transformed_func</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
         <span class="n">preimage</span> <span class="o">=</span> <span class="n">inv_mapping</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">preimage</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">preimage</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">preimage</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
     <span class="c1"># Transformed function, when multiplied by jacobian, should have no</span>
     <span class="c1"># singularity (numerically special treatment still needed)</span>
@@ -670,7 +671,7 @@
 <span class="sd">    :type rtol: float, optional.</span>
 <span class="sd">    :param maxiter: Maximum order of Gaussian quadrature.</span>
 <span class="sd">    :type maxiter: int, optional.</span>
-<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a “vector”</span>
+<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a &quot;vector&quot;</span>
 <span class="sd">                function). Default is True.</span>
 <span class="sd">    :type vec_func: bool, optional.</span>
 <span class="sd">    :param miniter: Minimum order of Gaussian quadrature.</span>
@@ -733,7 +734,7 @@
 <span class="sd">    :type rtol: float, optional.</span>
 <span class="sd">    :param maxiter: Maximum order of Gaussian quadrature.</span>
 <span class="sd">    :type maxiter: int, optional.</span>
-<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a “vector”</span>
+<span class="sd">    :param vec_func: True if func handles arrays as arguments (is a &quot;vector&quot;</span>
 <span class="sd">                function). Default is True.</span>
 <span class="sd">    :type vec_func: bool, optional.</span>
 <span class="sd">    :param miniter: Minimum order of Gaussian quadrature.</span>

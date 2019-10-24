@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>volumential.list1 &mdash; Volumential 2017.1 documentation</title>
+  <title>volumential.list1 &mdash; Volumential 2017.1alpha documentation</title>
   
 
   
@@ -153,7 +153,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for volumential.list1</h1><div class="highlight"><pre>
-<span></span><span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2018 Xiaoyu Wei&quot;</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2018 Xiaoyu Wei&quot;</span>
 
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
@@ -186,7 +188,7 @@
 <span class="kn">import</span> <span class="nn">loopy</span>
 <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 
-<span class="kn">from</span> <span class="nn">sumpy.tools</span> <span class="k">import</span> <span class="n">KernelCacheWrapper</span>
+<span class="kn">from</span> <span class="nn">volumential.tools</span> <span class="k">import</span> <span class="n">KernelCacheWrapper</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -200,6 +202,8 @@
 <div class="viewcode-block" id="NearFieldEvalBase"><a class="viewcode-back" href="../../api/modules.html#volumential.list1.NearFieldEvalBase">[docs]</a><span class="k">class</span> <span class="nc">NearFieldEvalBase</span><span class="p">(</span><span class="n">KernelCacheWrapper</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class of near-field evalulator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">default_name</span> <span class="o">=</span> <span class="s2">&quot;near_field_eval_base&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -578,6 +582,7 @@
                 <span class="s2">&quot;...&quot;</span><span class="p">,</span>
             <span class="p">],</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;near_field&quot;</span><span class="p">,</span>
+            <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="c1"># print(lpknl)</span>
@@ -600,10 +605,10 @@
 
     <span class="k">def</span> <span class="nf">get_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ncpus</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ncpus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="kn">import</span> <span class="nn">multiprocessing</span>
             <span class="c1"># NOTE: this detects the number of logical cores, disable hyperthreading</span>
             <span class="c1"># for the optimal performance.</span>
-            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+            <span class="n">ncpus</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">()</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">knl</span><span class="p">,</span> <span class="s2">&quot;tbox&quot;</span><span class="p">,</span> <span class="n">ncpus</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knl</span>
@@ -677,8 +682,7 @@
             <span class="n">table_data</span><span class="o">=</span><span class="n">table_data_combined</span><span class="p">,</span>
             <span class="n">target_boxes</span><span class="o">=</span><span class="n">target_boxes</span><span class="p">,</span>
             <span class="n">table_root_extent</span><span class="o">=</span><span class="n">table_root_extent</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">integral_kernel_init_kargs</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="o">**</span><span class="n">integral_kernel_init_kargs</span><span class="p">)</span>
 
         <span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
