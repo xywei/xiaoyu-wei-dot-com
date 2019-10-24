@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Modules &mdash; Volumential 2017.1 documentation</title>
+  <title>Modules &mdash; Volumential 2017.1alpha documentation</title>
   
 
   
@@ -575,7 +575,7 @@ inverse-type potentials like the fractional Laplacian.</p>
 <p>The tables are stored in <code class="docutils literal notranslate"><span class="pre">hdf5</span></code> format and managed through <code class="xref py py-class docutils literal notranslate"><span class="pre">NearFieldInteractionTableManager</span></code>.</p>
 <span class="target" id="module-volumential.nearfield_potential_table"></span><dl class="class">
 <dt id="volumential.nearfield_potential_table.NearFieldInteractionTable">
-<em class="property">class </em><code class="sig-prename descclassname">volumential.nearfield_potential_table.</code><code class="sig-name descname">NearFieldInteractionTable</code><span class="sig-paren">(</span><em class="sig-param">quad_order</em>, <em class="sig-param">method='gauss-legendre'</em>, <em class="sig-param">dim=2</em>, <em class="sig-param">kernel_func=None</em>, <em class="sig-param">kernel_type=None</em>, <em class="sig-param">sumpy_kernel=None</em>, <em class="sig-param">build_method=None</em>, <em class="sig-param">source_box_extent=1</em>, <em class="sig-param">dtype=&lt;class 'numpy.float64'&gt;</em>, <em class="sig-param">inverse_droste=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/nearfield_potential_table.html#NearFieldInteractionTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.nearfield_potential_table.NearFieldInteractionTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">volumential.nearfield_potential_table.</code><code class="sig-name descname">NearFieldInteractionTable</code><span class="sig-paren">(</span><em class="sig-param">quad_order</em>, <em class="sig-param">method='gauss-legendre'</em>, <em class="sig-param">dim=2</em>, <em class="sig-param">kernel_func=None</em>, <em class="sig-param">kernel_type=None</em>, <em class="sig-param">sumpy_kernel=None</em>, <em class="sig-param">build_method=None</em>, <em class="sig-param">source_box_extent=1</em>, <em class="sig-param">dtype=&lt;class 'numpy.float64'&gt;</em>, <em class="sig-param">inverse_droste=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/nearfield_potential_table.html#NearFieldInteractionTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.nearfield_potential_table.NearFieldInteractionTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for a near-field interaction table.</p>
 <p>A near-field interaction table stores precomputed singular integrals
 on template boxes and supports transforms to actual boxes on lookup.
@@ -672,11 +672,15 @@ vectors connection box centers.
 
 <span class="target" id="module-volumential.table_manager"></span><dl class="class">
 <dt id="volumential.table_manager.NearFieldInteractionTableManager">
-<em class="property">class </em><code class="sig-prename descclassname">volumential.table_manager.</code><code class="sig-name descname">NearFieldInteractionTableManager</code><span class="sig-paren">(</span><em class="sig-param">dataset_filename='nft.hdf5'</em>, <em class="sig-param">root_extent=1</em>, <em class="sig-param">dtype=&lt;class 'numpy.float64'&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/table_manager.html#NearFieldInteractionTableManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.table_manager.NearFieldInteractionTableManager" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">volumential.table_manager.</code><code class="sig-name descname">NearFieldInteractionTableManager</code><span class="sig-paren">(</span><em class="sig-param">dataset_filename='nft.hdf5'</em>, <em class="sig-param">root_extent=1</em>, <em class="sig-param">dtype=&lt;class 'numpy.float64'&gt;</em>, <em class="sig-param">read_only='auto'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/table_manager.html#NearFieldInteractionTableManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.table_manager.NearFieldInteractionTableManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class that manages near field interaction table computation and
 storage.</p>
 <p>Tables are stored under ‘Dimension/KernelName/QuadOrder/BoxLevel/dataset_name’
 e.g., ‘2D/Laplace/Order_1/Level_0/data’</p>
+<p>Only one table manager can exist for a dataset file with write access.
+The access can be controlled with the read_only argument. By default,
+the constructor tries to open the dataset with write access, and falls
+back to read-only if that fails.</p>
 <dl class="method">
 <dt id="volumential.table_manager.NearFieldInteractionTableManager.compute_and_update_table">
 <code class="sig-name descname">compute_and_update_table</code><span class="sig-paren">(</span><em class="sig-param">dim</em>, <em class="sig-param">kernel_type</em>, <em class="sig-param">q_order</em>, <em class="sig-param">source_box_level=0</em>, <em class="sig-param">compute_method=None</em>, <em class="sig-param">cl_ctx=None</em>, <em class="sig-param">queue=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/table_manager.html#NearFieldInteractionTableManager.compute_and_update_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.table_manager.NearFieldInteractionTableManager.compute_and_update_table" title="Permalink to this definition">¶</a></dt>
@@ -1172,43 +1176,7 @@ inverse-type potentials like the fractional Laplacian.</p>
 <div class="section" id="function-extension">
 <h2>Function Extension<a class="headerlink" href="#function-extension" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="#module-volumential.function_extension" title="volumential.function_extension"><code class="xref py py-mod docutils literal notranslate"><span class="pre">volumential.function_extension</span></code></a> module provides helper functions to perform source density extensions using layer potentials.</p>
-<span class="target" id="module-volumential.function_extension"></span><p>Function extension with regularity contraints:</p>
-<ol class="arabic simple">
-<li><p><span class="math notranslate nohighlight">\(L^2\)</span>: extend with constant value</p></li>
-</ol>
-<dl class="function">
-<dt id="volumential.function_extension.compute_constant_extension">
-<code class="sig-prename descclassname">volumential.function_extension.</code><code class="sig-name descname">compute_constant_extension</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">target_discr</em>, <em class="sig-param">qbx</em>, <em class="sig-param">density_discr</em>, <em class="sig-param">constant_val=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/function_extension.html#compute_constant_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.function_extension.compute_constant_extension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constant extension.</p>
-</dd></dl>
-
-<ol class="arabic simple" start="2">
-<li><p><span class="math notranslate nohighlight">\(C^0\)</span>: harmonic extension</p></li>
-</ol>
-<dl class="function">
-<dt id="volumential.function_extension.compute_harmonic_extension">
-<code class="sig-prename descclassname">volumential.function_extension.</code><code class="sig-name descname">compute_harmonic_extension</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">target_discr</em>, <em class="sig-param">qbx</em>, <em class="sig-param">density_discr</em>, <em class="sig-param">f</em>, <em class="sig-param">loc_sign=1</em>, <em class="sig-param">target_association_tolerance=0.05</em>, <em class="sig-param">gmres_tolerance=1e-14</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/function_extension.html#compute_harmonic_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.function_extension.compute_harmonic_extension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Harmonic extension.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Param</dt>
-<dd class="field-odd"><p>loc_sign indicates the domain for extension,
-which equals to the negation of the loc_sign
-for the original problem.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<ol class="arabic simple" start="3">
-<li><p><span class="math notranslate nohighlight">\(C^1\)</span>: biharmonic extension</p></li>
-</ol>
-<dl class="function">
-<dt id="volumential.function_extension.compute_biharmonic_extension">
-<code class="sig-prename descclassname">volumential.function_extension.</code><code class="sig-name descname">compute_biharmonic_extension</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">target_discr</em>, <em class="sig-param">qbx</em>, <em class="sig-param">density_discr</em>, <em class="sig-param">f</em>, <em class="sig-param">fx</em>, <em class="sig-param">fy</em>, <em class="sig-param">target_association_tolerance=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/function_extension.html#compute_biharmonic_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.function_extension.compute_biharmonic_extension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Biharmoc extension. Currently only support
-interior domains in 2D (i.e., extension is on the exterior).</p>
-</dd></dl>
-
-</div>
+<span class="target" id="module-volumential.function_extension"></span></div>
 <div class="section" id="module-volumential.tools">
 <span id="miscellaneous-tools"></span><h2>Miscellaneous Tools<a class="headerlink" href="#module-volumential.tools" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
