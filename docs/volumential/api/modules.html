@@ -905,6 +905,13 @@ the resulting expansion into the box’s local expansion in <em>local_exps</em>.
 <em>source_array</em> is in user source order.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.reorder_targets">
+<code class="sig-name descname">reorder_targets</code><span class="sig-paren">(</span><em class="sig-param">target_array</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDFMMLibExpansionWrangler.reorder_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDFMMLibExpansionWrangler.reorder_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of <em>target_array</em> in tree source order.
+<em>target_array</em> is in user target order.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1089,6 +1096,13 @@ the resulting expansion into the box’s local expansion in <em>local_exps</em>.
 <em>source_array</em> is in user source order.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.reorder_targets">
+<code class="sig-name descname">reorder_targets</code><span class="sig-paren">(</span><em class="sig-param">target_array</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#FPNDSumpyExpansionWrangler.reorder_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.FPNDSumpyExpansionWrangler.reorder_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of <em>target_array</em> in tree source order.
+<em>target_array</em> is in user target order.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1101,6 +1115,13 @@ expansion and manipulations.</p>
 <code class="xref py py-class docutils literal notranslate"><span class="pre">pyopencl.CommandQueue</span></code>, but this queue is allowed to be
 more ephemeral than the code, the code’s lifetime
 is decoupled by storing it in this object.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="volumential.expansion_wrangler_fpnd.inverse_id_map">
+<code class="sig-prename descclassname">volumential.expansion_wrangler_fpnd.</code><code class="sig-name descname">inverse_id_map</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">mapped_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/expansion_wrangler_fpnd.html#inverse_id_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.expansion_wrangler_fpnd.inverse_id_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a index mapping as its mapped ids, compute its inverse,
+and return the inverse by the inversely-mapped ids.</p>
 </dd></dl>
 
 </div>

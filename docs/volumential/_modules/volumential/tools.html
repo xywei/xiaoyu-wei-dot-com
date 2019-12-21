@@ -153,7 +153,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for volumential.tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">six</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2018 Xiaoyu Wei&quot;</span>
@@ -182,9 +182,9 @@
 <span class="kn">import</span> <span class="nn">loopy</span> <span class="k">as</span> <span class="nn">lp</span>
 <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 <span class="kn">import</span> <span class="nn">pymbolic</span> <span class="k">as</span> <span class="nn">pmbl</span>
-<span class="kn">from</span> <span class="nn">pytools</span> <span class="k">import</span> <span class="n">memoize_method</span>
-<span class="kn">from</span> <span class="nn">pymbolic.primitives</span> <span class="k">import</span> <span class="n">Variable</span> <span class="k">as</span> <span class="n">VariableType</span>
-<span class="kn">from</span> <span class="nn">pymbolic.primitives</span> <span class="k">import</span> <span class="n">Expression</span> <span class="k">as</span> <span class="n">ExpressionType</span>
+<span class="kn">from</span> <span class="nn">pytools</span> <span class="kn">import</span> <span class="n">memoize_method</span>
+<span class="kn">from</span> <span class="nn">pymbolic.primitives</span> <span class="kn">import</span> <span class="n">Variable</span> <span class="k">as</span> <span class="n">VariableType</span>
+<span class="kn">from</span> <span class="nn">pymbolic.primitives</span> <span class="kn">import</span> <span class="n">Expression</span> <span class="k">as</span> <span class="n">ExpressionType</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -220,7 +220,7 @@
 <span class="k">class</span> <span class="nc">KernelCacheWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="c1"># FIXME: largely code duplication with sumpy.</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;KernelCacheWrapper&quot;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                 <span class="s2">&quot;KernelCacheWrapper objects should not be constructed&quot;</span><span class="p">)</span>
@@ -236,12 +236,12 @@
 
     <span class="nd">@memoize_method</span>
     <span class="k">def</span> <span class="nf">get_cached_optimized_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">sumpy</span> <span class="k">import</span> <span class="n">code_cache</span><span class="p">,</span> <span class="n">CACHING_ENABLED</span><span class="p">,</span> <span class="n">OPT_ENABLED</span>
+        <span class="kn">from</span> <span class="nn">sumpy</span> <span class="kn">import</span> <span class="n">code_cache</span><span class="p">,</span> <span class="n">CACHING_ENABLED</span><span class="p">,</span> <span class="n">OPT_ENABLED</span>
 
         <span class="k">if</span> <span class="n">CACHING_ENABLED</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">loopy.version</span>
-            <span class="kn">from</span> <span class="nn">sumpy.version</span> <span class="k">import</span> <span class="n">KERNEL_VERSION</span> <span class="k">as</span> <span class="n">SUMPY_KERNEL_VERSION</span>
-            <span class="kn">from</span> <span class="nn">volumential.version</span> <span class="k">import</span> <span class="n">KERNEL_VERSION</span>
+            <span class="kn">from</span> <span class="nn">sumpy.version</span> <span class="kn">import</span> <span class="n">KERNEL_VERSION</span> <span class="k">as</span> <span class="n">SUMPY_KERNEL_VERSION</span>
+            <span class="kn">from</span> <span class="nn">volumential.version</span> <span class="kn">import</span> <span class="n">KERNEL_VERSION</span>
             <span class="n">cache_key</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">get_cache_key</span><span class="p">()</span>
                     <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)))</span>
@@ -263,7 +263,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: kernel cache miss [key=</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">))</span>
 
-        <span class="kn">from</span> <span class="nn">pytools</span> <span class="k">import</span> <span class="n">MinRecursionLimit</span>
+        <span class="kn">from</span> <span class="nn">pytools</span> <span class="kn">import</span> <span class="n">MinRecursionLimit</span>
         <span class="k">with</span> <span class="n">MinRecursionLimit</span><span class="p">(</span><span class="mi">3000</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">OPT_ENABLED</span><span class="p">:</span>
                 <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_optimized_kernel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -287,7 +287,7 @@
 <span class="sd">    Useful for imposing analytic conditions efficiently.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">function_manglers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">function_manglers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :arg dim</span>
 <span class="sd">        :arg expression A pymbolic expression for the function</span>
@@ -412,7 +412,7 @@
             <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knl</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">target_points</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">target_points</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :arg target_points</span>
 <span class="sd">        :arg extra_kernel_kwargs</span>
@@ -498,7 +498,7 @@
 <span class="sd">    sources and targets coincide.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :arg dim</span>
 <span class="sd">        :arg degree Number of nodes in each axis direction.</span>
@@ -642,7 +642,7 @@
             <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knl</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">traversal</span><span class="p">,</span> <span class="n">nodal_vals</span><span class="p">,</span> <span class="n">filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">traversal</span><span class="p">,</span> <span class="n">nodal_vals</span><span class="p">,</span> <span class="n">filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :arg traversal</span>
 <span class="sd">        :arg nodal_vals CL array of nodal values.</span>
@@ -704,7 +704,7 @@
 <span class="sd">    Adds up nodal values within each box.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :arg dim</span>
 <span class="sd">        :arg degree Number of nodes in each axis direction.</span>
@@ -769,7 +769,7 @@
             <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knl</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">traversal</span><span class="p">,</span> <span class="n">nodal_vals</span><span class="p">,</span> <span class="n">filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">traversal</span><span class="p">,</span> <span class="n">nodal_vals</span><span class="p">,</span> <span class="n">filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :arg traversal</span>
 <span class="sd">        :arg nodal_vals CL array of nodal values.</span>
