@@ -1,0 +1,4 @@
+NDArray
+=======
+
+.. automodule:: lappy.ndarray
