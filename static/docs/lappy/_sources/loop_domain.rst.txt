@@ -1,0 +1,214 @@
+Loop Domain
+===========
+
+.. note::
+
+  (Vaporware Warning).
+  This section mostly contain pseudo-codes that are not implemented yet.
+  The plans may change at anytime.
+
+The loop domain of a lazy array is an integer set of all work items.
+In :mod:`lappy`, it is represented as a set expression.
+
+Expression Tree
+---------------
+
+The expression tree of an array ``domain_expr`` starts from leaf nodes
+of type :class:`SetVar`, :class:`SetParam` or :class:`SetZero`.
+It has two levels:
+
+1. (Affine Expressions).
+   The nodes close to the leaf level that are of type :class:`PwAff`.
+   They consist the expression trees of the (irreducible)
+   low-dimensional polygons of type :class:`PwAffComparison`.
+   To avoid branches, the polygons' subtrees should have disjoint
+   variables (inames), but may share parameters (loop bounds).
+
+2. (Integer Set Expression).
+   The remaining nodes of type :class:`SetIntersection` and :class:`SetUnion`
+   represent the expression from the basic polygons
+   to the loop domain.
+
+The integer set expression exposes structures within the loop domain
+that could benefit array manipulations, e.g.,
+
+1. The :class:`PwAff` objects are labeled consistently. ISL treat inames
+   as purely positional placeholders, which may not be as handy. For example,
+   an FEM code may want to tag an iname as ``'i_q_point'``. Position of
+   the iname may change as the array is manipulated (e.g. transpose).
+
+2. The affine expressions are nonlinearity-tolerant w.r.t paramters.
+   ISL only allow affine operations among paramters.
+   When assembling the array expression, some loop bounds do not become
+   affine until more shaped information are fixed (e.g. reshape).
+
+
+Temporaries and CSEs
+--------------------
+
+Here is a sample integer set expression, where
+``OR`` represents set union, ``AND`` represents set intersection.
+
+Consider the following pseudo-code:
+
+.. code-block:: python
+
+  n = Unsigned('n')
+  k = arange(n)
+  c = outer(sin(k), cos(k))
+
+The expression for ``c`` is flattened by default, yielding a single instruction like
+(names are replaced for readability).
+
+.. code-block::
+
+  for i, j
+    c[i, j] = sin(i) * cos(j)
+  end
+
+If the user choose to make ``k`` a temporary,
+
+.. code-block:: python
+
+  n = Unsigned('n')
+  k = arange(n)
+  k.pin()
+  c = outer(sin(k), cos(k))
+
+The instructions for ``c`` shall be like
+
+.. code-block::
+
+  for i, j
+    <> k[i] = i  {id=k}
+    c[i, j] = sin(k[i]) * cos(k[j])  {dep=k}
+  end
+
+The loop domain is unchanged,
+but depending on the loop nesting order, ``k`` may be computed multiple times.
+
+.. code-block::
+
+                      AND 
+             /-------/  \-------\
+             |                  |
+      { 0 <= i < n }     { 0 <= j < n }
+
+If the user choose to make ``k`` a CSE,
+
+.. code-block:: python
+
+  n = Unsigned('n')
+  k = arange(n)
+  k.pin_cse()
+  c = outer(sin(k), cos(k))
+
+The inames and temporaries of ``k`` are then duplicated.
+It should produce the same results as evaluating ``k`` separately
+by calling ``k.eval()`` and pass in its value as an argument.
+
+.. code-block::
+
+  for i_dup
+    <> k[i_dup] = i_dup {id=k}
+  end
+
+  for i, j
+      c[i, j] = sin(k[i]) * cos(k[j]) {dep=k}
+  end
+
+
+And the loop domain acquires a new branch,
+
+.. code-block::
+
+                                           OR
+                       /------------------/  \-------------\
+                       |                                   |
+                      AND                         { 0 <= i_dup < n }  
+             /-------/  \-------\
+             |                  |
+      { 0 <= i < n }     { 0 <= j < n }
+
+
+
+Diamond Problem
+---------------
+
+The following code produces a diamond structure in the computation graph:
+
+.. code-block:: python
+
+  A = ndarray('A', shape='n, n')
+  x = ndarray('x', shape='n')
+  k = A @ x
+  sk = sin(k)
+  ck = cos(k)
+  C = outer(sk, ck) 
+
+The data flow looks like (top to bottom):
+
+.. code-block::
+
+     A @ x
+       |
+       k
+      /\
+     /  \
+    sk  ck
+     \  /
+      \/
+      c
+
+By default, the lazy evaluation expands all expressions, yielding
+redundant computations.
+
+.. code-block::
+
+  c[i, j] = sin(sum([k], A[i, k] * x[k])) * cos(sum([k], A[j, k] * x[k]))
+
+Note that the ``matvec`` is computed twice above.
+
+Besides Loopy's ability to recognize optimization opportunities, user can
+also make ``k`` a temporary or a CSE.
+
+.. code-block:: python
+
+  A = ndarray('A', shape='n, n')
+  x = ndarray('x', shape='n')
+  k = A @ x
+  k.pin()
+  sk = sin(k)
+  ck = cos(k)
+  C = outer(sk, ck) 
+
+Making ``k`` a temporary yields:
+
+.. code-block::
+
+  <> k[i] = sum([k], A[i, k] * x[k])  {id=k}
+  c[i, j] = sin(k[i]) * cos(k[j])  {dep=k}
+
+Similarly,
+
+.. code-block:: python
+
+  A = ndarray('A', shape='n, n')
+  x = ndarray('x', shape='n')
+  k = A @ x
+  k.pin_cse()
+  sk = sin(k)
+  ck = cos(k)
+  C = outer(sk, ck) 
+
+Making ``k`` a CSE yields:
+
+.. code-block::
+
+  for i_dup
+    <> k[i_dup] = sum([k], A[i_dup, k] * x[k])  {id=k}
+  end
+
+  for i, j
+    c[i, j] = sin(k[i]) * cos(k[j])  {dep=k}
+  end

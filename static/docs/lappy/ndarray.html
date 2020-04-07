@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>NDArray &mdash; Lappy 2020.1dev documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Loop Domain" href="loop_domain.html" />
+    <link rel="prev" title="Welcome to Lappy’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Lappy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                eb67e78007c56b1464ff66a0cf29eb98cd0ceb58
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NDArray</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loop_domain.html">Loop Domain</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Lappy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>NDArray</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/ndarray.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-lappy.ndarray">
+<span id="ndarray"></span><h1>NDArray<a class="headerlink" href="#module-lappy.ndarray" title="Permalink to this headline">¶</a></h1>
+<p>Lazily evaluated array. An array is a stateful (partial)
+closure consisting of three basic components:</p>
+<ol class="arabic simple">
+<li><p>a formal argument list</p></li>
+<li><p>an expression</p></li>
+<li><p>an environment</p></li>
+</ol>
+<p>1) and 3) are stored in a single capture list, where the value
+None represents items in the argument list. Arguments can be
+instantiated and moved into its environment. This process
+is monotonic, that is, the environment cannot be modified by
+operations other than instantiation of the arguments.</p>
+<dl class="py attribute">
+<dt id="lappy.ndarray.ndim">
+<code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">ndim</code><a class="headerlink" href="#lappy.ndarray.ndim" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of dimensions specified as an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Unsigned</span></code>. At the moment, only concrete ndim is
+supported, i.e., ndim.value must be known.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lappy.ndarray.shape">
+<code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">shape</code><a class="headerlink" href="#lappy.ndarray.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>overall shape of array expression.
+Tuple of <code class="xref py py-class docutils literal notranslate"><span class="pre">Unsigned</span></code> with length equal to <code class="docutils literal notranslate"><span class="pre">ndim</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lappy.ndarray.inames">
+<code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">inames</code><a class="headerlink" href="#lappy.ndarray.inames" title="Permalink to this definition">¶</a></dt>
+<dd><p>index names for iterating over the array.
+Tuple of <code class="xref py py-class docutils literal notranslate"><span class="pre">pymbolic.Variable</span></code>’s.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lappy.ndarray.domain_expr">
+<code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">domain_expr</code><a class="headerlink" href="#lappy.ndarray.domain_expr" title="Permalink to this definition">¶</a></dt>
+<dd><p>set expression for constructing the loop domain. A set expression
+has leafs of <code class="xref py py-class docutils literal notranslate"><span class="pre">lappy.core.primitives.PwAff</span></code> variables and
+integers. If domain_expr is None, the index domain of the array is
+used.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lappy.ndarray.dtype">
+<code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">dtype</code><a class="headerlink" href="#lappy.ndarray.dtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>data type, either None or convertible to loopy type. Lappy
+does not allow implicit type casting.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lappy.ndarray.is_integral">
+<code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">is_integral</code><a class="headerlink" href="#lappy.ndarray.is_integral" title="Permalink to this definition">¶</a></dt>
+<dd><p>a <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code> indicating whether array elements are integers</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lappy.ndarray.integer_domain">
+<code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">integer_domain</code><a class="headerlink" href="#lappy.ndarray.integer_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>an ISL set if is_integral is True, otherwise None. The set represents
+the domain for the full array. It is used to express conditions like
+non-negative integers, multiples of two, etc.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="loop_domain.html" class="btn btn-neutral float-right" title="Loop Domain" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Lappy’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Copyright (C) 2019 Xiaoyu Wei
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
