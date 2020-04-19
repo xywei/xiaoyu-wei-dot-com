@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                7b8ee32966931f021e2d5f7ffe1d722dc922b1e4
+                1e75f1fe2e1bc3c438e2ad2dbcb1083ded55c0e1
               </div>
             
           
@@ -178,7 +178,9 @@ supported, i.e., ndim.value must be known.</p>
 <dt id="lappy.ndarray.shape">
 <code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">shape</code><a class="headerlink" href="#lappy.ndarray.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>overall shape of array expression.
-Tuple of <code class="xref py py-class docutils literal notranslate"><span class="pre">Unsigned</span></code> with length equal to <code class="docutils literal notranslate"><span class="pre">ndim</span></code>.</p>
+Tuple of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> with length equal to <code class="docutils literal notranslate"><span class="pre">ndim</span></code>.
+Each component of the tuple is the name of a lazy object in the
+namespace.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -193,8 +195,8 @@ Tuple of <code class="xref py py-class docutils literal notranslate"><span class
 <code class="sig-prename descclassname">lappy.ndarray.</code><code class="sig-name descname">domain_expr</code><a class="headerlink" href="#lappy.ndarray.domain_expr" title="Permalink to this definition">¶</a></dt>
 <dd><p>set expression for constructing the loop domain. A set expression
 has leafs of <code class="xref py py-class docutils literal notranslate"><span class="pre">lappy.core.primitives.PwAff</span></code> variables and
-integers. If domain_expr is None, the index domain of the array is
-used.</p>
+integers. The domain expression is trivial if it equals to the set
+of indices of the array elements (no “hidden” axes).</p>
 </dd></dl>
 
 <dl class="py attribute">
