@@ -183,6 +183,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">loopy</span> <span class="k">as</span> <span class="nn">lp</span>
+<span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">BarycentricInterpolator</span> <span class="k">as</span> <span class="n">Interpolator</span>
 
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
@@ -1256,6 +1257,8 @@
                     <span class="p">)</span> <span class="o">*</span> <span class="n">fl_scaling</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
             <span class="k">return</span>
 
+        <span class="kn">from</span> <span class="nn">meshmode.array_context</span> <span class="kn">import</span> <span class="n">PyOpenCLArrayContext</span>
+        <span class="kn">from</span> <span class="nn">meshmode.dof_array</span> <span class="kn">import</span> <span class="n">thaw</span><span class="p">,</span> <span class="n">flatten</span>
         <span class="kn">from</span> <span class="nn">meshmode.mesh.io</span> <span class="kn">import</span> <span class="n">read_gmsh</span>
         <span class="kn">from</span> <span class="nn">meshmode.discretization</span> <span class="kn">import</span> <span class="n">Discretization</span>
         <span class="kn">from</span> <span class="nn">meshmode.discretization.poly_element</span> <span class="kn">import</span> \
@@ -1323,7 +1326,8 @@
 
         <span class="c1"># }}} End gmsh processing</span>
 
-        <span class="n">discr</span> <span class="o">=</span> <span class="n">Discretization</span><span class="p">(</span><span class="n">cl_ctx</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span>  <span class="c1"># noqa</span>
+        <span class="n">arr_ctx</span> <span class="o">=</span> <span class="n">PyOpenCLArrayContext</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+        <span class="n">discr</span> <span class="o">=</span> <span class="n">Discretization</span><span class="p">(</span><span class="n">arr_ctx</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span>
                 <span class="n">PolynomialWarpAndBlendGroupFactory</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">quad_order</span><span class="p">))</span>
 
         <span class="kn">from</span> <span class="nn">pytential</span> <span class="kn">import</span> <span class="n">bind</span><span class="p">,</span> <span class="n">sym</span>
@@ -1432,7 +1436,9 @@
 
         <span class="c1"># }}} End kernel evaluation</span>
 
-        <span class="n">nodes</span> <span class="o">=</span> <span class="n">discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span><span class="o">.</span><span class="n">with_queue</span><span class="p">(</span><span class="n">queue</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">]</span>
+        <span class="n">node_coords</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">thaw</span><span class="p">(</span><span class="n">arr_ctx</span><span class="p">,</span> <span class="n">discr</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">crd</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="k">for</span> <span class="n">crd</span> <span class="ow">in</span> <span class="n">node_coords</span><span class="p">]))</span>
 
         <span class="n">int_vals</span> <span class="o">=</span> <span class="p">[]</span>
 
