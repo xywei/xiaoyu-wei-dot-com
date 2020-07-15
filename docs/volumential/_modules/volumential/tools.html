@@ -654,14 +654,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">filtering</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">filter_multiplier</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">filter_multiplier</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="n">queue</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filtering</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
             <span class="k">assert</span> <span class="n">filtering</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,)</span>
             <span class="n">filter_multiplier</span> <span class="o">=</span> <span class="n">filtering</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid filtering argument: </span><span class="si">%s</span><span class="s2">&quot;</span>
-                    <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">filtering</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid filtering argument: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">filtering</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
 
@@ -685,6 +684,18 @@
         <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span></div>
 
 <span class="c1"># }}} End discrete Legendre transform</span>
+
+<span class="c1"># {{{ inverse discrete Legendre transform</span>
+
+
+<div class="viewcode-block" id="InverseDiscreteLegendreTransform"><a class="viewcode-back" href="../../api/modules.html#volumential.tools.InverseDiscreteLegendreTransform">[docs]</a><span class="k">class</span> <span class="nc">InverseDiscreteLegendreTransform</span><span class="p">(</span><span class="n">BoxSpecificMap</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Box-specific transform that maps box-local modal coefficients</span>
+<span class="sd">    to nodal values. Inverse of :class:`DiscreteLegendreTransform`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<span class="c1"># }}} End inverse discrete Legendre transform</span>
 
 <span class="c1"># }}} End box-specific maps</span>
 
