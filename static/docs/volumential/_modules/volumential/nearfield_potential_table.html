@@ -370,6 +370,7 @@
         <span class="n">source_box_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
         <span class="n">inverse_droste</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -488,9 +489,11 @@
 
         <span class="n">total_evals</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span>
 
-        <span class="kn">from</span> <span class="nn">pytools</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="s2">&quot;Building table:&quot;</span><span class="p">,</span> <span class="n">total_evals</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">pytools</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="s2">&quot;Building table:&quot;</span><span class="p">,</span> <span class="n">total_evals</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">is_built</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -896,7 +899,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pool</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">build_normalizer_table</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">pb</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_normalizers</span> <span class="o">=</span> <span class="kc">True</span>
@@ -908,18 +912,19 @@
         <span class="p">]</span>
 
         <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># multiprocess disabled for py2 compatibility</span>
-            <span class="c1"># (also drops dependency on dill/multiprocess)</span>
+            <span class="c1"># multiprocess disabled to remove dependency on dill/multiprocess</span>
             <span class="k">for</span> <span class="n">entry_id</span><span class="p">,</span> <span class="n">entry_val</span> <span class="ow">in</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">compute_table_entry</span><span class="p">,</span> <span class="n">invariant_entry_ids</span>
             <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry_val</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">entry_id</span> <span class="ow">in</span> <span class="n">invariant_entry_ids</span><span class="p">:</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">entry_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_table_entry</span><span class="p">(</span><span class="n">entry_id</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry_val</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Then complete the table via symmetry lookup</span>
@@ -929,7 +934,8 @@
                 <span class="k">if</span> <span class="n">centry_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">centry_id</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">entry_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)):</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">centry_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_by_symmetry</span><span class="p">(</span><span class="n">entry_id</span><span class="p">)</span>
@@ -937,9 +943,11 @@
                 <span class="k">if</span> <span class="n">centry_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">centry_id</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">finished</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">finished</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
             <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
