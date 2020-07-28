@@ -185,28 +185,24 @@
 <span class="s2">.. autofunction:: interpolate_volume_potential</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
 <span class="kn">from</span> <span class="nn">boxtree.fmm</span> <span class="kn">import</span> <span class="n">TimingRecorder</span>
 <span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_interface</span> <span class="kn">import</span> <span class="n">ExpansionWranglerInterface</span>
 <span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_fpnd</span> <span class="kn">import</span> <span class="p">(</span>
         <span class="n">FPNDSumpyExpansionWrangler</span><span class="p">,</span> <span class="n">FPNDFMMLibExpansionWrangler</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="drive_volume_fmm"><a class="viewcode-back" href="../../api/modules.html#volumential.volume_fmm.drive_volume_fmm">[docs]</a><span class="k">def</span> <span class="nf">drive_volume_fmm</span><span class="p">(</span>
-    <span class="n">traversal</span><span class="p">,</span>
-    <span class="n">expansion_wrangler</span><span class="p">,</span>
-    <span class="n">src_weights</span><span class="p">,</span>
-    <span class="n">src_func</span><span class="p">,</span>
-    <span class="n">direct_evaluation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">timing_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span>
-<span class="p">):</span>
+<span class="c1"># {{{ volume FMM driver</span>
+
+<div class="viewcode-block" id="drive_volume_fmm"><a class="viewcode-back" href="../../api/modules.html#volumential.volume_fmm.drive_volume_fmm">[docs]</a><span class="k">def</span> <span class="nf">drive_volume_fmm</span><span class="p">(</span><span class="n">traversal</span><span class="p">,</span> <span class="n">expansion_wrangler</span><span class="p">,</span> <span class="n">src_weights</span><span class="p">,</span> <span class="n">src_func</span><span class="p">,</span>
+                     <span class="n">direct_evaluation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timing_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">reorder_sources</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reorder_potentials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Top-level driver routine for volume potential calculation</span>
 <span class="sd">    via fast multiple method.</span>
@@ -228,6 +224,10 @@
 <span class="sd">        Passed unmodified to *expansion_wrangler*.</span>
 <span class="sd">    :arg src_func: Source &#39;density/weights/charges&#39; function.</span>
 <span class="sd">        Passed unmodified to *expansion_wrangler*.</span>
+<span class="sd">    :arg reorder_sources: Whether sources are in user order (if True, sources</span>
+<span class="sd">        are reordered into tree order before conducting FMM).</span>
+<span class="sd">    :arg reorder_potentials: Whether potentials should be in user order (if True,</span>
+<span class="sd">        potentials are reordered into user order before return).</span>
 
 <span class="sd">    Returns the potentials computed by *expansion_wrangler*.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -250,10 +250,10 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_func</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
             <span class="n">src_func</span> <span class="o">=</span> <span class="n">src_func</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder source weights&quot;</span><span class="p">)</span>
-
-    <span class="n">src_weights</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_sources</span><span class="p">(</span><span class="n">src_weights</span><span class="p">)</span>
-    <span class="n">src_func</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_targets</span><span class="p">(</span><span class="n">src_func</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">reorder_sources</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder source weights&quot;</span><span class="p">)</span>
+        <span class="n">src_weights</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_sources</span><span class="p">(</span><span class="n">src_weights</span><span class="p">)</span>
+        <span class="n">src_func</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_targets</span><span class="p">(</span><span class="n">src_func</span><span class="p">)</span>
 
     <span class="c1"># {{{ Construct local multipoles</span>
 
@@ -300,8 +300,9 @@
     <span class="c1"># &#39;list1_only&#39; takes precedence over &#39;exclude_list1&#39;</span>
     <span class="k">if</span> <span class="s1">&#39;list1_only&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;list1_only&#39;</span><span class="p">]:</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder potentials&quot;</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="n">potentials</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reorder_potentials</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder potentials&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="n">potentials</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;finalize potentials&quot;</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">finalize_potentials</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -372,8 +373,9 @@
         <span class="c1"># list 4</span>
         <span class="k">assert</span> <span class="n">traversal</span><span class="o">.</span><span class="n">from_sep_close_bigger_starts</span> <span class="ow">is</span> <span class="kc">None</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder potentials&quot;</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="n">potentials</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reorder_potentials</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder potentials&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="n">potentials</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;finalize potentials&quot;</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">finalize_potentials</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -492,8 +494,9 @@
     <span class="c1"># }}}</span>
 
     <span class="c1"># {{{ Reorder potentials</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder potentials&quot;</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="n">potentials</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">reorder_potentials</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder potentials&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_potentials</span><span class="p">(</span><span class="n">potentials</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;finalize potentials&quot;</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">finalize_potentials</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -506,6 +509,10 @@
 
     <span class="k">return</span> <span class="n">result</span></div>
 
+<span class="c1"># }}} End volume FMM driver</span>
+
+
+<span class="c1"># {{{ free form interpolation of potentials</span>
 
 <span class="k">def</span> <span class="nf">compute_barycentric_lagrange_params</span><span class="p">(</span><span class="n">q_order</span><span class="p">):</span>
 
@@ -524,22 +531,36 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">interp_points</span><span class="p">,</span> <span class="n">interp_weights</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="interpolate_volume_potential"><a class="viewcode-back" href="../../api/modules.html#volumential.volume_fmm.interpolate_volume_potential">[docs]</a><span class="k">def</span> <span class="nf">interpolate_volume_potential</span><span class="p">(</span>
-    <span class="n">target_points</span><span class="p">,</span> <span class="n">traversal</span><span class="p">,</span> <span class="n">wrangler</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">target_radii</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lbl_lookup</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">):</span>
+<div class="viewcode-block" id="interpolate_volume_potential"><a class="viewcode-back" href="../../api/modules.html#volumential.volume_fmm.interpolate_volume_potential">[docs]</a><span class="k">def</span> <span class="nf">interpolate_volume_potential</span><span class="p">(</span><span class="n">target_points</span><span class="p">,</span> <span class="n">traversal</span><span class="p">,</span> <span class="n">wrangler</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span>
+                                 <span class="n">potential_in_tree_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">target_radii</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lbl_lookup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interpolate the volume potential, only works for tensor-product quadrature formulae.</span>
 <span class="sd">    target_points and potential should be an cl array.</span>
 
-<span class="sd">    wrangler is used only for general info (nothing sumpy kernel specific)</span>
+<span class="sd">    :arg wrangler: Used only for general info (nothing sumpy kernel specific). May also</span>
+<span class="sd">        be None if the needed information is passed by kwargs.</span>
+<span class="sd">    :arg potential_in_tree_order: Whether the potential is in tree order (as opposed to</span>
+<span class="sd">        in user order).</span>
+<span class="sd">    :lbl_lookup: a :class:`boxtree.LeavesToBallsLookup` that has the lookup information</span>
+<span class="sd">        for target points. Can be None if the lookup lists are provided separately in</span>
+<span class="sd">        kwargs. If it is None and no other information is provided, the lookup will be</span>
+<span class="sd">        built from scratch.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">wrangler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">near_field_table</span><span class="o">.</span><span class="n">values</span><span class="p">()))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">tree</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span>
+        <span class="n">q_order</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">quad_order</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">dtype</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dim&#39;</span><span class="p">]</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;tree&#39;</span><span class="p">]</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;queue&#39;</span><span class="p">]</span>
+        <span class="n">q_order</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;q_order&#39;</span><span class="p">]</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dtype&#39;</span><span class="p">]</span>
 
-    <span class="n">dim</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">near_field_table</span><span class="o">.</span><span class="n">values</span><span class="p">()))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span>
-    <span class="n">tree</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">tree</span>
-    <span class="n">queue</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span>
-    <span class="n">q_order</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">quad_order</span>
     <span class="n">ctx</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">context</span>
-    <span class="n">dtype</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">dtype</span>
     <span class="n">coord_dtype</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">coord_dtype</span>
     <span class="n">n_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
@@ -549,27 +570,35 @@
         <span class="n">traversal</span> <span class="o">=</span> <span class="n">traversal</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">dim</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_points</span><span class="p">)</span>
+    <span class="n">evt</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="c1"># Building the lookup takes O(n*log(n))</span>
-    <span class="k">if</span> <span class="n">lbl_lookup</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">boxtree.area_query</span> <span class="kn">import</span> <span class="n">LeavesToBallsLookupBuilder</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;balls_near_box_starts&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;balls_near_box_lists&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">balls_near_box_starts</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;balls_near_box_starts&quot;</span><span class="p">]</span>
+        <span class="n">balls_near_box_lists</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;balls_near_box_lists&quot;</span><span class="p">]</span>
 
-        <span class="n">lookup_builder</span> <span class="o">=</span> <span class="n">LeavesToBallsLookupBuilder</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Building the lookup takes O(n*log(n))</span>
+        <span class="k">if</span> <span class="n">lbl_lookup</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">boxtree.area_query</span> <span class="kn">import</span> <span class="n">LeavesToBallsLookupBuilder</span>
+            <span class="n">lookup_builder</span> <span class="o">=</span> <span class="n">LeavesToBallsLookupBuilder</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">target_radii</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
+            <span class="k">if</span> <span class="n">target_radii</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Set this number small enough so that all points found</span>
+                <span class="c1"># are inside the box</span>
+                <span class="n">target_radii</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span>
+                    <span class="n">queue</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">coord_dtype</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-12</span><span class="p">)</span>
 
-            <span class="c1"># Set this number small enough so that all points found</span>
-            <span class="c1"># are inside the box</span>
-            <span class="n">target_radii</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span>
-                <span class="n">queue</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">coord_dtype</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-12</span>
-            <span class="p">)</span>
+            <span class="n">lbl_lookup</span><span class="p">,</span> <span class="n">evt</span> <span class="o">=</span> <span class="n">lookup_builder</span><span class="p">(</span>
+                <span class="n">queue</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">target_points</span><span class="p">,</span> <span class="n">target_radii</span><span class="p">)</span>
 
-        <span class="n">lbl_lookup</span><span class="p">,</span> <span class="n">evt</span> <span class="o">=</span> <span class="n">lookup_builder</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">target_points</span><span class="p">,</span> <span class="n">target_radii</span><span class="p">)</span>
+        <span class="n">balls_near_box_starts</span> <span class="o">=</span> <span class="n">lbl_lookup</span><span class="o">.</span><span class="n">balls_near_box_starts</span>
+        <span class="n">balls_near_box_lists</span> <span class="o">=</span> <span class="n">lbl_lookup</span><span class="o">.</span><span class="n">balls_near_box_lists</span>
 
     <span class="n">pout</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">multiplicity</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-    <span class="n">pout</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">evt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pout</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
 
     <span class="c1"># map all boxes to a template [0,1]^2 so that the interpolation</span>
     <span class="c1"># weights and modes can be precomputed</span>
@@ -746,6 +775,13 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
+    <span class="k">if</span> <span class="n">potential_in_tree_order</span><span class="p">:</span>
+        <span class="n">user_mode_ids</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+            <span class="n">queue</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">user_source_ids</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">user_source_ids</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># fetching from user_source_ids converts potential to tree order</span>
+        <span class="n">user_mode_ids</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">user_source_ids</span>
+
     <span class="n">lpknl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">lpknl</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">lpknl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">fix_parameters</span><span class="p">(</span><span class="n">lpknl</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">q_order</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">q_order</span><span class="p">))</span>
     <span class="n">lpknl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">split_iname</span><span class="p">(</span><span class="n">lpknl</span><span class="p">,</span> <span class="s2">&quot;tbox&quot;</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">outer_tag</span><span class="o">=</span><span class="s2">&quot;g.0&quot;</span><span class="p">,</span> <span class="n">inner_tag</span><span class="o">=</span><span class="s2">&quot;l.0&quot;</span><span class="p">)</span>
@@ -755,14 +791,14 @@
         <span class="n">multiplicity</span><span class="o">=</span><span class="n">multiplicity</span><span class="p">,</span>
         <span class="n">box_centers</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">box_centers</span><span class="p">,</span>
         <span class="n">box_levels</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">box_levels</span><span class="p">,</span>
-        <span class="n">balls_near_box_starts</span><span class="o">=</span><span class="n">lbl_lookup</span><span class="o">.</span><span class="n">balls_near_box_starts</span><span class="p">,</span>
-        <span class="n">balls_near_box_lists</span><span class="o">=</span><span class="n">lbl_lookup</span><span class="o">.</span><span class="n">balls_near_box_lists</span><span class="p">,</span>
+        <span class="n">balls_near_box_starts</span><span class="o">=</span><span class="n">balls_near_box_starts</span><span class="p">,</span>
+        <span class="n">balls_near_box_lists</span><span class="o">=</span><span class="n">balls_near_box_lists</span><span class="p">,</span>
         <span class="n">barycentric_lagrange_weights</span><span class="o">=</span><span class="n">blweights</span><span class="p">,</span>
         <span class="n">barycentric_lagrange_points</span><span class="o">=</span><span class="n">blpoints</span><span class="p">,</span>
         <span class="n">box_target_starts</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">box_target_starts</span><span class="p">,</span>
         <span class="n">box_target_counts_cumul</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">box_target_counts_cumul</span><span class="p">,</span>
         <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span>
-        <span class="n">user_mode_ids</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">user_source_ids</span><span class="p">,</span>
+        <span class="n">user_mode_ids</span><span class="o">=</span><span class="n">user_mode_ids</span><span class="p">,</span>
         <span class="n">target_boxes</span><span class="o">=</span><span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">,</span>
         <span class="n">root_extent</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">root_extent</span><span class="p">,</span>
         <span class="n">n_tgt_boxes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">),</span>
@@ -775,6 +811,7 @@
 
     <span class="k">return</span> <span class="n">pout</span> <span class="o">/</span> <span class="n">multiplicity</span></div>
 
+<span class="c1"># }}} End free form interpolation of potentials</span>
 
 <span class="c1"># vim: filetype=pyopencl:fdm=marker</span>
 </pre></div>
