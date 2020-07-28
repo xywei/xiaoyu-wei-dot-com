@@ -1137,7 +1137,7 @@ Although the interpolation is <span class="math notranslate nohighlight">\(O(N l
 the total runtime.</p>
 <span class="target" id="module-volumential.volume_fmm"></span><dl class="py function">
 <dt id="volumential.volume_fmm.drive_volume_fmm">
-<code class="sig-prename descclassname">volumential.volume_fmm.</code><code class="sig-name descname">drive_volume_fmm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">traversal</span></em>, <em class="sig-param"><span class="n">expansion_wrangler</span></em>, <em class="sig-param"><span class="n">src_weights</span></em>, <em class="sig-param"><span class="n">src_func</span></em>, <em class="sig-param"><span class="n">direct_evaluation</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">timing_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/volume_fmm.html#drive_volume_fmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.volume_fmm.drive_volume_fmm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">volumential.volume_fmm.</code><code class="sig-name descname">drive_volume_fmm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">traversal</span></em>, <em class="sig-param"><span class="n">expansion_wrangler</span></em>, <em class="sig-param"><span class="n">src_weights</span></em>, <em class="sig-param"><span class="n">src_func</span></em>, <em class="sig-param"><span class="n">direct_evaluation</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">timing_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">reorder_sources</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">reorder_potentials</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/volume_fmm.html#drive_volume_fmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.volume_fmm.drive_volume_fmm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Top-level driver routine for volume potential calculation
 via fast multiple method.</p>
 <p>This function, and the interface it utilizes, is adapted from boxtree/fmm.py</p>
@@ -1156,6 +1156,10 @@ wrangler interface.</p></li>
 Passed unmodified to <em>expansion_wrangler</em>.</p></li>
 <li><p><strong>src_func</strong> – Source ‘density/weights/charges’ function.
 Passed unmodified to <em>expansion_wrangler</em>.</p></li>
+<li><p><strong>reorder_sources</strong> – Whether sources are in user order (if True, sources
+are reordered into tree order before conducting FMM).</p></li>
+<li><p><strong>reorder_potentials</strong> – Whether potentials should be in user order (if True,
+potentials are reordered into user order before return).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1164,10 +1168,25 @@ Passed unmodified to <em>expansion_wrangler</em>.</p></li>
 
 <dl class="py function">
 <dt id="volumential.volume_fmm.interpolate_volume_potential">
-<code class="sig-prename descclassname">volumential.volume_fmm.</code><code class="sig-name descname">interpolate_volume_potential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target_points</span></em>, <em class="sig-param"><span class="n">traversal</span></em>, <em class="sig-param"><span class="n">wrangler</span></em>, <em class="sig-param"><span class="n">potential</span></em>, <em class="sig-param"><span class="n">target_radii</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lbl_lookup</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/volume_fmm.html#interpolate_volume_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.volume_fmm.interpolate_volume_potential" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">volumential.volume_fmm.</code><code class="sig-name descname">interpolate_volume_potential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target_points</span></em>, <em class="sig-param"><span class="n">traversal</span></em>, <em class="sig-param"><span class="n">wrangler</span></em>, <em class="sig-param"><span class="n">potential</span></em>, <em class="sig-param"><span class="n">potential_in_tree_order</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">target_radii</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lbl_lookup</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/volumential/volume_fmm.html#interpolate_volume_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#volumential.volume_fmm.interpolate_volume_potential" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interpolate the volume potential, only works for tensor-product quadrature formulae.
 target_points and potential should be an cl array.</p>
-<p>wrangler is used only for general info (nothing sumpy kernel specific)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wrangler</strong> – Used only for general info (nothing sumpy kernel specific). May also
+be None if the needed information is passed by kwargs.</p></li>
+<li><p><strong>potential_in_tree_order</strong> – Whether the potential is in tree order (as opposed to
+in user order).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Lbl_lookup</dt>
+<dd class="field-even"><p>a <code class="xref py py-class docutils literal notranslate"><span class="pre">boxtree.LeavesToBallsLookup</span></code> that has the lookup information
+for target points. Can be None if the lookup lists are provided separately in
+kwargs. If it is None and no other information is provided, the lookup will be
+built from scratch.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <span class="target" id="module-0"></span><dl class="py class">
