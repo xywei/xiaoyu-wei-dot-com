@@ -676,7 +676,7 @@
 <span class="sd">                    end</span>
 
 <span class="sd">                    # Count how many times the potential is computed</span>
-<span class="sd">                    multiplicity[target_point_id] = multiplicity[target_point_id] + 1</span>
+<span class="sd">                    multiplicity[target_point_id] = multiplicity[target_point_id] + 1  {atomic}</span>
 
 <span class="sd">                    # Map target point to template box</span>
 <span class="sd">                    for iaxis</span>
@@ -733,7 +733,7 @@
 
 <span class="sd">                    p_out[target_point_id] = p_out[target_point_id] + sum(mid,</span>
 <span class="sd">                        mode_coeff * prod_mode_val</span>
-<span class="sd">                        ) {id=p_out,dep=pmod}</span>
+<span class="sd">                        ) {id=p_out,dep=pmod,atomic}</span>
 
 <span class="sd">                end</span>
 
@@ -750,11 +750,14 @@
             <span class="c1"># loopy.TemporaryVariable(&quot;diff&quot;, dtype, &quot;dim, q_order&quot;),</span>
             <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;box_centers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;dim, aligned_nboxes&quot;</span><span class="p">),</span>
             <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;balls_near_box_lists&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;multiplicity&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_atomic</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;p_out&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_atomic</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="n">loopy</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;aligned_nboxes&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">loopy</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;dim&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">loopy</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;q_order&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="s2">&quot;...&quot;</span><span class="p">,</span>
         <span class="p">],</span>
+        <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="c1"># }}} End loopy kernel for interpolation</span>
 
