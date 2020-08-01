@@ -463,6 +463,11 @@
 
     <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_kernel</span><span class="o">.</span><span class="n">is_complex_valued</span><span class="p">:</span>
+            <span class="n">potential_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">complex128</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">potential_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+
         <span class="n">lpknl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">make_kernel</span><span class="p">(</span>  <span class="c1"># NOQA</span>
             <span class="p">[</span>
                 <span class="s2">&quot;{ [ tbox ] : 0 &lt;= tbox &lt; n_tgt_boxes }&quot;</span><span class="p">,</span>
@@ -569,11 +574,12 @@
                 <span class="n">loopy</span><span class="o">.</span><span class="n">TemporaryVariable</span><span class="p">(</span><span class="s2">&quot;tgt_table_lev&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">TemporaryVariable</span><span class="p">(</span><span class="s2">&quot;tgt_table_lev_tmp&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;encoding_base&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
-                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;mode_nmlz&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;n_tables, n_q_points&quot;</span><span class="p">),</span>
-                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;exterior_mode_nmlz&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-                    <span class="s2">&quot;n_tables, n_q_points&quot;</span><span class="p">),</span>
-                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;table_data&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-                    <span class="s2">&quot;n_tables, n_table_entries&quot;</span><span class="p">),</span>
+                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;mode_nmlz&quot;</span><span class="p">,</span> <span class="n">potential_dtype</span><span class="p">,</span>
+                                <span class="s2">&quot;n_tables, n_q_points&quot;</span><span class="p">),</span>
+                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;exterior_mode_nmlz&quot;</span><span class="p">,</span> <span class="n">potential_dtype</span><span class="p">,</span>
+                                <span class="s2">&quot;n_tables, n_q_points&quot;</span><span class="p">),</span>
+                <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;table_data&quot;</span><span class="p">,</span> <span class="n">potential_dtype</span><span class="p">,</span>
+                                <span class="s2">&quot;n_tables, n_table_entries&quot;</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;source_boxes&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="s2">&quot;n_source_boxes&quot;</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">GlobalArg</span><span class="p">(</span><span class="s2">&quot;box_centers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;dim, aligned_nboxes&quot;</span><span class="p">),</span>
                 <span class="n">loopy</span><span class="o">.</span><span class="n">ValueArg</span><span class="p">(</span><span class="s2">&quot;aligned_nboxes&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
@@ -588,9 +594,7 @@
             <span class="n">lang_version</span><span class="o">=</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="c1"># print(lpknl)</span>
         <span class="c1"># lpknl = loopy.set_options(lpknl, write_code=True)</span>
-
         <span class="n">lpknl</span> <span class="o">=</span> <span class="n">loopy</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">lpknl</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">lpknl</span>
@@ -600,6 +604,7 @@
             <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">kname</span><span class="p">,</span>
+            <span class="s2">&quot;complex_kernel=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">integral_kernel</span><span class="o">.</span><span class="n">is_complex_valued</span><span class="p">),</span>
             <span class="s2">&quot;potential_kind=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_kind</span><span class="p">,</span>
             <span class="s2">&quot;infer_scaling=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_kwargs</span><span class="p">[</span><span class="s2">&quot;infer_kernel_scaling&quot;</span><span class="p">]),</span>
             <span class="s2">&quot;scaling_policy=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen_compute_scaling</span><span class="p">(),</span>

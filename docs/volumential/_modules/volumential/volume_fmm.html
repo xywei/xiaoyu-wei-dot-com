@@ -263,8 +263,6 @@
     <span class="p">)</span>
     <span class="n">recorder</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;form_multipoles&quot;</span><span class="p">,</span> <span class="n">timing_future</span><span class="p">)</span>
 
-    <span class="c1"># print(max(abs(mpole_exps)))</span>
-
     <span class="c1"># }}}</span>
 
     <span class="c1"># {{{ Propagate multipoles upward</span>
@@ -276,8 +274,6 @@
         <span class="n">mpole_exps</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">recorder</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;coarsen_multipoles&quot;</span><span class="p">,</span> <span class="n">timing_future</span><span class="p">)</span>
-
-    <span class="c1"># print(max(abs(mpole_exps)))</span>
 
     <span class="c1"># mpole_exps is called Phi in [1]</span>
 
@@ -346,8 +342,13 @@
             <span class="n">value_dtypes</span><span class="o">=</span><span class="p">[</span><span class="n">wrangler</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>
         <span class="p">)</span>
 
-        <span class="n">p2p_extra_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">self_extra_kwargs</span><span class="p">)</span>
-        <span class="n">p2p_extra_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">kernel_extra_kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">wrangler</span><span class="p">,</span> <span class="s2">&quot;self_extra_kwargs&quot;</span><span class="p">):</span>
+            <span class="n">p2p_extra_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">self_extra_kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p2p_extra_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">wrangler</span><span class="p">,</span> <span class="s2">&quot;self_extra_kwargs&quot;</span><span class="p">):</span>
+            <span class="n">p2p_extra_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">kernel_extra_kwargs</span><span class="p">)</span>
 
         <span class="n">evt</span><span class="p">,</span> <span class="p">(</span><span class="n">ref_pot</span><span class="p">,)</span> <span class="o">=</span> <span class="n">p2p</span><span class="p">(</span>
             <span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
@@ -397,8 +398,6 @@
         <span class="n">mpole_exps</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">recorder</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;multipole_to_local&quot;</span><span class="p">,</span> <span class="n">timing_future</span><span class="p">)</span>
-
-    <span class="c1"># print(max(abs(local_exps)))</span>
 
     <span class="c1"># local_exps represents both Gamma and Delta in [1]</span>
 
