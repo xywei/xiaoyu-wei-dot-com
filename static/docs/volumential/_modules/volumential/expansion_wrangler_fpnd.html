@@ -539,19 +539,20 @@
             <span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
-            <span class="p">)</span>
+            <span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span>
         <span class="p">)</span>
         <span class="n">mode_nmlz_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
             <span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">),</span>
-            <span class="p">)</span>
+            <span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="o">.</span><span class="n">dtype</span>
         <span class="p">)</span>
         <span class="n">exterior_mode_nmlz_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
             <span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span><span class="p">),</span>
-            <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span><span class="o">.</span><span class="n">dtype</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">lev</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">])):</span>
             <span class="n">table_data_combined</span><span class="p">[</span><span class="n">lev</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="n">lev</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
@@ -1152,13 +1153,13 @@
             <span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
-            <span class="p">)</span>
+            <span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span>
         <span class="p">)</span>
         <span class="n">mode_nmlz_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
             <span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="p">),</span>
-            <span class="p">)</span>
+            <span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mode_normalizers</span><span class="o">.</span><span class="n">dtype</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">lev</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">])):</span>
             <span class="n">table_data_combined</span><span class="p">[</span><span class="n">lev</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="n">lev</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
@@ -1169,7 +1170,8 @@
             <span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">]),</span>
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span><span class="p">),</span>
-            <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">kernel_exterior_normalizers</span><span class="o">.</span><span class="n">dtype</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">lev</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">])):</span>
             <span class="n">table_data_combined</span><span class="p">[</span><span class="n">lev</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">near_field_table</span><span class="p">[</span><span class="n">kname</span><span class="p">][</span><span class="n">lev</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
