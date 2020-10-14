@@ -958,6 +958,39 @@
 
     <span class="c1"># {{{ build table via adding up a Droste of bricks</span>
 
+    <span class="k">def</span> <span class="nf">get_droste_table_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_brick_quad_points</span><span class="p">,</span>
+                                 <span class="n">special_radial_brick_quadrature</span><span class="p">,</span>
+                                 <span class="n">nradial_brick_quad_points</span><span class="p">,</span>
+                                 <span class="n">use_symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">knl_symmetry_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_droste</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="kn">import</span> <span class="n">InverseDrosteReduced</span>
+
+            <span class="n">drf</span> <span class="o">=</span> <span class="n">InverseDrosteReduced</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
+                <span class="n">n_brick_quad_points</span><span class="p">,</span> <span class="n">knl_symmetry_tags</span><span class="p">,</span> <span class="n">auto_windowing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">special_radial_quadrature</span><span class="o">=</span><span class="n">special_radial_brick_quadrature</span><span class="p">,</span>
+                <span class="n">nradial_quad_points</span><span class="o">=</span><span class="n">nradial_brick_quad_points</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">use_symmetry</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="kn">import</span> <span class="n">DrosteFull</span>
+
+                <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteFull</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span> <span class="n">n_brick_quad_points</span><span class="p">,</span>
+                    <span class="n">special_radial_quadrature</span><span class="o">=</span><span class="n">special_radial_brick_quadrature</span><span class="p">,</span>
+                    <span class="n">nradial_quad_points</span><span class="o">=</span><span class="n">nradial_brick_quad_points</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="kn">import</span> <span class="n">DrosteReduced</span>
+
+                <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteReduced</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
+                    <span class="n">n_brick_quad_points</span><span class="p">,</span> <span class="n">knl_symmetry_tags</span><span class="p">,</span>
+                    <span class="n">special_radial_quadrature</span><span class="o">=</span><span class="n">special_radial_brick_quadrature</span><span class="p">,</span>
+                    <span class="n">nradial_quad_points</span><span class="o">=</span><span class="n">nradial_brick_quad_points</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">drf</span>
+
     <span class="k">def</span> <span class="nf">build_table_via_droste_bricks</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
@@ -982,20 +1015,15 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">nlev</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="c1"># extra_kernel_kwargs = {}</span>
-        <span class="c1"># if &quot;extra_kernel_kwargs&quot; in kwargs:</span>
-        <span class="c1">#     extra_kernel_kwargs = kwargs[&quot;extra_kernel_kwargs&quot;]</span>
+        <span class="k">if</span> <span class="s2">&quot;special_radial_brick_quadrature&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">special_radial_brick_quadrature</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+                <span class="s2">&quot;special_radial_brick_quadrature&quot;</span><span class="p">)</span>
+            <span class="n">nradial_brick_quad_points</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;nradial_brick_quad_points&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">special_radial_brick_quadrature</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">nradial_brick_quad_points</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">cheb_coefs</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_mode_cheb_coeffs</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">)</span>
-            <span class="p">]</span>
-
-        <span class="c1"># {{{ get the table builder</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_droste</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="kn">import</span> <span class="n">InverseDrosteReduced</span>
-
+        <span class="k">if</span> <span class="n">use_symmetry</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;knl_symmetry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                 <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knl_symmetry_tags&quot;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1008,67 +1036,31 @@
                         <span class="p">)</span>
                 <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="kc">None</span>
 
-            <span class="n">drf</span> <span class="o">=</span> <span class="n">InverseDrosteReduced</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
-                    <span class="n">n_brick_quad_points</span><span class="p">,</span>
-                    <span class="n">knl_symmetry_tags</span><span class="p">,</span>
-                    <span class="n">auto_windowing</span><span class="o">=</span><span class="kc">False</span>
-                    <span class="p">)</span>
+        <span class="c1"># extra_kernel_kwargs = {}</span>
+        <span class="c1"># if &quot;extra_kernel_kwargs&quot; in kwargs:</span>
+        <span class="c1">#     extra_kernel_kwargs = kwargs[&quot;extra_kernel_kwargs&quot;]</span>
 
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">use_symmetry</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="kn">import</span> <span class="n">DrosteFull</span>
-
-                <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteFull</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
-                    <span class="n">n_brick_quad_points</span><span class="p">,</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">volumential.droste</span> <span class="kn">import</span> <span class="n">DrosteReduced</span>
-
-                <span class="k">if</span> <span class="s2">&quot;knl_symmetry_tags&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-                    <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knl_symmetry_tags&quot;</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># Maximum symmetry by default</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s2">&quot;use_symmetry is set to True, but knl_symmetry_tags is not &quot;</span>
-                        <span class="s2">&quot;set. Using the default maximum symmetry. (Using maximum &quot;</span>
-                        <span class="s2">&quot;symmetry for some kernels (e.g. derivatives of &quot;</span>
-                        <span class="s2">&quot;LaplaceKernel will yield incorrect results).&quot;</span>
-                        <span class="p">)</span>
-                    <span class="n">knl_symmetry_tags</span> <span class="o">=</span> <span class="kc">None</span>
-
-                <span class="n">drf</span> <span class="o">=</span> <span class="n">DrosteReduced</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
-                    <span class="n">n_brick_quad_points</span><span class="p">,</span>
-                    <span class="n">knl_symmetry_tags</span><span class="p">,</span>
-                <span class="p">)</span>
-
-        <span class="c1"># }}} End get the table builder</span>
+        <span class="n">cheb_coefs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_mode_cheb_coeffs</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_q_points</span><span class="p">)</span>
+            <span class="p">]</span>
 
         <span class="c1"># compute an initial table</span>
-        <span class="n">data0</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span>
-            <span class="n">queue</span><span class="p">,</span>
-            <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
-            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
-            <span class="n">nlevels</span><span class="o">=</span><span class="n">nlev</span><span class="p">,</span>
-            <span class="c1"># extra_kernel_kwargs=extra_kernel_kwargs,</span>
-            <span class="n">cheb_coefs</span><span class="o">=</span><span class="n">cheb_coefs</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span>
-        <span class="p">)</span>
+        <span class="n">drf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_droste_table_builder</span><span class="p">(</span>
+            <span class="n">n_brick_quad_points</span><span class="p">,</span>
+            <span class="n">special_radial_brick_quadrature</span><span class="p">,</span> <span class="n">nradial_brick_quad_points</span><span class="p">,</span>
+            <span class="n">use_symmetry</span><span class="p">,</span> <span class="n">knl_symmetry_tags</span><span class="p">)</span>
+        <span class="n">data0</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+                    <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">nlevels</span><span class="o">=</span><span class="n">nlev</span><span class="p">,</span>
+                    <span class="c1"># extra_kernel_kwargs=extra_kernel_kwargs,</span>
+                    <span class="n">cheb_coefs</span><span class="o">=</span><span class="n">cheb_coefs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># {{{ adaptively determine number of levels</span>
 
         <span class="n">resid</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">missing_measure</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">adaptive_level</span><span class="p">:</span>
-            <span class="n">table_tol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="mi">64</span>
+            <span class="n">table_tol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="mi">256</span>  <span class="c1"># 5e-14 for float64</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Searching for nlevels since adaptive_level=True&quot;</span><span class="p">)</span>
 
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
@@ -1084,15 +1076,10 @@
                     <span class="k">break</span>
 
                 <span class="n">nlev</span> <span class="o">=</span> <span class="n">nlev</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="n">data1</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span>
-                    <span class="n">queue</span><span class="p">,</span>
-                    <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
-                    <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
-                    <span class="n">nlevels</span><span class="o">=</span><span class="n">nlev</span><span class="p">,</span>
-                    <span class="c1"># extra_kernel_kwargs=extra_kernel_kwargs,</span>
-                    <span class="n">cheb_coefs</span><span class="o">=</span><span class="n">cheb_coefs</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">kwargs</span>
-                <span class="p">)</span>
+                <span class="n">data1</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+                            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">nlevels</span><span class="o">=</span><span class="n">nlev</span><span class="p">,</span>
+                            <span class="c1"># extra_kernel_kwargs=extra_kernel_kwargs,</span>
+                            <span class="n">cheb_coefs</span><span class="o">=</span><span class="n">cheb_coefs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
                 <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data0</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span><span class="p">))</span>
                 <span class="n">data0</span> <span class="o">=</span> <span class="n">data1</span>
@@ -1112,24 +1099,36 @@
 
             <span class="k">if</span> <span class="n">resid</span> <span class="o">&gt;=</span> <span class="n">table_tol</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Adaptive level refinement failed to converge.&quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Residual at level </span><span class="si">%d</span><span class="s2"> equals to </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nlev</span><span class="p">,</span> <span class="n">resid</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residual at level </span><span class="si">{</span><span class="n">nlev</span><span class="si">}</span><span class="s2"> equals to </span><span class="si">{</span><span class="n">resid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># }}} End adaptively determine number of levels</span>
 
         <span class="c1"># {{{ adaptively determine brick quad order</span>
 
-        <span class="n">resid</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">if</span> <span class="n">adaptive_quadrature</span><span class="p">:</span>
-            <span class="n">table_tol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="mi">64</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;Searching for n_brick_quad_points since &quot;</span>
-                <span class="s2">&quot;adaptive_quadrature=True&quot;</span><span class="p">)</span>
+            <span class="n">table_tol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="mi">256</span>  <span class="c1"># 5e-14 for float64</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Searching for n_brick_quad_points since &quot;</span>
+                        <span class="s2">&quot;adaptive_quadrature=True. Note that if you are using &quot;</span>
+                        <span class="s2">&quot;special radial quadrature, the radial order will also be &quot;</span>
+                        <span class="s2">&quot;adaptively refined.&quot;</span><span class="p">)</span>
 
-            <span class="n">max_n_quad_pts</span> <span class="o">=</span> <span class="mi">200</span>
+            <span class="n">max_n_quad_pts</span> <span class="o">=</span> <span class="mi">1000</span>
+            <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
 
-                <span class="n">n_brick_quad_points</span> <span class="o">=</span> <span class="n">n_brick_quad_points</span> <span class="o">+</span> <span class="mi">3</span>
+                <span class="n">n_brick_quad_points</span> <span class="o">+=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_brick_quad_points</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">special_radial_brick_quadrature</span><span class="p">:</span>
+                    <span class="n">nradial_brick_quad_points</span> <span class="o">+=</span> <span class="nb">max</span><span class="p">(</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="n">nradial_brick_quad_points</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Trying n_brick_quad_points = </span><span class="si">{</span><span class="n">n_brick_quad_points</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;nradial_brick_quad_points = </span><span class="si">{</span><span class="n">nradial_brick_quad_points</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;resid = </span><span class="si">{</span><span class="n">resid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Trying n_brick_quad_points = </span><span class="si">{</span><span class="n">n_brick_quad_points</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;resid = </span><span class="si">{</span><span class="n">resid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">n_brick_quad_points</span> <span class="o">&gt;</span> <span class="n">max_n_quad_pts</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                             <span class="s2">&quot;Adaptive quadrature refinement terminated &quot;</span>
@@ -1139,25 +1138,29 @@
                                 <span class="n">max_n_quad_pts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
                     <span class="k">break</span>
 
-                <span class="n">data1</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span>
-                    <span class="n">queue</span><span class="p">,</span>
-                    <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
-                    <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
-                    <span class="n">nlevels</span><span class="o">=</span><span class="n">nlev</span><span class="p">,</span>
-                    <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="n">n_brick_quad_points</span><span class="p">,</span>
-                    <span class="c1"># extra_kernel_kwargs=extra_kernel_kwargs,</span>
-                    <span class="n">cheb_coefs</span><span class="o">=</span><span class="n">cheb_coefs</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">kwargs</span>
-                <span class="p">)</span>
+                <span class="n">drf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_droste_table_builder</span><span class="p">(</span>
+                    <span class="n">n_brick_quad_points</span><span class="p">,</span>
+                    <span class="n">special_radial_brick_quadrature</span><span class="p">,</span> <span class="n">nradial_brick_quad_points</span><span class="p">,</span>
+                    <span class="n">use_symmetry</span><span class="p">,</span> <span class="n">knl_symmetry_tags</span><span class="p">)</span>
+                <span class="n">data1</span> <span class="o">=</span> <span class="n">drf</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">source_box_extent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_box_extent</span><span class="p">,</span>
+                            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">nlevels</span><span class="o">=</span><span class="n">nlev</span><span class="p">,</span>
+                            <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="n">n_brick_quad_points</span><span class="p">,</span>
+                            <span class="c1"># extra_kernel_kwargs=extra_kernel_kwargs,</span>
+                            <span class="n">cheb_coefs</span><span class="o">=</span><span class="n">cheb_coefs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
+                <span class="n">resid_prev</span> <span class="o">=</span> <span class="n">resid</span>
                 <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data0</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data1</span><span class="p">))</span>
                 <span class="n">data0</span> <span class="o">=</span> <span class="n">data1</span>
 
-                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">table_tol</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">resid</span> <span class="o">&lt;</span> <span class="n">table_tol</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                         <span class="s2">&quot;Adaptive quadrature &quot;</span>
                         <span class="s2">&quot;converged at order </span><span class="si">%d</span><span class="s2"> with residual </span><span class="si">%e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
                             <span class="n">n_brick_quad_points</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">resid</span><span class="p">))</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">resid</span> <span class="o">&gt;</span> <span class="n">resid_prev</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Non-monotonic residual, breaking..&quot;</span><span class="p">)</span>
                     <span class="k">break</span>
 
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">resid</span><span class="p">):</span>
@@ -1168,8 +1171,8 @@
 
             <span class="k">if</span> <span class="n">resid</span> <span class="o">&gt;=</span> <span class="n">table_tol</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Adaptive quadrature failed to converge.&quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Residual at order </span><span class="si">%d</span><span class="s2"> equals to </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                    <span class="n">n_brick_quad_points</span><span class="p">,</span> <span class="n">resid</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residual at order </span><span class="si">{</span><span class="n">n_brick_quad_points</span><span class="si">}</span><span class="s2"> &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;equals to </span><span class="si">{</span><span class="n">resid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">resid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Failed to perform quadrature order refinement.&quot;</span><span class="p">)</span>
@@ -1377,13 +1380,9 @@
 
         <span class="c1"># only for getting kernel evaluation related stuff</span>
         <span class="n">drf</span> <span class="o">=</span> <span class="n">InverseDrosteReduced</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span>
-                <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                <span class="n">knl_symmetry_tags</span><span class="o">=</span><span class="p">[],</span>
-                <span class="n">auto_windowing</span><span class="o">=</span><span class="kc">False</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_order</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_case_vecs</span><span class="p">,</span> <span class="n">n_brick_quad_points</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">knl_symmetry_tags</span><span class="o">=</span><span class="p">[],</span> <span class="n">auto_windowing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># uses &quot;dist[dim]&quot;, assigned to &quot;knl_val&quot;</span>
         <span class="n">knl_insns</span> <span class="o">=</span> <span class="n">drf</span><span class="o">.</span><span class="n">get_sumpy_kernel_insns</span><span class="p">()</span>
