@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>volumential.volume_fmm &mdash; Volumential 2017.1alpha documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -29,8 +32,6 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Volumential
+            <a href="../../index.html" class="icon icon-home"> Volumential
           
 
           
@@ -132,6 +133,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -187,6 +190,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pyopencl</span> <span class="k">as</span> <span class="nn">cl</span>
+<span class="kn">from</span> <span class="nn">pytools.obj_array</span> <span class="kn">import</span> <span class="n">make_obj_array</span>
 <span class="kn">from</span> <span class="nn">boxtree.fmm</span> <span class="kn">import</span> <span class="n">TimingRecorder</span>
 <span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_interface</span> <span class="kn">import</span> <span class="n">ExpansionWranglerInterface</span>
 <span class="kn">from</span> <span class="nn">volumential.expansion_wrangler_fpnd</span> <span class="kn">import</span> <span class="p">(</span>
@@ -237,9 +241,19 @@
     <span class="n">recorder</span> <span class="o">=</span> <span class="n">TimingRecorder</span><span class="p">()</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;start fmm&quot;</span><span class="p">)</span>
 
+    <span class="c1"># accept unpacked inputs when doing fmm for just one source field</span>
+    <span class="k">if</span> <span class="n">src_weights</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">src_weights</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="n">src_weights</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">src_func</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">src_func</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="n">src_func</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="p">(</span><span class="n">ns</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_weights</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_func</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ns</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Multiple outputs are not yet supported&quot;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expansion_wrangler</span><span class="p">,</span> <span class="n">FPNDSumpyExpansionWrangler</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_weights</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_func</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">sw</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="k">for</span> <span class="n">sw</span> <span class="ow">in</span> <span class="n">src_weights</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">sf</span><span class="p">,</span> <span class="n">cl</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="k">for</span> <span class="n">sf</span> <span class="ow">in</span> <span class="n">src_func</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expansion_wrangler</span><span class="p">,</span> <span class="n">FPNDFMMLibExpansionWrangler</span><span class="p">):</span>
 
@@ -252,8 +266,9 @@
 
     <span class="k">if</span> <span class="n">reorder_sources</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;reorder source weights&quot;</span><span class="p">)</span>
-        <span class="n">src_weights</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_sources</span><span class="p">(</span><span class="n">src_weights</span><span class="p">)</span>
-        <span class="n">src_func</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_targets</span><span class="p">(</span><span class="n">src_func</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx_s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
+            <span class="n">src_weights</span><span class="p">[</span><span class="n">idx_s</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_sources</span><span class="p">(</span><span class="n">src_weights</span><span class="p">[</span><span class="n">idx_s</span><span class="p">])</span>
+            <span class="n">src_func</span><span class="p">[</span><span class="n">idx_s</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">reorder_targets</span><span class="p">(</span><span class="n">src_func</span><span class="p">[</span><span class="n">idx_s</span><span class="p">])</span>
 
     <span class="c1"># {{{ Construct local multipoles</span>
 
@@ -288,7 +303,7 @@
         <span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">,</span>
         <span class="n">traversal</span><span class="o">.</span><span class="n">neighbor_source_boxes_starts</span><span class="p">,</span>
         <span class="n">traversal</span><span class="o">.</span><span class="n">neighbor_source_boxes_lists</span><span class="p">,</span>
-        <span class="n">src_func</span><span class="p">,</span>
+        <span class="n">src_func</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># FIXME: handle multiple source fields</span>
     <span class="p">)</span>
     <span class="n">recorder</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;eval_direct&quot;</span><span class="p">,</span> <span class="n">timing_future</span><span class="p">)</span>
 
@@ -337,7 +352,7 @@
 
         <span class="n">p2p</span> <span class="o">=</span> <span class="n">P2P</span><span class="p">(</span>
             <span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
-            <span class="n">wrangler</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">out_kernels</span><span class="p">,</span>
+            <span class="n">wrangler</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">target_kernels</span><span class="p">,</span>
             <span class="n">exclude_self</span><span class="o">=</span><span class="n">wrangler</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">exclude_self</span><span class="p">,</span>
             <span class="n">value_dtypes</span><span class="o">=</span><span class="p">[</span><span class="n">wrangler</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>
         <span class="p">)</span>
@@ -822,28 +837,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Xiaoyu Wei
+        &#169; Copyright 2021, Xiaoyu Wei.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
