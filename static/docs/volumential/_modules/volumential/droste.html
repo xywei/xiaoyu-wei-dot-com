@@ -950,7 +950,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">loopy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">prepare_loopy_kernel</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: B902</span>
             <span class="k">pass</span>
 
         <span class="k">return</span> <span class="n">loopy_knl</span>
@@ -1428,7 +1428,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">loopy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">prepare_loopy_kernel</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: B902</span>
             <span class="k">pass</span>
 
         <span class="k">return</span> <span class="n">loopy_knl</span></div>
@@ -1522,7 +1522,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_memoize_dic_get_cached_optimized_kernel&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: B902</span>
             <span class="k">pass</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
         <span class="n">evt</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">knl</span><span class="p">(</span>
@@ -1540,7 +1540,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_memoize_dic_get_cached_optimized_kernel&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: B902</span>
             <span class="k">pass</span>
         <span class="n">knl2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
         <span class="n">evt</span><span class="p">,</span> <span class="n">res2</span> <span class="o">=</span> <span class="n">knl2</span><span class="p">(</span>
@@ -2197,7 +2197,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">loopy_knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integral_knl</span><span class="o">.</span><span class="n">prepare_loopy_kernel</span><span class="p">(</span><span class="n">loopy_knl</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: B902</span>
             <span class="k">pass</span>
 
         <span class="k">return</span> <span class="n">loopy_knl</span></div>
@@ -2298,7 +2298,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_memoize_dic_get_cached_optimized_kernel&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: B902</span>
             <span class="k">pass</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
         <span class="n">result_array_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_result_array</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -2321,7 +2321,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_memoize_dic_get_cached_optimized_kernel&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: B902</span>
             <span class="k">pass</span>
         <span class="n">result_array_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_result_array</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">knl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
@@ -2344,7 +2344,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">get_kernel_id</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_memoize_dic_get_cached_optimized_kernel&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: B902</span>
             <span class="k">pass</span>
         <span class="n">knl2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_optimized_kernel</span><span class="p">()</span>
         <span class="n">result_array</span> <span class="o">=</span> <span class="n">res0</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">res1</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
