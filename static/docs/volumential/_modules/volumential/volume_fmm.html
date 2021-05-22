@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
@@ -242,10 +245,11 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;start fmm&quot;</span><span class="p">)</span>
 
     <span class="c1"># accept unpacked inputs when doing fmm for just one source field</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">dtype</span>
     <span class="k">if</span> <span class="n">src_weights</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">src_weights</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="n">src_weights</span><span class="p">])</span>
+        <span class="n">src_weights</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="n">src_weights</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)])</span>
     <span class="k">if</span> <span class="n">src_func</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">src_func</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="n">src_func</span><span class="p">])</span>
+        <span class="n">src_func</span> <span class="o">=</span> <span class="n">make_obj_array</span><span class="p">([</span><span class="n">src_func</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)])</span>
 
     <span class="k">assert</span> <span class="p">(</span><span class="n">ns</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_weights</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_func</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ns</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -348,8 +352,6 @@
 
         <span class="kn">from</span> <span class="nn">sumpy</span> <span class="kn">import</span> <span class="n">P2P</span>
 
-        <span class="n">dtype</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">dtype</span>
-
         <span class="n">p2p</span> <span class="o">=</span> <span class="n">P2P</span><span class="p">(</span>
             <span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
             <span class="n">wrangler</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">target_kernels</span><span class="p">,</span>
@@ -365,14 +367,15 @@
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">wrangler</span><span class="p">,</span> <span class="s2">&quot;self_extra_kwargs&quot;</span><span class="p">):</span>
             <span class="n">p2p_extra_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">wrangler</span><span class="o">.</span><span class="n">kernel_extra_kwargs</span><span class="p">)</span>
 
-        <span class="n">evt</span><span class="p">,</span> <span class="p">(</span><span class="n">ref_pot</span><span class="p">,)</span> <span class="o">=</span> <span class="n">p2p</span><span class="p">(</span>
-            <span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
-            <span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">targets</span><span class="p">,</span>
-            <span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">sources</span><span class="p">,</span>
-            <span class="p">(</span><span class="n">src_weights</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">),),</span>
-            <span class="o">**</span><span class="n">p2p_extra_kwargs</span>
-        <span class="p">)</span>
-        <span class="n">potentials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ref_pot</span>
+        <span class="k">for</span> <span class="n">iw</span><span class="p">,</span> <span class="n">sw</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">src_weights</span><span class="p">):</span>
+            <span class="n">evt</span><span class="p">,</span> <span class="p">(</span><span class="n">ref_pot</span><span class="p">,)</span> <span class="o">=</span> <span class="n">p2p</span><span class="p">(</span>
+                <span class="n">wrangler</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
+                <span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">targets</span><span class="p">,</span>
+                <span class="n">traversal</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">sources</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">sw</span><span class="p">,),</span>
+                <span class="o">**</span><span class="n">p2p_extra_kwargs</span>
+            <span class="p">)</span>
+            <span class="n">potentials</span><span class="p">[</span><span class="n">iw</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ref_pot</span>
 
         <span class="n">l1_potentials</span><span class="p">,</span> <span class="n">timing_future</span> <span class="o">=</span> <span class="n">wrangler</span><span class="o">.</span><span class="n">eval_direct_p2p</span><span class="p">(</span>
                 <span class="n">traversal</span><span class="o">.</span><span class="n">target_boxes</span><span class="p">,</span>
